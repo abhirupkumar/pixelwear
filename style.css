@@ -1,0 +1,16 @@
+html, body {
+    height: 100%;
+    width: 100%;
+  }
+  .left img{
+    height: 50px;
+    width: 50px;
+  }
+  .container{
+    max-width: 80vw;
+    margin: auto;
+  }
+  nav ul li{
+    list-style: none;
+    padding: 0 15px;
+  }
