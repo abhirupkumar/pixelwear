@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 
         <br/>To reset your password, please follow the link below:
 
-        <br/><a href="${process.env.NEXT_PUBLIC_HOST}/forgot?token=${token}">Click here to reset your password</a> Link is valid for just 10 minutes.
+        <br/><a href="https://pixelwear.herokuapp.com/forgot?token=${token}">Click here to reset your password</a> Link is valid for just 10 minutes.
 
         <br/><br/>
 
