@@ -30,7 +30,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault() //prevents reloading the form after setup
     const data = { email, password }
-    let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/login`, {
+    let res = await fetch(`/api/login`, {
       method: 'POST', // or 'PUT'
       headers: {
         'Content-Type': 'application/json',
