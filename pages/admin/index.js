@@ -18,7 +18,7 @@ export default function Index() {
         if (!myuser) {
             router.push('/')
         }
-        if (myuser && myuser.token && (myuser.email == 'abhirupkumar2003@gmail.com' || myuser.email == 'kabirlesoft@gmail.com')) {
+        if (myuser && myuser.token && (myuser.email == 'abhirupkumar2003@gmail.com')) {
             setAdmin(true)
         }
         else {
