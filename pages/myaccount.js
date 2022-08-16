@@ -32,7 +32,7 @@ const Myaccount = () => {
 
     const fetchData = async (token) => {
         let data = { token: token }
-        let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getuser`, {
+        let a = await fetch(`https://pixelwear.herokuapp.com/api/getuser`, {
             method: 'POST', // or 'PUT'
             headers: {
                 'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ const Myaccount = () => {
 
     const handleUserSubmit = async () => {
         let data = { token: user.token, name, phone, address, pincode }
-        let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/updateuser`, {
+        let a = await fetch(`https://pixelwear.herokuapp.com/api/updateuser`, {
             method: 'POST', // or 'PUT'
             headers: {
                 'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ const Myaccount = () => {
         let res;
         if(npassword == cpassword){
             let data = { token: user.token, password, cpassword, npassword }
-            let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/updatepassword`, {
+            let a = await fetch(`https://pixelwear.herokuapp.com/api/updatepassword`, {
                 method: 'POST', // or 'PUT'
                 headers: {
                     'Content-Type': 'application/json',
