@@ -97,7 +97,7 @@ const Update = ({ product }) => {
             price: price,
             availableQty: qty
         }]
-        let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/updateproducts`, {
+        let a = await fetch(`/api/updateproducts`, {
             method: 'POST', // or 'PUT'
             headers: {
                 'Content-Type': 'application/json',
