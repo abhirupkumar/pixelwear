@@ -26,7 +26,7 @@ const Add = () => {
         if (!myuser) {
             router.push('/')
         }
-        if(myuser && myuser.token && (myuser.email == 'abhirupkumar2003@gmail.com' || myuser.email == 'kabirlesoft@gmail.com')){
+        if(myuser && myuser.token && (myuser.email == 'abhirupkumar2003@gmail.com')){
             setAdmin(true)
         }
         else{
@@ -62,7 +62,7 @@ const Add = () => {
             price: form.price,
             availableQty: form.qty
         }]
-        let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/addproducts`, {
+        let a = await fetch(`/api/addproducts`, {
             method: 'POST', // or 'PUT'
             headers: {
                 'Content-Type': 'application/json',
