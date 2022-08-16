@@ -55,7 +55,7 @@ const handler = async (req, res) => {
         }
 
         const rdata = { price: req.body.subTotal };
-        const data = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/razorpay`, { method: "POST", body: JSON.stringify(rdata), }).then((t) =>
+        const data = await fetch(`https://pixelwear.herokuapp.com/api/razorpay`, { method: "POST", body: JSON.stringify(rdata), }).then((t) =>
             t.json()
         );
         // Initiate an order corresponding to the order id
@@ -84,7 +84,7 @@ const handler = async (req, res) => {
         //     "mid": process.env.NEXT_PUBLIC_PAYTM_MID,
         //     "websiteName": "MissNeha.in",
         //     "orderId": req.body.oid,
-        //     "callbackUrl": `${process.env.NEXT_PUBLIC_HOST}/api/posttransaction`,
+        //     "callbackUrl": `https://pixelwear.herokuapp.com/api/posttransaction`,
         //     "txnAmount": {
         //         "value": req.body.subTotal,
         //         "currency": "INR",
@@ -102,7 +102,7 @@ const handler = async (req, res) => {
         // const checksum = await PaytmChecksum.generateSignature(JSON.stringify(paytmParams.body), process.env.PAYTM_MKEY)
 
         // Make API call to the serverless API
-        // const data = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/razorpay`, {
+        // const data = await fetch(`https://pixelwear.herokuapp.com/api/razorpay`, {
 
         //     method: 'POST', // or 'PUT'
         //     headers: {
@@ -127,7 +127,7 @@ const handler = async (req, res) => {
 
         // let subTotal = req.body.subTotal
         // let razordata = { subTotal }
-        // const a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/razorpay`, {
+        // const a = await fetch(`https://pixelwear.herokuapp.com/api/razorpay`, {
 
         //     method: 'POST', // or 'PUT'
         //     headers: {
@@ -178,7 +178,7 @@ const handler = async (req, res) => {
         //     },
         // };
 
-        // let call_url = `${process.env.NEXT_PUBLIC_HOST}/api/posttransaction`
+        // let call_url = `https://pixelwear.herokuapp.com/api/posttransaction`
         // var options = {
         //     "key": process.env.RAZORPAY_KEY, // Enter the Key ID generated from the Dashboard
         //     "amount": (req.body.subTotal*100).toString(), // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
