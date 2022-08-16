@@ -38,7 +38,7 @@ const Forgot = () => {
         email,
         sendMail: true
       }
-      let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/forgot`, {
+      let a = await fetch(`https://pixelwear.herokuapp.com/api/forgot`, {
         method: 'POST', // or 'PUT'
       headers: {
         'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ const Forgot = () => {
         password,
         sendMail: false
       }
-      let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/forgot`, {
+      let a = await fetch(`https://pixelwear.herokuapp.com/api/forgot`, {
         method: 'POST', // or 'PUT'
         headers: {
           'Content-Type': 'application/json',
