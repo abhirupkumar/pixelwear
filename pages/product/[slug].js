@@ -59,7 +59,7 @@ const Post = ({ buyNow, addToCart, product, variants, error }) => {
   }
 
   const refreshVariant = (newsize, newcolor) => {
-    let url = `${process.env.NEXT_PUBLIC_HOST}/product/${variants[newcolor][newsize]['slug']}`
+    let url = `https://pixelwear.herokuapp.com/product/${variants[newcolor][newsize]['slug']}`
     router.push(url)
   }
 
