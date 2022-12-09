@@ -43,7 +43,7 @@ const Signup = () => {
     e.preventDefault() //prevents reloading the form after setup
     const data = { name, email, password, sendOtp: true, otp: otpPin }
 
-    let res = await fetch(`https://pixelwear.herokuapp.com/api/signup`, {
+    let res = await fetch(`https://pixelwear.vercel.app/api/signup`, {
       method: 'POST', // or 'PUT'
       headers: {
         'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const Signup = () => {
     if (otp == otpPin) {
       const data = { name, email, password, sendOtp: false }
 
-      let res = await fetch(`https://pixelwear.herokuapp.com/api/signup`, {
+      let res = await fetch(`https://pixelwear.vercel.app/api/signup`, {
         method: 'POST', // or 'PUT'
         headers: {
           'Content-Type': 'application/json',
