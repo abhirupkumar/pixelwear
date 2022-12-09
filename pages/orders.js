@@ -9,7 +9,7 @@ const Orders = () => {
     useEffect(() => {
 
         const fetchOrders = async () => {
-            let a = await fetch(`https://pixelwear.herokuapp.com/api/myorders`, {
+            let a = await fetch(`https://pixelwear.vercel.app/api/myorders`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
