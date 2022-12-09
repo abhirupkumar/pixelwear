@@ -38,7 +38,7 @@ const Forgot = () => {
         email,
         sendMail: true
       }
-      let a = await fetch(`https://pixelwear.herokuapp.com/api/forgot`, {
+      let a = await fetch(`https://pixelwear.vercel.app/api/forgot`, {
         method: 'POST', // or 'PUT'
       headers: {
         'Content-Type': 'application/json',
