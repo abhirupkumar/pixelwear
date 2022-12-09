@@ -42,7 +42,7 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
 
   const fetchData = async (token) => {
     let data = { token: token }
-    let a = await fetch(`https://pixelwear.herokuapp.com/api/getuser`, {
+    let a = await fetch(`https://pixelwear.vercel.app/api/getuser`, {
       method: 'POST', // or 'PUT'
       headers: {
         'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
       setPincode(e.target.value)
       if (e.target.value.length == 6) {
         getPinCode(e.target.value)
-        // let pins = await fetch(`https://pixelwear.herokuapp.com/api/pincode`)
+        // let pins = await fetch(`https://pixelwear.vercel.app/api/pincode`)
         // let pinJson = await pins.json()
         // if (Object.keys(pinJson).includes(e.target.value)) {
         //   setState(pinJson[e.target.value][1])
@@ -111,7 +111,7 @@ const Checkout = ({ cart, clearCart, subTotal, addToCart, removeFromCart }) => {
   //   let oid = Math.floor(Math.random() * Date.now());
   //   //Get a transaction token
   //   const data = { cart, subTotal, oid, email: email, name, address, pincode, phone, state, city };
-  //   let a = await fetch(`https://pixelwear.herokuapp.com/api/pretransaction`, {
+  //   let a = await fetch(`https://pixelwear.vercel.app/api/pretransaction`, {
   //     method: 'POST', // or 'PUT'
   //     headers: {
   //       'Content-Type': 'application/json',
