@@ -6,6 +6,7 @@ https://pixelwear.vercel.app
 ## Tech Stack
 
 **Client** : React, Nextjs
+
 **Database** : MongoDB
 
 ## Getting Started
