@@ -21,11 +21,12 @@ const Allproducts = ({ products }) => {
         if (!myuser) {
             router.push('/')
         }
-        if(myuser && myuser.token && (myuser.email == 'abhirupkumar2003@gmail.com' || myuser.email == 'kabirlesoft@gmail.com')){
+        if (myuser && myuser.token && (myuser.email == 'abhirupkumar2003@gmail.com' || myuser.email == 'kabirlesoft@gmail.com')) {
             setAdmin(true)
         }
-        else{
-            setAdmin(false)
+        else {
+            setAdmin(false);
+            router.push('/');
         }
     }, [])
 
@@ -42,7 +43,7 @@ const Allproducts = ({ products }) => {
                 `}</style>
                 <Grid container spacing={0}>
                     <Grid item xs={12} lg={12}>
-                        <AllProducts products={products}/>
+                        <AllProducts products={products} />
                     </Grid>
                 </Grid>
             </FullLayout>}

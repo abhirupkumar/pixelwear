@@ -1,7 +1,7 @@
 export const menuItems = [
     {
         title: "Sarees",
-        link: "/saree",
+        link: "/sarees?category=sarees",
     },
     {
         title: "Bottoms",
@@ -11,7 +11,7 @@ export const menuItems = [
         },
         {
             title: "Capri Leggings",
-            link: "/bottoms?category=capri",
+            link: "/bottoms?category=caprileggings",
         },
         {
             title: "Churidar Leggings",
@@ -58,11 +58,11 @@ export const menuItems = [
             submenu: [
                 {
                     title: "Ankle Leggings",
-                    link: "/kids/bottom?category=ankleleggings",
+                    link: "/kids?category=bottom/ankleleggings",
                 },
                 {
                     title: "Capri",
-                    link: "/kids/bottom?category=capri",
+                    link: "/kids?category=bottom/capri",
                 },
             ],
         },

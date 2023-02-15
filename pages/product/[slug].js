@@ -7,6 +7,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import Error from 'next/error'
 import Head from 'next/head';
 import ReactImageMagnify from "react-image-magnify";
+import { wordToHex } from '../../colorhex';
+import { useDispatch } from 'react-redux';
+import { addToCart, clearCart } from '../../features/cartSlice';
 // import {
 //   Magnifier,
 //   GlassMagnifier,
@@ -16,32 +19,45 @@ import ReactImageMagnify from "react-image-magnify";
 //   TOUCH_ACTIVATION
 // } from "react-image-magnifiers";
 
-const Post = ({ buyNow, addToCart, product, variants, error }) => {
+const Post = ({ product, variants, error }) => {
+  const dispatch = useDispatch();
   const router = useRouter()
   const { slug } = router.query
   const [pin, setpin] = useState()
   const [service, setService] = useState()
   const [color, setColor] = useState()
   const [size, setSize] = useState()
-
-  const imgarr = []
-  imgarr[0] = product.img
-  if (product.img2) {
-    imgarr[1] = product.img2
-  }
-  if (product.img3) {
-    imgarr[2] = product.img3
-  }
-  if (product.img4) {
-    imgarr[3] = product.img4
-  }
+  const [image, setImage] = useState()
+  const [imgarr, setImgarr] = useState([])
 
   useEffect(() => {
     if (!error) {
       setColor(product.color)
       setSize(product.size)
+      setImage(product.img)
+      setImgarr([])
+      setImgarr(imgarr => imgarr.concat(product.img))
+      if (product.img2 && product.img2 != '') {
+        setImgarr(imgarr => imgarr.concat(product.img2))
+      }
+      if (product.img3 && product.img3 != '') {
+        setImgarr(imgarr => imgarr.concat(product.img3))
+      }
+      if (product.img && product.img4 != '') {
+        setImgarr(imgarr => imgarr.concat(product.img4))
+      }
     }
   }, [router.query])
+
+  const handleImage = (e) => {
+    setImage(e.target.id)
+  }
+
+  const buyNow = (slug, qty, price, name, size, variant, theme, category, img, img2, img3, img4, fabric) => {
+    dispatch(clearCart());
+    dispatch(addToCart({ slug, qty, price, name, size, variant, theme, category, img, img2, img3, img4, fabric }));
+    router.push('/checkout');
+  }
 
 
   const checkServiceability = async () => {
@@ -87,6 +103,9 @@ const Post = ({ buyNow, addToCart, product, variants, error }) => {
   }
 
 
+  if (error) {
+    router.push('/404')
+  }
 
   return (
     <section className="text-gray-600 body-font overflow-hidden">
@@ -106,26 +125,26 @@ const Post = ({ buyNow, addToCart, product, variants, error }) => {
         <meta name="description" content="Quality of classes at proces of masses." />
         <link rel="icon" href="/icon.png" />
       </Head>
-      <div className="container px-5 py-16 mx-auto">
+      <div className="container px-5 py-16 mx-auto mt-12">
         <div className="mx-auto flex flex-wrap">
           {/* <img alt="ecommerce" className="lg:w-1/2 w-full lg:h-auto px-24 object-cover object-center rounded" src={product.img} /> */}
           <div className='lg:w-1/2 mx-auto items-center justify-center'>
             <div className='flex flex-row'>
-              {imgarr.length >= 2 && <div className="w-1/3 mx-auto flex flex-col">
-                {imgarr.map((item, index) => {
-                  return item && <img key={index} alt="ecommerce" className="w-16 border-4 border-blue-300 rounded-md m-2" src={item} />
-                })}
+              {imgarr?.length > 1 && <div className="w-1/3 mx-auto flex flex-col">
+                {imgarr?.map((item, index) => (
+                  <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`md:w-32 w-16 rounded-md m-2`} src={item} />
+                ))}
               </div>}
-              <div className='w-2/3 mx-auto'>
+              <div className='md:block hidden w-2/3 mx-auto'>
                 <ReactImageMagnify className='z-10' {...{
                   smallImage: {
                     alt: `${product.title}`,
                     isFluidWidth: true,
-                    src: `${product.img}`,
+                    src: `${image}`,
                     sizes: '(width: 480px) 100vw, (max-width: 1200px) 50vw, 500px'
                   },
                   largeImage: {
-                    src: `${product.img}`,
+                    src: `${image}`,
                     width: 1200,
                     height: 1800,
                   },
@@ -135,14 +154,15 @@ const Post = ({ buyNow, addToCart, product, variants, error }) => {
                   }
                 }} />
               </div>
+              <div className='md:hidden block w-[85%] mx-auto'>
+                <img alt="product-image" src={image} />
+              </div>
             </div>
           </div>
           <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
             <h2 className="text-sm title-font text-gray-500 tracking-widest">MissNeha</h2>
             <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{product.title} - ({product.size}/{product.color})</h1>
             <div className="flex mb-4">
-
-
               {/* <span className="flex items-center">
                 <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-indigo-500" viewBox="0 0 24 24">
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
@@ -178,24 +198,13 @@ const Post = ({ buyNow, addToCart, product, variants, error }) => {
                   </svg>
                 </a>
               </span> */}
-
-
             </div>
             <p className="leading-relaxed">{product.desc}</p>
             <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
               <div className="flex">
-                {/* <span className="mr-3">Color</span> */}
-                {/* {Object.keys(variants).includes('red') && Object.keys(variants['red']).includes(size) && <button onClick={() => { refreshVariant(size, 'red') }} className={`border-2 bg-red-600 rounded-full w-6 h-6 focus:outline-none ${color === 'red' ? 'border-black' : 'border-gray-300'}`}></button>}
-                {Object.keys(variants).includes('black') && Object.keys(variants['black']).includes(size) && <button onClick={() => { refreshVariant(size, 'black') }} className={`border-2 ml-1 bg-black rounded-full w-6 h-6 focus:outline-none ${color === 'black' ? 'border-black' : 'border-gray-300'}`}></button>}
-                {Object.keys(variants).includes('orange') && Object.keys(variants['orange']).includes(size) && <button onClick={() => { refreshVariant(size, 'orange') }} className={`border-2 ml-1 bg-orange-500 rounded-full w-6 h-6 focus:outline-none ${color === 'black' ? 'border-black' : 'border-gray-300'}`}></button>}
-                {Object.keys(variants).includes('blue') && Object.keys(variants['blue']).includes(size) && <button onClick={() => { refreshVariant(size, 'blue') }} className={`border-2 ml-1 bg-blue-600 rounded-full w-6 h-6 focus:outline-none ${color === 'blue' ? 'border-black' : 'border-gray-300'}`}></button>}
-                {Object.keys(variants).includes('yellow') && Object.keys(variants['yellow']).includes(size) && <button onClick={() => { refreshVariant(size, 'yellow') }} className={`border-2 bg-yellow-300 rounded-full w-6 h-6 focus:outline-none ${color === 'yellow' ? 'border-black' : 'border-gray-300'}`}></button>}
-                {Object.keys(variants).includes('pink') && Object.keys(variants['pink']).includes(size) && <button onClick={() => { refreshVariant(size, 'pink') }} className={`border-2 ml-1 bg-pink-600 rounded-full w-6 h-6 focus:outline-none ${color === 'pink' ? 'border-black' : 'border-gray-300'}`}></button>}
-                {Object.keys(variants).includes('dark green') && Object.keys(variants['dark green']).includes(size) && <button onClick={() => { refreshVariant(size, 'dark green') }} className={`border-2 ml-1 bg-green-900 rounded-full w-6 h-6 focus:outline-none ${color === 'green' ? 'border-black' : 'border-gray-300'}`}></button>}
-                {Object.keys(variants).includes('dark blue') && Object.keys(variants['dark blue']).includes(size) && <button onClick={() => { refreshVariant(size, 'dark blue') }} className={`border-2 ml-1 bg-blue-900 rounded-full w-6 h-6 focus:outline-none ${color === 'dark blue' ? 'border-black' : 'border-gray-300'}`}></button>}
-                {Object.keys(variants).includes('brown') && Object.keys(variants['brown']).includes(size) && <button onClick={() => { refreshVariant(size, 'brown') }} className={`border-2 ml-1 bg-amber-700 rounded-full w-6 h-6 focus:outline-none ${color === 'brown' ? 'border-black' : 'border-gray-300'}`}></button>}
-                {Object.keys(variants).includes('purple') && Object.keys(variants['purple']).includes(size) && <button onClick={() => { refreshVariant(size, 'purple') }} className={`border-2 ml-1 bg-purple-600 rounded-full w-6 h-6 focus:outline-none ${color === 'purple' ? 'border-black' : 'border-gray-300'}`}></button>} */}
-
+                <span className="mr-3">Color</span>
+                {Object.keys(variants) && Object.keys(variants).map((color1, index) => wordToHex[color1] && <button key={index} onClick={() => { refreshVariant(Object.keys(variants[color1]), color1) }} className={`border-2 mx-[1px] rounded-full w-6 h-6 focus:outline-none ${color === color1 ? 'border-black' : 'border-gray-300'}`} style={{ backgroundColor: wordToHex[color1] }}></button>
+                )}
               </div>
               <div className="flex ml-3 items-center">
                 <span className="mr-3">Size</span>
@@ -205,7 +214,8 @@ const Post = ({ buyNow, addToCart, product, variants, error }) => {
                     {color && Object.keys(variants[color]).includes('M') && <option value='M'>M</option>}
                     {color && Object.keys(variants[color]).includes('L') && <option value='L'>L</option>}
                     {color && Object.keys(variants[color]).includes('XL') && <option value='XL'>XL</option>}
-                    {color && Object.keys(variants[color]).includes('XXL') && <option value='XXL'>XXL</option>}
+                    {color && (Object.keys(variants[color]).includes('2XL') || Object.keys(variants[color]).includes('XXL')) && <option value='2XL'>2XL</option>}
+                    {color && (Object.keys(variants[color]).includes('3XL') || Object.keys(variants[color]).includes('XXXL')) && <option value='3XL'>3XL</option>}
                     {color && Object.keys(variants[color]).includes('Standard') && <option value='Standard'>Standard</option>}
                     {color && Object.keys(variants[color]).includes('Free') && <option value='Free'>Free</option>}
                   </select>
@@ -220,8 +230,8 @@ const Post = ({ buyNow, addToCart, product, variants, error }) => {
             <div className="flex">
               {product.availableQty > 0 && <span className="title-font font-medium text-2xl text-gray-900">₹{product.price}</span>}
               {product.availableQty <= 0 && <span className="title-font font-medium text-2xl text-red-600">Out Of Stock!</span>}
-              <button disabled={product.availableQty <= 0} onClick={() => { buyNow(slug, 1, product.price, product.title, size, color, product.category, product.img) }} className="flex ml-8 text-white bg-indigo-500 disabled:bg-indigo-300 border-0 py-2 px-1 md:px-6 focus:outline-none hover:bg-indigo-600 rounded">Buy Now</button>
-              <button disabled={product.availableQty <= 0} onClick={() => { addToCart(slug, 1, product.price, product.title, size, color, product.category, product.img) }} className="flex ml-4 text-white bg-indigo-500 disabled:bg-indigo-300 border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-indigo-600 rounded">Add to cart</button>
+              <button disabled={product.availableQty <= 0} onClick={() => { buyNow(slug, 1, product.price, product.title, size, color, product.category, product.theme, product.img, product.img2, product.img3, product.img4, product.fabric) }} className="flex ml-8 text-white bg-indigo-500 disabled:bg-indigo-300 border-0 py-2 px-1 md:px-6 focus:outline-none hover:bg-indigo-600 rounded">Buy Now</button>
+              <button disabled={product.availableQty <= 0} onClick={() => dispatch(addToCart({ slug, qty: 1, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img, img2: product.img2, img3: product.img3, img4: product.img4 }))} className="flex ml-4 text-white bg-indigo-500 disabled:bg-indigo-300 border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-indigo-600 rounded">Add to cart</button>
             </div>
             <div className="pin mt-6 flex space-x-2 text-sm">
               <input onChange={onChangePin} className="px-2 border-2 border-gray-400 rounded-md" type="text" placeholder='Enter your pincode' />
@@ -248,7 +258,7 @@ export async function getServerSideProps(context) {
   let product = await Product.findOne({ slug: context.query.slug })
   if (product == null) {
     return {
-      props: { error: 404 },
+      props: { error: true },
     }
   }
   let variant = await Product.find({ title: product.title, category: product.category })

@@ -17,6 +17,9 @@ const Update = ({ product }) => {
     const [slug, setSlug] = useState()
     const [desc, setDesc] = useState()
     const [img, setImg] = useState()
+    const [img2, setImg2] = useState()
+    const [img3, setImg3] = useState()
+    const [img4, setImg4] = useState()
     const [type, setType] = useState()
     const [themes, setThemes] = useState()
     const [size, setSize] = useState()
@@ -47,6 +50,9 @@ const Update = ({ product }) => {
         setSlug(product.slug)
         setDesc(product.desc)
         setImg(product.img)
+        setImg2(product.img2)
+        setImg3(product.img3)
+        setImg4(product.img4)
         setType(product.category)
         setThemes(product.theme)
         setSize(product.size)
@@ -66,6 +72,15 @@ const Update = ({ product }) => {
         }
         if (e.target.name == 'img') {
             setImg(e.target.value)
+        }
+        if (e.target.name == 'img2') {
+            setImg2(e.target.value)
+        }
+        if (e.target.name == 'img3') {
+            setImg3(e.target.value)
+        }
+        if (e.target.name == 'img4') {
+            setImg4(e.target.value)
         }
         if (e.target.name == 'desc') {
             setDesc(e.target.value)
@@ -101,6 +116,9 @@ const Update = ({ product }) => {
             slug: slug,
             desc: desc,
             img: img,
+            img2: img2,
+            img3: img3,
+            img4: img4,
             category: type,
             theme: themes,
             size: size,
@@ -148,14 +166,6 @@ const Update = ({ product }) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <style jsx global>{`
-                .navbar-show{
-                    display: none;
-                }
-                footer{
-                    display: none;
-                }
-                `}</style>
             {admin && <FullLayout>
                 <style jsx global>{`
                 .navbar-show{
@@ -213,6 +223,18 @@ const Update = ({ product }) => {
                         <div className="mb-4">
                             <label htmlFor="img" className="leading-7 text-sm text-gray-600">Image</label>
                             <input value={img ? img : product.img} onChange={handleChange} type="text" id="img" name="img" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="img2" className="leading-7 text-sm text-gray-600">Image2</label>
+                            <input value={img2 ? img2 : product.img2} onChange={handleChange} type="text" id="img2" name="img2" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="img3" className="leading-7 text-sm text-gray-600">Image3</label>
+                            <input value={img3 ? img3 : product.img3} onChange={handleChange} type="text" id="img3" name="img3" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="img4" className="leading-7 text-sm text-gray-600">Image4</label>
+                            <input value={img4 ? img4 : product.img4} onChange={handleChange} type="text" id="img4" name="img4" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                         </div>
                         <div className="mb-4">
                             <label htmlFor="price" className="leading-7 text-sm text-gray-600">Price</label>

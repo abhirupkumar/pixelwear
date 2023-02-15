@@ -9,7 +9,7 @@ import Head from 'next/head'
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 
-const Bottoms = ({ products, filter }) => {
+const InnerWear = ({ products, filter }) => {
 
     const router = useRouter()
 
@@ -18,7 +18,7 @@ const Bottoms = ({ products, filter }) => {
 
     const handleChange = (event) => {
         setValue(event.target.value)
-        router.push(`/bottoms?category=${event.target.value}`)
+        router.push(`/innerwear?category=${event.target.value}`)
     }
 
     const changeFilter = (event) => {
@@ -33,12 +33,12 @@ const Bottoms = ({ products, filter }) => {
     return (
         <div>
             <Head>
-                <title>MissNeha - Bottoms</title>
+                <title>MissNeha - InnerWear</title>
                 <meta name="description" content="Quality of classes at proces of masses." />
                 <link rel="icon" href="/icon.png" />
             </Head>
             <section className="text-gray-600 body-font min-h-screen flex lg:flex-row flex-col mt-10">
-                <div className={`lg:mx-2 lg:my-12 my-4 border border-gray-400 lg:w-[20%] w-full rounded-md lg:h-full lg:relative fixed bg-white z-20 ${showFilter ? '' : 'lg:border-gray-400 border-gray-300'} `}>
+                { Object.keys(products).length > 0 && <div className={`lg:mx-2 lg:my-12 my-4 border border-gray-400 lg:w-1/4 w-full rounded-md lg:h-full lg:relative fixed bg-white z-20 ${showFilter ? '' : 'lg:border-gray-400 border-gray-300'} `}>
                     <p className='lg:flex lg:flex-row hidden justify-center px-1 my-2 mx-10 text-xl'>Filter</p>
                     <button className='flex lg:hidden justify-center px-1 my-2 mx-auto text-xl' onClick={changeFilter}>Filter {showFilter ? <FilterListIcon /> : <FilterListOffIcon />}</button>
                     <div className={`${showFilter ? 'lg:block transition-all' : 'lg:block hidden'}`}>
@@ -47,12 +47,7 @@ const Bottoms = ({ products, filter }) => {
                             <FormControl>
                                 <p className='flex flex-row justify-center px-1 my-2 text-lg text-semibold'>Categories</p>
                                 <RadioGroup name='job-experience-group-label' aria-labelledby='job-experience-group-label' value={value} onChange={handleChange} col='true'>
-                                    <FormControlLabel control={<Radio size='medium' color='primary' />} value='ankleleggings' label='Ankle Leggings' />
-                                    <FormControlLabel control={<Radio size='medium' color='primary' />} value='caprileggings' label='Capri Leggings' />
-                                    <FormControlLabel control={<Radio size='medium' color='primary' />} value='churidarleggings' label='Churidar Leggings' />
-                                    <FormControlLabel control={<Radio size='medium' color='primary' />} value='palazzo' label='Palazzo' />
-                                    <FormControlLabel control={<Radio size='medium' color='primary' />} value='patiala' label='Patiala' />
-                                    <FormControlLabel control={<Radio size='medium' color='primary' />} value='straightpant' label='Straight Pant' />
+                                    <FormControlLabel control={<Radio size='medium' color='primary' />} value='shorts' label='Shorts' />
                                 </RadioGroup>
                             </FormControl>
                         </div>
@@ -78,14 +73,14 @@ const Bottoms = ({ products, filter }) => {
                             })}
                         </div>
                     </div>
-                </div>
+                </div>}
                 <div className="container px-5 py-12">
                     <div className="flex flex-wrap lg:-m-4 md:-mx-1 justify-center items-center">
-                        {Object.keys(products).length === 0 && <p>Sorry all the {value} are currently out of stock. New stock comming soon. Stay Tuned!</p>}
+                        {Object.keys(products).length === 0 && <p className='mt-5'>Sorry all the {value} are currently out of stock. New stock comming soon. Stay Tuned!</p>}
                         {Object.keys(products).map((item) => {
-                            return <Link passHref={true} key={products[item]._id} href={`/product/${products[item].slug}`}><div className="lg:w-[27%] cursor-pointer shadow-xl m-4 mx-2">
+                            return <Link passHref={true} key={products[item]._id} href={`/product/${products[item].slug}`}><div className="lg:w-[27%]  p-4 cursor-pointer shadow-xl m-4 mx-2">
                                 <a className="flex justify-center relative rounded overflow-hidden">
-                                    <img alt="ecommerce" className="m-auto md:m-0 max-h-[900] max-w-[600] block" src={products[item].img} />
+                                    <img alt="ecommerce" className="m-auto md:m-0 h-[340px] object-contain block" src={products[item].img} />
                                 </a>
                                 <div className="mt-4 text-center md:text-left">
                                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{products[item].category.toUpperCase()}</h3>
@@ -131,7 +126,7 @@ export async function getServerSideProps(context) {
         await mongoose.connect(process.env.MONGO_URI)
     }
     let obj = {
-        category: 'bottoms',
+        category: 'innerwear',
         theme: context.query.category,
     }
     if (context.query.color) {
@@ -144,26 +139,26 @@ export async function getServerSideProps(context) {
         obj['size'] = context.query.size
     }
     let products = await Product.find(obj)
-    let bottoms = {}
+    let proditems = {}
     let titlefilter = []
     for (let item of products) {
-        if (item.title in bottoms) {
-            if (!bottoms[item.title].color.includes(item.color) && item.availableQty > 0) {
-                bottoms[item.title].color.push(item.color)
+        if (item.title in proditems) {
+            if (!proditems[item.title].color.includes(item.color) && item.availableQty > 0) {
+                proditems[item.title].color.push(item.color)
             }
-            if (!bottoms[item.title].size.includes(item.size) && item.availableQty > 0) {
-                bottoms[item.title].size.push(item.size)
+            if (!proditems[item.title].size.includes(item.size) && item.availableQty > 0) {
+                proditems[item.title].size.push(item.size)
             }
         }
         else {
-            bottoms[item.title] = JSON.parse(JSON.stringify(item))
+            proditems[item.title] = JSON.parse(JSON.stringify(item))
             if (item.availableQty > 0) {
-                bottoms[item.title].color = [item.color]
-                bottoms[item.title].size = [item.size]
+                proditems[item.title].color = [item.color]
+                proditems[item.title].size = [item.size]
             }
             else {
-                bottoms[item.title].color = []
-                bottoms[item.title].size = []
+                proditems[item.title].color = []
+                proditems[item.title].size = []
             }
         }
     }
@@ -183,9 +178,9 @@ export async function getServerSideProps(context) {
     }
 
     return {
-        props: { products: JSON.parse(JSON.stringify(bottoms)), filter: unique }, // will be passed to the page component as props
+        props: { products: JSON.parse(JSON.stringify(proditems)), filter: unique }, // will be passed to the page component as props
         // props: { products: JSON.parse(JSON.stringify(products)) }, // will be passed to the page component as props
     }
 }
 
-export default Bottoms
+export default InnerWear

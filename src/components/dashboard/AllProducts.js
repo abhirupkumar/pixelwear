@@ -188,11 +188,6 @@ const AllProducts = ({ products }) => {
             </TableCell>
             <TableCell align="center">
               <Typography color="textSecondary" variant="h6">
-                Image
-              </Typography>
-            </TableCell>
-            <TableCell align="center">
-              <Typography color="textSecondary" variant="h6">
                 Size/Color
               </Typography>
             </TableCell>
@@ -226,9 +221,19 @@ const AllProducts = ({ products }) => {
                   sx={{
                     fontSize: "13px",
                     fontWeight: "500",
+                    flexWrap: "wrap",
                   }}
                 >
                   {product.title}
+                  <Typography sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                  }}>
+                    <img style={{ height: '100px' }} src={product.img} alt='1' />
+                    {product.img2 && <img style={{ height: '100px' }} src={product.img2} alt='2' />}
+                    {product.img3 && <img style={{ height: '100px' }} src={product.img3} alt='3' />}
+                    {product.img4 && <img style={{ height: '100px' }} src={product.img4} alt='4' />}
+                  </Typography>
                 </Typography>
               </TableCell>}
               {product.theme == subcategory && <TableCell align="center">
@@ -239,16 +244,6 @@ const AllProducts = ({ products }) => {
                   }}
                 >
                   {product.fabric}
-                </Typography>
-              </TableCell>}
-              {product.theme == subcategory && <TableCell align="center">
-                <Typography
-                  sx={{
-                    fontSize: "13px",
-                    fontWeight: "500",
-                  }}
-                >
-                  <img style={{ height: '52px' }} src={product.img} alt='' />
                 </Typography>
               </TableCell>}
 

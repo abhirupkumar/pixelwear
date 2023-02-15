@@ -2,7 +2,7 @@ import React from 'react'
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../src/theme/theme";
 import FullLayout from "../../src/layouts/FullLayout";
-import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, RadioGroup, Radio, Stack, TextField, Autocomplete } from '@mui/material';
+import { Button, FormControl, FormControlLabel, FormLabel, Grid, RadioGroup, Radio, Stack, TextField } from '@mui/material';
 import BaseCard from '../../src/components/baseCard/BaseCard';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -154,9 +154,12 @@ const Add = () => {
         }
         let data = [{
             title: form.title,
-            slug: form.slug,
+            slug: (form?.title?.toLowerCase().replaceAll(' ', '-') + "-" + type + "-" + pid + '-' + color + "-" + size.toLowerCase()),
             desc: form.description,
             img: form.img,
+            img2: form.img2,
+            img3: form.img3,
+            img4: form.img4,
             category: type,
             theme: subcategory,
             size: size,
@@ -333,10 +336,17 @@ const Add = () => {
                                                 onChange={handleCheckboxChange}
                                             />
                                             <FormControlLabel
-                                                value="XXL"
+                                                value="2XL"
                                                 control={<Radio />}
-                                                label="XXL"
-                                                name="XXL"
+                                                label="2XL"
+                                                name="2XL"
+                                                onChange={handleCheckboxChange}
+                                            />
+                                            <FormControlLabel
+                                                value="3XL"
+                                                control={<Radio />}
+                                                label="3XL"
+                                                name="3XL"
                                                 onChange={handleCheckboxChange}
                                             />
                                             <FormControlLabel
@@ -346,11 +356,16 @@ const Add = () => {
                                                 name="Standard"
                                                 onChange={handleCheckboxChange}
                                             />
+                                            <FormControlLabel
+                                                value="Free"
+                                                control={<Radio />}
+                                                label="Free"
+                                                name="Free"
+                                                onChange={handleCheckboxChange}
+                                            />
                                         </div>
                                     </RadioGroup>
                                 </FormControl>
-
-                                {/* <TextField onChange={onChange} value={form.color ? form.color.toLowerCase() : ""} name="color" label="Color" variant="outlined" /> */}
 
                                 <TextField label='Color' name='color' select value={color} onChange={handleColorChange} fullWidth
                                 >
@@ -363,9 +378,13 @@ const Add = () => {
 
                                 <TextField onChange={onChange} value={form.fabric ? form.fabric : ""} name="fabric" label="Fabric" variant="outlined" />
 
-                                <TextField onChange={onChange} value={form.img ? form.img : ""} name="img" label="Image Link" variant="outlined" />
+                                <TextField onChange={onChange} value={form.img ? form.img : ""} name="img" label="Image1 Link" variant="outlined" />
 
-                                <TextField onChange={onChange} value={form.slug ? (form.slug = form.title.toLowerCase().replaceAll(' ', '-') + "-" + type + "-" + pid + '-' + color + "-" + size.toLowerCase()) : ''} name="slug" label="Slug" variant="outlined" />
+                                <TextField onChange={onChange} value={form.img2 ? form.img2 : ""} name="img2" label="Image2 Link" variant="outlined" />
+
+                                <TextField onChange={onChange} value={form.img3 ? form.img3 : ""} name="img3" label="Image3 Link" variant="outlined" />
+
+                                <TextField onChange={onChange} value={form.img4 ? form.img4 : ""} name="img4" label="Image4 Link" variant="outlined" />
 
                                 <TextField onChange={onChange}
                                     id="price"

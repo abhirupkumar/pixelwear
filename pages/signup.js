@@ -74,7 +74,7 @@ const Signup = () => {
         draggable
         pauseOnHover
       />
-      <div className="min-h-full flex items-center justify-center pt-12 pb-44 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-full mt-10 flex items-center justify-center pt-12 pb-44 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div>
             <Link href={'/'}><img className="mx-auto h-12 w-auto cursor-pointer" src="/logo.png" alt="Workflow" /></Link>

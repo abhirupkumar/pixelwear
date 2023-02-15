@@ -5,7 +5,7 @@ const Privacy = () => {
   return (
     <div>
       <Head>
-        <title> Privacy Policy - MissNeha</title>
+        <title> Privacy Policy - Le-Soft</title>
         <meta name="description" content="Quality of classes at proces of masses." />
         <link rel="icon" href="/icon.png" />
       </Head>
@@ -29,7 +29,7 @@ const Privacy = () => {
 
                 <li>
 
-                  <p> <strong> Company</strong>  (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to MissNeha, Ranaghat, West Bengal.</p>
+                  <p> <strong> Company</strong>  (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to Le-Soft, Ranaghat, West Bengal.</p>
                 </li>
                 <li>
                   <p> <strong> Cookies</strong>  are small files that are placed on Your computer, mobile device or any other device by a website, containing the details of Your browsing history on that website among its many uses.</p>
@@ -66,8 +66,8 @@ const Privacy = () => {
 
                 <li>
 
-                  <p> <strong> Website</strong>  refers to MissNeha, accessible from
-                    <a href="https://www.MissNeha.in" rel="external nofollow noopener noreferrer" target="_blank"> https://www.MissNeha.in</a>
+                  <p> <strong> Website</strong>  refers to Le-Soft, accessible from
+                    <a href="https://www.lesoft.in" rel="external nofollow noopener noreferrer" target="_blank"> https://www.lesoft.in</a>
                   </p>
                 </li>
 

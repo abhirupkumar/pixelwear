@@ -1,7 +1,4 @@
 import { Grid, Stack, ImageList, ImageListItem, Box, ImageListItemBar, TextField } from "@mui/material";
-import BlogCard from "../../src/components/dashboard/BlogCard";
-import SalesOverview from "../../src/components/dashboard/SalesOverview";
-import DailyActivity from "../../src/components/dashboard/DailyActivity";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../src/theme/theme";
 import FullLayout from "../../src/layouts/FullLayout";
@@ -14,11 +11,9 @@ import Image from "/models/Image"
 import mongoose from 'mongoose'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-// import { images } from "../../indeximages";
-// import image from "../../dashimages";
+import Video from "../../models/Video";
 
-
-const Index = ({ images }) => {
+const Index = ({ images, videos }) => {
     const router = useRouter()
     const [admin, setAdmin] = useState(true)
     const [value1, setValue1] = useState('')
@@ -26,19 +21,22 @@ const Index = ({ images }) => {
     const [value3, setValue3] = useState('')
     const [value4, setValue4] = useState('')
     const [value5, setValue5] = useState('')
+    const [videoValue, setVideoValue] = useState('')
 
     useEffect(() => {
         const myuser = JSON.parse(localStorage.getItem('myuser'));
         if (!myuser) {
-            router.push('/')
+            router.push('/');
         }
         if (myuser && myuser.token && (myuser.email == 'abhirupkumar2003@gmail.com' || myuser.email == 'kabirlesoft@gmail.com')) {
-            setAdmin(true)
+            setAdmin(true);
         }
         else {
-            setAdmin(false)
+            setAdmin(false);
+            router.push('/');
         }
         fetchimages()
+        fetchvideos()
     }, [])
 
     const fetchimages = () => {
@@ -47,6 +45,10 @@ const Index = ({ images }) => {
         setValue3(images[2].img.toString())
         setValue4(images[3].img.toString())
         setValue5(images[4].img.toString())
+    }
+
+    const fetchvideos = () => {
+        setVideoValue(videos[0].vid.toString())
     }
 
     const onChange = (e) => {
@@ -67,25 +69,36 @@ const Index = ({ images }) => {
         }
     }
 
+    const onVChange = (e) => {
+        if (e.target.name == 'vid') {
+            setVideoValue(e.target.value)
+        }
+    }
+
     const handleClick = async (e) => {
         let data = [{
             _id: images[0]._id,
+            category: "frontimage",
             img: value1
         },
         {
             _id: images[1]._id,
+            category: "frontimage",
             img: value2
         },
         {
             _id: images[2]._id,
+            category: "frontimage",
             img: value3
         },
         {
             _id: images[3]._id,
+            category: "frontimage",
             img: value4
         },
         {
             _id: images[4]._id,
+            category: "frontimage",
             img: value5
         },
         ]
@@ -98,7 +111,47 @@ const Index = ({ images }) => {
         })
         let res = await a.json()
         if (res.success) {
-            toast.success("Product Successfully Updated", {
+            toast.success("Images Successfully Updated", {
+                position: "top-left",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            setTimeout(() => {
+                router.push(`${process.env.NEXT_PUBLIC_HOST}/admin`)
+            }, 2000);
+        }
+        else {
+            toast.error("Some Error Occured ! Could not Update products", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+    }
+
+    const handleVClick = async (e) => {
+        let data = [{
+            _id: images[0]._id,
+            vid: videoValue
+        }]
+        let a = await fetch(`/api/updatevideo`, {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        let res = await a.json()
+        if (res.success) {
+            toast.success("Video Successfully Updated", {
                 position: "top-left",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -148,40 +201,27 @@ const Index = ({ images }) => {
                     pauseOnHover
                 />
                 <Grid container spacing={0}>
-                    <div className="flex flex-col">
-                        {/* <div className="mx-auto">Go to add products to add a new product</div>
-                        <br />
-                        <div className="mx-auto">Go to view products to see and edit all the products</div>
-                        <br />
-                        <div className="mx-auto">Go to orders to see the order details</div> */}
-                    </div>
                     <BaseCard>
                         <Stack spacing={4}>
                             <ImageList sx={{ width: '100%', height: '100%' }} cols={1} rowHeight={164}>
-                                {/* {Object.keys(images).map((item, index) => {
-                                    return <div key={index}>
-                                        <img src={`${images[item].img}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
-                                        <TextField onChange={onChange} value={value1} name={images[item].img} label={"Image" + (index + 1)} variant="outlined" />
-                                    </div>
-                                })} */}
                                 {images[0] && <div>
-                                    <img src={`${images[0].img}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
+                                    <img src={`${value1}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
                                     <TextField onChange={onChange} value={value1} name='img1' label={"Image1"} variant="outlined" fullWidth />
                                 </div>}
                                 {images[1] && <div>
-                                    <img src={`${images[1].img}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
+                                    <img src={`${value2}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
                                     <TextField onChange={onChange} value={value2} name='img2' label={"Image2"} variant="outlined" fullWidth />
                                 </div>}
                                 {images[2] && <div>
-                                    <img src={`${images[2].img}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
+                                    <img src={`${value3}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
                                     <TextField onChange={onChange} value={value3} name='img3' label={"Image3"} variant="outlined" fullWidth />
                                 </div>}
                                 {images[3] && <div>
-                                    <img src={`${images[3].img}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
+                                    <img src={`${value4}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
                                     <TextField onChange={onChange} value={value4} name='img4' label={"Image4"} variant="outlined" fullWidth />
                                 </div>}
                                 {images[4] && <div>
-                                    <img src={`${images[4].img}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
+                                    <img src={`${value5}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
                                     <TextField onChange={onChange} value={value5} name='img5' label={"Image5"} variant="outlined" fullWidth />
                                 </div>}
                             </ImageList>
@@ -189,7 +229,9 @@ const Index = ({ images }) => {
                         </Stack>
 
                         <Stack spacing={2}>
-                            {/* {images.map((item, index) => { <TextField key={index} onChange={onChange} value={form.qty ? form.qty : ""} name="qty" label="Image" variant="outlined" /> })} */}
+                            <iframe width="100%" height="400" style={{ marginTop: "3rem" }} src={videoValue} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                            <TextField onChange={onVChange} value={videoValue} name="vid" label="Video" variant="outlined" />
+                            <button onClick={handleVClick} className="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-lg text-white my-3">Change</button>
                         </Stack>
 
                     </BaseCard>
@@ -212,10 +254,11 @@ export async function getServerSideProps(context) {
         await mongoose.connect(process.env.MONGO_URI)
     }
 
-    let images = await Image.find()
+    let images = await Image.find({ category: "frontimage" });
+    let videos = await Video.find();
 
     return {
-        props: { images: JSON.parse(JSON.stringify(images)) }, // will be passed to the page component as props
+        props: { images: JSON.parse(JSON.stringify(images)), videos: JSON.parse(JSON.stringify(videos)) }, // will be passed to the page component as props
     }
 }
 
