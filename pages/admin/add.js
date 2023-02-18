@@ -2,7 +2,7 @@ import React from 'react'
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../src/theme/theme";
 import FullLayout from "../../src/layouts/FullLayout";
-import { Button, FormControl, FormControlLabel, FormLabel, Grid, RadioGroup, Radio, Stack, TextField } from '@mui/material';
+import { Button, FormControl, FormControlLabel, FormLabel, Grid, RadioGroup, Radio, Stack, TextField, IconButton, Typography, Autocomplete, CircularProgress } from '@mui/material';
 import BaseCard from '../../src/components/baseCard/BaseCard';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,6 +12,17 @@ import { useState } from "react";
 import Head from 'next/head';
 import { MenuItem } from '@mui/material'
 import { wordToHex } from '../../colorhex'
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useRef } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { useSelector } from 'react-redux';
+const jwt = require('jsonwebtoken');
+
+function generateSkuId() {
+    const randomString = Math.random().toString(36).substring(2, 14);
+    const skuId = uuidv4().substr(0, 5) + randomString;
+    return skuId.toUpperCase();
+}
 
 const Add = () => {
 
@@ -95,42 +106,60 @@ const Add = () => {
     const [form, setForm] = useState({})
     const [size, setSize] = useState('')
     const [type, setType] = useState('')
-    const [pid, setPid] = useState(0)
-
     const router = useRouter()
-    const [admin, setAdmin] = useState(true)
-
+    const [admin, setAdmin] = useState(false)
     const [subcategory, setSubcategory] = useState('')
     const [color, setColor] = useState('')
+    const [imageLinks, setImageLinks] = useState([]);
+    const [newLink, setNewLink] = useState('');
+    const [desc, setDesc] = useState([]);
+    const [newDesc, setNewDesc] = useState('');
+    const [loading, setLoading] = useState(false);
 
+    const token = useSelector((state) => state.cartItems.token)
+    let email = ''
+
+    const ref = useRef(null)
+
+    const handleAddLink = () => {
+        setImageLinks([...imageLinks, newLink]);
+        setNewLink('');
+    };
+
+    const handleRemoveLink = (index) => {
+        setImageLinks(imageLinks.filter((_, i) => i !== index));
+    };
+
+
+    const handleAddDesc = () => {
+        setDesc([...desc, newDesc]);
+        setNewDesc('');
+    };
+
+    const handleRemoveDesc = (index) => {
+        setDesc(desc.filter((_, i) => i !== index));
+    };
 
     const handleChange = (e) => {
         const value2 = e.target.value
         setSubcategory(value2)
     }
 
-    const handleColorChange = (e) => {
-        const value3 = e.target.value
-        setColor(value3)
+    const handleColorChange = (e, value) => {
+        setColor(value)
     }
 
     useEffect(() => {
-        const myuser = JSON.parse(localStorage.getItem('myuser'));
-        if (!myuser) {
-            router.push('/')
+        if (token) {
+            email = jwt.decode(token).email
         }
-        if (myuser && myuser.token && (myuser.email == 'abhirupkumar2003@gmail.com' || myuser.email == 'kabirlesoft@gmail.com')) {
+        if (token && email != '' && (email == process.env.EMAIL1 || email == process.env.EMAIL2)) {
             setAdmin(true)
         }
         else {
             setAdmin(false)
         }
     }, [])
-
-    useEffect(() => {
-        pid = Math.floor(Math.random() * 10000000 + 9)
-        setPid(pid)
-    }, [form, size, type, subcategory])
 
     const onChange = (e) => {
         setForm({
@@ -152,22 +181,24 @@ const Add = () => {
         if (!form.theme) {
             form.theme = '####';
         }
+        const newSkuId = generateSkuId()
         let data = [{
             title: form.title,
-            slug: (form?.title?.toLowerCase().replaceAll(' ', '-') + "-" + type + "-" + pid + '-' + color + "-" + size.toLowerCase()),
-            desc: form.description,
+            slug: (form?.title?.toLowerCase().replaceAll(' ', '-') + "-" + type + "-" + newSkuId + '-' + color + "-" + size.toLowerCase()),
+            skuId: newSkuId,
+            desc: desc,
             img: form.img,
-            img2: form.img2,
-            img3: form.img3,
-            img4: form.img4,
+            imgarr: imageLinks,
             category: type,
             theme: subcategory,
             size: size,
             color: color,
             fabric: form.fabric,
             price: form.price,
-            availableQty: form.qty
+            availableQty: form.qty,
         }]
+
+        setLoading(true);
         let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/addproducts`, {
             method: 'POST', // or 'PUT'
             headers: {
@@ -176,6 +207,7 @@ const Add = () => {
             body: JSON.stringify(data),
         })
         let res = await a.json()
+        setLoading(false);
         if (res.success) {
             toast.success("Product Successfully Added", {
                 position: "top-left",
@@ -205,11 +237,12 @@ const Add = () => {
     const clear = () => {
         setForm('')
         type = ''
-        setType(type)
+        setType('')
         size = ''
         setSubcategory('')
         setSize(null)
         setColor('')
+        setImageLinks([])
     }
 
     return (
@@ -350,65 +383,123 @@ const Add = () => {
                                                 onChange={handleCheckboxChange}
                                             />
                                             <FormControlLabel
-                                                value="Standard"
-                                                control={<Radio />}
-                                                label="Standard"
-                                                name="Standard"
-                                                onChange={handleCheckboxChange}
-                                            />
-                                            <FormControlLabel
                                                 value="Free"
                                                 control={<Radio />}
                                                 label="Free"
                                                 name="Free"
                                                 onChange={handleCheckboxChange}
                                             />
+                                            <FormControlLabel
+                                                value="Standard"
+                                                control={<Radio />}
+                                                label="Standard"
+                                                name="Standard"
+                                                onChange={handleCheckboxChange}
+                                            />
                                         </div>
                                     </RadioGroup>
                                 </FormControl>
 
-                                <TextField label='Color' name='color' select value={color} onChange={handleColorChange} fullWidth
-                                >
-                                    {Object.keys(wordToHex).map((key, value) => {
-                                        return (<MenuItem key={value} value={key}>{key}</MenuItem>);
-                                    })}
-                                </TextField>
+                                <div className="flex space-x-6 items-center">
+                                    <TextField onChange={onChange} value={form.img ? form.img : ""} name="img" label="Main Image Link" variant="outlined" className="flex-1" />
+                                    {form.img && form.img != "" && <img src={form.img} alt={`product-main-image`} className="w-14" />}
+                                </div>
 
-                                <TextField onChange={onChange} value={form.qty ? form.qty : ""} name="qty" label="Quantity" variant="outlined" />
+                                <div className="flex space-x-4">
+                                    <TextField
+                                        label="Optional Images Link"
+                                        value={newLink}
+                                        onChange={(e) => setNewLink(e.target.value)}
+                                        className="flex-1 pr-4"
+                                    />
+                                    <Button variant="contained" color="primary" sx={{ height: '50px' }} onClick={handleAddLink}>
+                                        Add Link
+                                    </Button>
+                                </div>
+                                {imageLinks.length !== 0 && <Typography variant="subtitle1">Entered Image Links:</Typography>}
+                                <div className="flex space-x-4">
+                                    {imageLinks.map((link, index) => (
+                                        <div key={index} style={{ alignItems: 'center' }}>
+                                            <img src={link} alt={`img-${index}`} className="h-14" />
+                                            <IconButton onClick={() => handleRemoveLink(index)}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </div>
+                                    ))}
+                                </div>
 
-                                <TextField onChange={onChange} value={form.fabric ? form.fabric : ""} name="fabric" label="Fabric" variant="outlined" />
+                                <div className="flex space-x-4 items-center">
+                                    <TextField
+                                        label="Description"
+                                        value={newDesc}
+                                        onChange={(e) => setNewDesc(e.target.value)}
+                                        multiline
+                                        rows={3}
+                                        className="flex-1 pr-4"
+                                    />
+                                    <Button variant="contained" color="primary" sx={{ height: '50px' }} onClick={handleAddDesc}>
+                                        Add Desc
+                                    </Button>
+                                </div>
+                                {desc.length !== 0 && <Typography variant="subtitle1">Entered Descriptions:</Typography>}
+                                <div className="flex flex-col space-x-4">
+                                    {desc.map((item, index) => (
+                                        <div key={index} className="items-center flex">
+                                            <p className="bg-gray-200 text-black flex-1 py-1 pl-3 rounded-sm">{item}</p>
+                                            <IconButton onClick={() => handleRemoveDesc(index)}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </div>
+                                    ))}
+                                </div>
 
-                                <TextField onChange={onChange} value={form.img ? form.img : ""} name="img" label="Image1 Link" variant="outlined" />
+                                <div className='flex space-x-6'>
+                                    <Autocomplete
+                                        options={Object.keys(wordToHex)}
+                                        noOptionsText='No Option Found'
+                                        loadingText='Loading...'
+                                        renderInput={(params) => (
+                                            <TextField {...params} label="Choose a color" variant="outlined" name={"color"} />
+                                        )}
+                                        isOptionEqualToValue={(option, newValue) => {
+                                            return option.id === newValue.id;
+                                        }}
+                                        onChange={handleColorChange}
+                                        onInputChange={(e, v) => {
+                                            setColor(v)
+                                        }}
+                                        renderOption={(props, option) => {
+                                            return <li key={option} {...props} style={{ display: 'flex', alignItems: 'center' }}>
+                                                <div style={{ backgroundColor: wordToHex[option], width: 20, height: 20, marginRight: 10 }} />
+                                                {option}
+                                            </li>
+                                        }}
+                                        style={{
+                                            flex: 1,
+                                            marginTop: 0,
+                                        }}
+                                        ref={ref}
+                                    />
+                                    <TextField onChange={onChange} value={form.qty ? form.qty : ""} name="qty" label="Quantity" variant="outlined" />
 
-                                <TextField onChange={onChange} value={form.img2 ? form.img2 : ""} name="img2" label="Image2 Link" variant="outlined" />
+                                    <TextField onChange={onChange} value={form.fabric ? form.fabric : ""} name="fabric" label="Fabric" variant="outlined" />
 
-                                <TextField onChange={onChange} value={form.img3 ? form.img3 : ""} name="img3" label="Image3 Link" variant="outlined" />
+                                    <TextField onChange={onChange}
+                                        id="price"
+                                        name="price"
+                                        label="Price"
+                                        value={form.price ? form.price : ""}
+                                        variant="outlined"
+                                    />
 
-                                <TextField onChange={onChange} value={form.img4 ? form.img4 : ""} name="img4" label="Image4 Link" variant="outlined" />
-
-                                <TextField onChange={onChange}
-                                    id="price"
-                                    name="price"
-                                    label="Price"
-                                    value={form.price ? form.price : ""}
-                                    variant="outlined"
-                                />
-
-                                <TextField onChange={onChange}
-                                    id="description"
-                                    name="description"
-                                    label="Description"
-                                    value={form.description ? form.description : ""}
-                                    multiline
-                                    rows={4}
-                                />
+                                </div>
 
                             </Stack>
                             <br />
-                            <Button onClick={submitForm} variant="outlined" mt={2}>
+                            {loading ? <CircularProgress color="primary" /> : <Button onClick={submitForm} variant="contained" mt={2}>
                                 Submit
-                            </Button>
-                            <Button onClick={clear} variant="outlined" mt={2}>
+                            </Button>}
+                            <Button onClick={clear} variant="contained" mt={2} sx={{ marginLeft: '20px' }}>
                                 Clear Form
                             </Button>
                         </BaseCard>

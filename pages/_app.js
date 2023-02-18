@@ -9,12 +9,8 @@ import { persistor, store } from '../store';
 import { PersistGate } from 'redux-persist/integration/react';
 import Bottom from '../components/Bottom';
 
-
 function MyApp({ Component, pageProps }) {
 
-  const [cart, setCart] = useState({})
-  const [subTotal, setSubTotal] = useState(0)
-  const [user, setUser] = useState({ value: null })
   const [key, setKey] = useState()
   const [progress, setProgress] = useState(0)
   const router = useRouter()
@@ -26,19 +22,8 @@ function MyApp({ Component, pageProps }) {
     router.events.on('routeChangeComplete', () => {
       setProgress(100);
     })
-    const myuser = JSON.parse(localStorage.getItem('myuser'));
-    if (myuser) {
-      setUser({ value: myuser.token, email: myuser.email })
-    }
     setKey(Math.random())
   }, [router.query])
-
-  const logout = () => {
-    localStorage.removeItem('myuser')
-    setUser({ value: null })
-    setKey(Math.random())
-    router.push('/')
-  }
 
   return <>
     <LoadingBar
@@ -49,9 +34,9 @@ function MyApp({ Component, pageProps }) {
     />
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-        {key && <Navbar logout={logout} user={user} key={key} />}
+        {key && <Navbar key={key} />}
         <Component {...pageProps} />
-        <Bottom logout={logout} user={user} />
+        <Bottom />
         <Footer />
       </PersistGate>
     </Provider>

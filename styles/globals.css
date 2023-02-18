@@ -39,3 +39,19 @@
 .active2 {
     border: 2px solid #e77600;
 }
+
+.alice-carousel__prev-btn{
+    display: block!important;
+    position: absolute!important;
+    top: 50%!important;
+    left: 0!important;
+    width: 10px;
+}
+
+.alice-carousel__next-btn{
+    display: block!important;
+    position: absolute!important;
+    top: 50%!important;
+    right: 0!important;
+    width: 10px;
+}

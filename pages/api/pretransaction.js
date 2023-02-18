@@ -3,7 +3,6 @@ const PaytmChecksum = require('paytmchecksum');
 import Order from "../../models/Order"
 import Product from "../../models/Product"
 import connectDb from "../../middleware/mongoose"
-import pincodes from '../../pincodes.json'
 
 const handler = async (req, res) => {
     if (req.method == 'POST') {
@@ -31,18 +30,23 @@ const handler = async (req, res) => {
             product = await Product.findOne({ slug: item })
             sumTotal += cart[item].price * cart[item].qty
 
+            if (product == null) {
+                res.status(200).json({ success: false, error: "Some Error Occured!", cartClear: true })
+                return;
+            }
+
             //Check if the cart items are out of stock
             if (product.availableQty < cart[item].qty) {
                 res.status(200).json({ success: false, "error": "Some items in your cart are out of stock.", cartClear: true })
                 return
             }
             if (product.price != cart[item].price) {
-                res.status(200).json({ success: false, "error": "price of some items in cart have changed", cartClear: true })
+                res.status(200).json({ success: false, "error": "Price of some items in cart have changed", cartClear: true })
                 return
             }
         }
         if (sumTotal != req.body.subTotal) {
-            res.status(200).json({ success: false, "error": "price of some items in cart have changed", cartClear: true })
+            res.status(200).json({ success: false, "error": "Price of some items in cart have changed", cartClear: true })
             return
         }
 

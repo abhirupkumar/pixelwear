@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from 'react-redux';
+const jwt = require('jsonwebtoken')
 
 const Myaccount = () => {
 
@@ -15,17 +17,17 @@ const Myaccount = () => {
     const [cpassword, setCpassword] = useState('')
     const [npassword, setNpassword] = useState('')
     const [user, setUser] = useState({ value: null })
+    const token = useSelector((state) => state.cartItems.token);
 
     const router = useRouter()
     useEffect(() => {
-        const myuser = JSON.parse(localStorage.getItem('myuser'));
-        if (!myuser) {
+        if (!token) {
             router.push('/')
         }
-        if (myuser && myuser.token) {
-            setUser(myuser)
-            setEmail(myuser.email)
-            fetchData(myuser.token)
+        if (token) {
+            setUser(token)
+            setEmail(jwt.decode(token).email)
+            fetchData(token)
         }
 
     }, [])
@@ -56,7 +58,7 @@ const Myaccount = () => {
             body: JSON.stringify(data),
         })
         let res = await a.json()
-        if(res.success){
+        if (res.success) {
             toast.success("Delivery Details Successfully Updated!", {
                 position: "top-right",
                 autoClose: 5000,
@@ -71,7 +73,7 @@ const Myaccount = () => {
 
     const handlePassword = async () => {
         let res;
-        if(npassword == cpassword){
+        if (npassword == cpassword) {
             let data = { token: user.token, password, cpassword, npassword }
             let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/updatepassword`, {
                 method: 'POST', // or 'PUT'
@@ -82,10 +84,10 @@ const Myaccount = () => {
             })
             res = await a.json()
         }
-        else{
-            res = {success: false}
+        else {
+            res = { success: false }
         }
-        if(res.success){
+        if (res.success) {
             toast.success("Password Updated Successfully!", {
                 position: "top-right",
                 autoClose: 5000,
@@ -96,7 +98,7 @@ const Myaccount = () => {
                 progress: undefined,
             });
         }
-        else{
+        else {
             toast.error("Error While Updating Password!", {
                 position: "top-right",
                 autoClose: 5000,
@@ -154,7 +156,7 @@ const Myaccount = () => {
                 pauseOnHover
             />
             <Head>
-                <title>My Account - MissNeha</title>
+                <title>My Account - Le-Soft</title>
                 <meta name="description" content="Quality of classes at proces of masses." />
                 <link rel="icon" href="/icon.png" />
             </Head>

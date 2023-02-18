@@ -5,7 +5,7 @@ const Contact = () => {
   return (
     <div>
       <Head>
-        <title>Contact Us - MissNeha.in</title>
+        <title>Contact Us - Le-Soft</title>
         <meta name="description" content="Quality of classes at proces of masses." />
         <link rel="icon" href="/icon.png" />
       </Head>

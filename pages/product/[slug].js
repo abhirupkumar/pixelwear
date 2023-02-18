@@ -10,14 +10,8 @@ import ReactImageMagnify from "react-image-magnify";
 import { wordToHex } from '../../colorhex';
 import { useDispatch } from 'react-redux';
 import { addToCart, clearCart } from '../../features/cartSlice';
-// import {
-//   Magnifier,
-//   GlassMagnifier,
-//   SideBySideMagnifier,
-//   PictureInPictureMagnifier,
-//   MOUSE_ACTIVATION,
-//   TOUCH_ACTIVATION
-// } from "react-image-magnifiers";
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 const Post = ({ product, variants, error }) => {
   const dispatch = useDispatch();
@@ -29,6 +23,7 @@ const Post = ({ product, variants, error }) => {
   const [size, setSize] = useState()
   const [image, setImage] = useState()
   const [imgarr, setImgarr] = useState([])
+  const [qty, setQty] = useState(1)
 
   useEffect(() => {
     if (!error) {
@@ -37,14 +32,8 @@ const Post = ({ product, variants, error }) => {
       setImage(product.img)
       setImgarr([])
       setImgarr(imgarr => imgarr.concat(product.img))
-      if (product.img2 && product.img2 != '') {
-        setImgarr(imgarr => imgarr.concat(product.img2))
-      }
-      if (product.img3 && product.img3 != '') {
-        setImgarr(imgarr => imgarr.concat(product.img3))
-      }
-      if (product.img && product.img4 != '') {
-        setImgarr(imgarr => imgarr.concat(product.img4))
+      for (let i = 0; i < product.imgarr.length; i++) {
+        setImgarr(imgarr => imgarr.concat(product.imgarr[i]))
       }
     }
   }, [router.query])
@@ -121,7 +110,7 @@ const Post = ({ product, variants, error }) => {
         pauseOnHover
       />
       <Head>
-        <title>MissNeha - {product.title}</title>
+        <title>Le-Soft - {product.title}</title>
         <meta name="description" content="Quality of classes at proces of masses." />
         <link rel="icon" href="/icon.png" />
       </Head>
@@ -130,28 +119,31 @@ const Post = ({ product, variants, error }) => {
           {/* <img alt="ecommerce" className="lg:w-1/2 w-full lg:h-auto px-24 object-cover object-center rounded" src={product.img} /> */}
           <div className='lg:w-1/2 mx-auto items-center justify-center'>
             <div className='flex flex-row'>
-              {imgarr?.length > 1 && <div className="w-1/3 mx-auto flex flex-col">
+              {imgarr?.length > 1 && <div className="w-[15%] mx-auto flex flex-col">
                 {imgarr?.map((item, index) => (
-                  <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`md:w-32 w-16 rounded-md m-2`} src={item} />
+                  <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`md:w-16 w-8 rounded-sm m-2`} src={item} />
                 ))}
               </div>}
-              <div className='md:block hidden w-2/3 mx-auto'>
+              <div className='md:block hidden w-[85%] mx-auto'>
                 <ReactImageMagnify className='z-10' {...{
                   smallImage: {
                     alt: `${product.title}`,
                     isFluidWidth: true,
                     src: `${image}`,
-                    sizes: '(width: 480px) 100vw, (max-width: 1200px) 50vw, 500px'
                   },
                   largeImage: {
                     src: `${image}`,
                     width: 1200,
-                    height: 1800,
+                    height: 1800
                   },
                   enlargedImageContainerDimensions: {
                     width: '200%',
-                    height: '100%'
-                  }
+                    height: '100%',
+                  },
+                  lensSize: 150,
+                  isHintEnabled: true,
+                  shouldHideHintAfterFirstActivation: false,
+                  zoomContainerBorderSize: 8,
                 }} />
               </div>
               <div className='md:hidden block w-[85%] mx-auto'>
@@ -160,8 +152,7 @@ const Post = ({ product, variants, error }) => {
             </div>
           </div>
           <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-            <h2 className="text-sm title-font text-gray-500 tracking-widest">MissNeha</h2>
-            <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{product.title} - ({product.size}/{product.color})</h1>
+            <h1 className="text-gray-900 lg:text-3xl text-2xl title-font font-medium mb-1">{product.title} - ({product.size}/{product.color})</h1>
             <div className="flex mb-4">
               {/* <span className="flex items-center">
                 <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-indigo-500" viewBox="0 0 24 24">
@@ -199,14 +190,16 @@ const Post = ({ product, variants, error }) => {
                 </a>
               </span> */}
             </div>
-            <p className="leading-relaxed">{product.desc}</p>
+            <ul className="flex flex-col justify-start flex-wrap list-disc pl-10 lg:text-base md:text-sm text-xs">
+              {product?.desc && product?.desc.map((desc, index) => <li key={index} className="leading-relaxed text-md">{desc}</li>)}
+            </ul>
             <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
               <div className="flex">
                 <span className="mr-3">Color</span>
                 {Object.keys(variants) && Object.keys(variants).map((color1, index) => wordToHex[color1] && <button key={index} onClick={() => { refreshVariant(Object.keys(variants[color1]), color1) }} className={`border-2 mx-[1px] rounded-full w-6 h-6 focus:outline-none ${color === color1 ? 'border-black' : 'border-gray-300'}`} style={{ backgroundColor: wordToHex[color1] }}></button>
                 )}
               </div>
-              <div className="flex ml-3 items-center">
+              <div className="flex flex-wrap ml-3 items-center">
                 <span className="mr-3">Size</span>
                 <div className="relative">
                   <select value={size} onChange={(e) => { refreshVariant(e.target.value, color) }} className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10">
@@ -227,15 +220,21 @@ const Post = ({ product, variants, error }) => {
                 </div>
               </div>
             </div>
+            {product.availableQty > 0 && <div className=" flex my-8 space-x-4">
+              <p className="font-medium">Quantity: </p>
+              <RemoveIcon className="rounded-sm cursor-pointer bg-[#8000ff] text-white" onClick={() => { return qty !== 1 && setQty(qty - 1) }} />
+              <p className="font-medium w-2">{qty}</p>
+              <AddIcon className="rounded-sm cursor-pointer bg-[#8000ff] text-white" onClick={() => { return qty !== product.availableQty && setQty(qty + 1) }} />
+            </div>}
             <div className="flex">
               {product.availableQty > 0 && <span className="title-font font-medium text-2xl text-gray-900">₹{product.price}</span>}
               {product.availableQty <= 0 && <span className="title-font font-medium text-2xl text-red-600">Out Of Stock!</span>}
-              <button disabled={product.availableQty <= 0} onClick={() => { buyNow(slug, 1, product.price, product.title, size, color, product.category, product.theme, product.img, product.img2, product.img3, product.img4, product.fabric) }} className="flex ml-8 text-white bg-indigo-500 disabled:bg-indigo-300 border-0 py-2 px-1 md:px-6 focus:outline-none hover:bg-indigo-600 rounded">Buy Now</button>
-              <button disabled={product.availableQty <= 0} onClick={() => dispatch(addToCart({ slug, qty: 1, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img, img2: product.img2, img3: product.img3, img4: product.img4 }))} className="flex ml-4 text-white bg-indigo-500 disabled:bg-indigo-300 border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-indigo-600 rounded">Add to cart</button>
+              <button disabled={product.availableQty <= 0} onClick={() => { buyNow(slug, qty, product.price, product.title, size, color, product.category, product.theme, product.img, product.fabric) }} className="flex ml-4 text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Buy Now</button>
+              <button disabled={product.availableQty <= 0} onClick={() => dispatch(addToCart({ slug, qty: qty, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img }))} className="flex ml-4 text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Add To Cart</button>
             </div>
             <div className="pin mt-6 flex space-x-2 text-sm">
               <input onChange={onChangePin} className="px-2 border-2 border-gray-400 rounded-md" type="text" placeholder='Enter your pincode' />
-              <button onClick={checkServiceability} className="flex ml-14 text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Check</button>
+              <button onClick={checkServiceability} className="flex ml-14 text-white bg-[#9933ff] border-0 py-2 px-6 focus:outline-none hover:bg-[#8000ff] rounded">Check</button>
             </div>
             {(!service && service != null) && <div className="text-red-700 text-sm mt-3">
               Sorry! We do not deliver to this pincode yet

@@ -5,6 +5,7 @@ export const menuItems = [
     },
     {
         title: "Bottoms",
+        link: "/bottoms",
         submenu: [{
             title: "Ankle Leggings",
             link: "/bottoms?category=ankleleggings",
@@ -33,6 +34,7 @@ export const menuItems = [
     },
     {
         title: "Tops",
+        link: "/tops",
         submenu: [{
             title: "T-shirts",
             link: "/tops?category=tshirts",
@@ -45,6 +47,7 @@ export const menuItems = [
     },
     {
         title: "Inner Wear",
+        link: "/innerwear",
         submenu: [{
             title: "Shorts",
             link: "/innerwear?category=shorts",
@@ -53,8 +56,10 @@ export const menuItems = [
     },
     {
         title: "Kids",
+        link: "/kids",
         submenu: [{
             title: "Bottoms",
+            link: "/kids?category=bottom/ankleleggings",
             submenu: [
                 {
                     title: "Ankle Leggings",
@@ -74,6 +79,7 @@ export const menuItems = [
     },
     {
         title: "Lounge Wear",
+        link: "/loungewear",
         submenu: [{
             title: "Pyjama Set",
             link: "/loungewear?category=pyjama",

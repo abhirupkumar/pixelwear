@@ -1,11 +1,13 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 
 const Orders = () => {
 
     const router = useRouter()
     const [orders, setOrders] = useState([])
+    const token = useSelector((state) => state.cartItems.token);
     useEffect(() => {
 
         const fetchOrders = async () => {
@@ -14,13 +16,13 @@ const Orders = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ token: JSON.parse(localStorage.getItem('myuser')).token }),
+                body: JSON.stringify({ token: token }),
             })
             let res = await a.json()
             setOrders(res.orders);
         }
 
-        if (!localStorage.getItem('myuser')) {
+        if (!token) {
             router.push('/')
         }
         else {
@@ -57,17 +59,17 @@ const Orders = () => {
                                     <tbody>
                                         {orders.map((item) => {
                                             return <tr key={item._id} className="bg-white border-b transition duration-300 ease-in-out hover:bg-indigo-100">
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.orderId}</td>
-                                            <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                {item.email}
-                                            </td>
-                                            <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            ₹{item.amount}
-                                            </td>
-                                            <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                <Link href={'/order?id=' + item._id}><a className='text-blue-700 hover:underline'>Details</a></Link>
-                                            </td>
-                                        </tr>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.orderId}</td>
+                                                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                                    {item.email}
+                                                </td>
+                                                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                                    ₹{item.amount}
+                                                </td>
+                                                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                                    <Link href={'/order?id=' + item._id}><a className='text-blue-700 hover:underline'>Details</a></Link>
+                                                </td>
+                                            </tr>
                                         })}
 
 

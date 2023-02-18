@@ -10,23 +10,25 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useState } from "react";
 import Head from 'next/head';
+import { useSelector } from 'react-redux';
+const jwt = require('jsonwebtoken');
 
 
 const Allproducts = ({ products }) => {
     const router = useRouter()
-    const [admin, setAdmin] = useState(true)
+    const [admin, setAdmin] = useState(false)
+    const token = useSelector((state) => state.cartItems.token);
+    let email = '';
 
     useEffect(() => {
-        const myuser = JSON.parse(localStorage.getItem('myuser'));
-        if (!myuser) {
-            router.push('/')
+        if (token) {
+            email = jwt.decode(token).email
         }
-        if (myuser && myuser.token && (myuser.email == 'abhirupkumar2003@gmail.com' || myuser.email == 'kabirlesoft@gmail.com')) {
+        if (token && email != '' && (email == process.env.EMAIL1 || email == process.env.EMAIL2)) {
             setAdmin(true)
         }
         else {
-            setAdmin(false);
-            router.push('/');
+            setAdmin(false)
         }
     }, [])
 

@@ -2,8 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import Dropdown from "./Dropdown";
 import { IoIosArrowForward, IoIosArrowDown } from 'react-icons/io'
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const MenuItems = ({ items, depthLevel, mobile }) => {
+
+    const router = useRouter()
 
     let ref = useRef();
     const [dropdown, setDropdown] = useState(false);
@@ -37,7 +40,10 @@ const MenuItems = ({ items, depthLevel, mobile }) => {
             {items.submenu ? (
                 <>
                     <button type="button" aria-haspopup="menu" className={`w-full flex flex-row mx-auto text-center items-center hover:text-indigo-700 ${dropdownClass} rounded-lg`} aria-expanded={dropdown ? "true" : "false"}
-                        onClick={() => setDropdown((prev) => !prev)} >
+                        onClick={() => {
+                            setDropdown((prev) => !prev)
+                            router.push(items.link)
+                        }} >
                         {items.title}
                         {depthLevel > 0 ? <span className="text-xs font-semibold"><IoIosArrowForward /></span> : <span className="text-xs font-thin"><IoIosArrowDown /></span>}
                     </button>
@@ -49,22 +55,6 @@ const MenuItems = ({ items, depthLevel, mobile }) => {
                 <Link href={`${items.link}`}><a className={`hover:text-indigo-700 py-0 rounded-lg`}>{items.title}</a></Link>
             )}
         </li>
-        // <li ref={ref} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} >
-        //     {items.submenu ? (
-        //         <>
-        //             <button type="button" aria-haspopup="menu" aria-expanded={dropdown ? "true" : "false"}
-        //                 onClick={() => setDropdown((prev) => !prev)} >
-        //                 {items.title}
-        //                 {depthLevel > 0 ? <span><IoIosArrowForward /></span> : <span><IoIosArrowDown /></span>}
-        //             </button>
-        //             <div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-        //                 <Dropdown depthLevel={depthLevel} submenus={items.submenu} dropdown={dropdown} />
-        //             </div>
-        //         </>
-        //     ) : (
-        //         <Link href={`${items.link}`}><a>{items.title}</a></Link>
-        //     )}
-        // </li>
     );
 };
 

@@ -3,28 +3,28 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { AiFillCloseCircle, AiFillHome, AiFillMinusCircle, AiFillPlusCircle, AiOutlineShoppingCart } from 'react-icons/ai';
+import { AiFillCloseCircle, AiOutlineShoppingCart } from 'react-icons/ai';
 import { BsFillBagCheckFill } from 'react-icons/bs';
-import { GiHamburgerMenu } from 'react-icons/gi';
 import { MdAccountCircle } from 'react-icons/md';
 import { menuItems } from '../menuItems';
 import MenuItems from "./MenuItems";
-import { Drawer, Box, Typography, IconButton, Stack, BottomNavigation, BottomNavigationAction, MenuItem, Menu } from '@mui/material'
+import { Drawer, Box, Typography, IconButton } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close';
-import { List, ListItem, ListItemText, ListItemIcon, ListItemAvatar, Avatar, ListItemButton, Divider } from '@mui/material';
-import { RiAccountCircleFill } from 'react-icons/ri';
+import { List, ListItem, ListItemText, ListItemButton, Divider } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart, clearCart, removeFromCart } from '../features/cartSlice';
-import { PersonAdd, Settings } from '@material-ui/icons';
-import { Logout } from '@mui/icons-material';
+import { addToCart, increment, clearCart, removeFromCart, removeToken } from '../features/cartSlice';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+const jwt = require('jsonwebtoken');
 
-const Navbar = ({ logout, user }) => {
+const Navbar = () => {
 
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cartItems.cart)
+  const token = useSelector((state) => state.cartItems.token)
   const subTotal = useSelector((state) => state.cartItems.subTotal)
   const [dropdown, setDropdown] = useState(false)
   const [sidebar, setSidebar] = useState(false)
@@ -33,10 +33,14 @@ const Navbar = ({ logout, user }) => {
   const router = useRouter()
 
   const animation = ["fadeIn", "fadeOut"];
+  let email = ''
 
   useEffect(() => {
-    const myuser = JSON.parse(localStorage.getItem('myuser'));
-    if (myuser && myuser.token && (myuser.email == 'abhirupkumar2003@gmail.com' || myuser.email == 'kabirlesoft@gmail.com')) {
+    if (token) {
+      email = jwt.decode(token).email
+    }
+    if (token && email != '' && (email == process.env.EMAIL1 || email == process.env.EMAIL2)) {
+
       setAdmin(true)
     }
     else {
@@ -46,7 +50,7 @@ const Navbar = ({ logout, user }) => {
     if (exempted.includes(router.pathname)) {
       setSidebar(false)
     }
-  }, [])
+  }, [token])
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
@@ -85,16 +89,18 @@ const Navbar = ({ logout, user }) => {
             {admin && <Link href={'/admin'}><a><li className='py-1 hover:text-indigo-700 text-sm font-bold'>Admin Panel</li></a></Link>}
             <Link href={'/myaccount'}><a><li className='py-1 hover:text-indigo-700 text-sm font-bold'>My Account</li></a></Link>
             <Link href={'/orders'}><a><li className='py-1 hover:text-indigo-700 text-sm font-bold'>My Orders</li></a></Link>
-            <li onClick={logout} className='py-1 hover:text-indigo-700 text-sm font-bold'>Logout</li>
+            <li onClick={() => {
+              dispatch(removeToken())
+              setDropdown(false)
+            }} className='py-1 hover:text-indigo-700 text-sm font-bold'>Logout</li>
           </ul>
         </div>}
         <span onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>
-          {user.value && <MdAccountCircle className="text-2xl mx-5 my-2" />}
+          {token && <MdAccountCircle className="text-2xl mx-5 my-2" />}
         </span>
 
       </span>}
       <div className='lg:hidden block fixed left-8 top-0 z-[27]'>
-        {/* <MenuIcon /> */}
         <IconButton size='large' edge='start' color='inherit' aria-label='logo' sx={{ top: '14px' }} onClick={() => setIsDrawerOpen(true)}>
           <MenuIcon />
         </IconButton>
@@ -173,33 +179,41 @@ const Navbar = ({ logout, user }) => {
             })}
           </ul>
         </div>
-        <div className="cart absolute right-0 top-4 mx-6 cursor-pointer flex">
-          {!user.value && <Link href={'/login'}><a>
+        <div className="cart lg:flex hidden absolute right-0 top-4 mx-6 cursor-pointer">
+          {token == null && <Link href={'/login'}><a>
             <button className='lg:flex hidden mr-2 text-white bg-indigo-500 border-0 py-2 px-3 focus:outline-none hover:bg-indigo-600 rounded text-sm' >Login</button>
           </a></Link>}
           <AiOutlineShoppingCart onClick={toggleCart} className="text-2xl mt-2" />
-          {Object.keys(cart).length > 0 && <span className='absolute right-0 mx-[-5px] mt-[-2px] px-1 text-xs border border-indigo-500 bg-indigo-500 text-white rounded-full'> {cart?.length} </span>}
+          {Object.keys(cart).length > 0 && <span className='absolute right-0 mx-[-5px] mt-[-2px] px-1 text-xs border border-indigo-500 bg-[#9933ff] text-white rounded-full'> {cart?.length} </span>}
         </div>
         <Drawer anchor='right' open={sidebar} onClose={() => setSidebar(false)} className="z-[45]">
-          <div className={`h-[100vh] md:min-w-[40rem]  top-0 bg-blue-100 px-8 py-10 transition-all `}>
+          <div className={`h-[100vh] md:w-[40rem] top-0 bg-[#f2e5ff] px-8 py-10 transition-all overflow-y-scroll`}>
             <h2 className='font-bold text-xl text-center'>Shopping Cart</h2>
-            <span onClick={toggleCart} className='absolute top-5 right-3 text-3xl cursor-pointer text-blue-500'><AiFillCloseCircle /></span>
+            <span onClick={toggleCart} className='absolute top-5 right-3 text-3xl cursor-pointer text-[#8000ff]'><AiFillCloseCircle /></span>
             <ol className='list-decimal font-semibold'>
               {cart?.length == 0 && <div className='my-4 font-semibold'>Your cart is Empty!</div>}
               {cart?.map((item, index) => {
                 return <li key={index}>
-                  <div className="item flex my-5">
-                    <div className='max-w-[30rem] font-semibold flex flex-row'>{item.name} ({item.size}/{item.variant})</div>
-                    <img style={{ height: '100px' }} src={item.img} alt={index} />
-                    <div className='flex items-center justify-center w-1/3 font-semibold text-lg'><AiFillMinusCircle onClick={() => { dispatch(removeFromCart({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, img2: item.img2, img3: item.img3, img4: item.img4, fabric: item.fabric })) }} className='cursor-pointer text-blue-500' /><span className='mx-2 text-sm' > {item.qty} </span><AiFillPlusCircle onClick={() => { dispatch(addToCart({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, img2: item.img2, img3: item.img3, img4: item.img4, fabric: item.fabric })) }} className='cursor-pointer text-blue-500' /></div>
+                  <div className="flex my-5 space-x-2 flex-row-reverse">
+                    <img style={{ height: '110px' }} src={item.img} alt={index} />
+                    <div className='flex flex-col'>
+                      <div className='max-w-[30rem] font-semibold flex flex-row'>{item.name} ({item.size}/{item.variant})</div>
+                      <div className='flex space-x-6'>
+                        <div className='flex items-center justify-start mt-2 font-semibold text-lg'><RemoveIcon onClick={() => { dispatch(removeFromCart({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#8000ff] text-[#f2e5ff] rounded-sm' /><span className='mx-2 text-sm' > {item.qty} </span><AddIcon onClick={() => { dispatch(increment({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#8000ff] text-[#f2e5ff] rounded-sm' /></div>
+                        <div className='flex mt-3 justify-start space-x-1'>
+                          <p>Price: </p>
+                          <p>₹{item.price * item.qty}</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </li>
               })}
               <div className="font-bold my-2">Subtotal: ₹{subTotal}</div>
             </ol>
             <div className="flex">
-              <Link href={'/checkout'} ><button disabled={cart.length === 0} className="disabled:bg-indigo-300 flex mr-2 text-white bg-indigo-500 border-0 py-2 px-2 focus:outline-none hover:bg-indigo-600 rounded text-sm"><BsFillBagCheckFill className='m-1' />Checkout</button></Link>
-              <button disabled={cart.length === 0} onClick={() => dispatch(clearCart())} className="disabled:bg-indigo-300 flex mr-2 text-white bg-indigo-500 border-0 py-2 px-2 focus:outline-none hover:bg-indigo-600 rounded text-sm">Clear Cart</button>
+              <Link href={'/checkout'} ><button disabled={cart.length === 0} className="disabled:bg-[#cc99ff] flex mr-2 text-white bg-[#9933ff] border-0 py-2 px-2 focus:outline-none hover:bg-[#8000ff] rounded text-sm"><BsFillBagCheckFill className='m-1' />Checkout</button></Link>
+              <button disabled={cart.length === 0} onClick={() => dispatch(clearCart())} className="disabled:bg-[#cc99ff] flex mr-2 text-white bg-[#9933ff] border-0 py-2 px-2 focus:outline-none hover:bg-[#8000ff] rounded text-sm">Clear Cart</button>
             </div>
           </div>
         </Drawer>

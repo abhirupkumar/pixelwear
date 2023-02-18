@@ -4,20 +4,25 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { setToken } from '../features/cartSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { CircularProgress } from '@mui/material';
 
 const Signup = () => {
   const router = useRouter()
 
+  const token = useSelector((state) => state.cartItems.token)
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      router.push('/')
+    if (token) {
+      router.push('/');
     }
-
   }, [])
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
 
   const handleChange = async (e) => {
     if (e.target.name == 'name') {
@@ -33,6 +38,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault() //prevents reloading the form after setup
+    setLoading(true)
     const data = { name, email, password }
     let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/signup`, {
       method: 'POST', // or 'PUT'
@@ -45,21 +51,47 @@ const Signup = () => {
     setName('')
     setEmail('')
     setPassword('')
-    toast.success('Your account has been created! Please Login', {
-      position: "top-left",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+    setLoading(false)
+    if (response.success) {
+      const data2 = { email, password }
+      let res2 = await fetch(`/api/login`, {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data2),
+      })
+      let response2 = await res2.json()
+      dispatch(setToken({ token: response2.token }))
+      router.push(`/`)
+      toast.success('Your account has been created! Please Login', {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+    else {
+      toast.error(response.error, {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+
   }
 
   return (
     <div>
       <Head>
-        <title>Signup - MissNeha</title>
+        <title>Signup - Le-Soft</title>
         <meta name="description" content="Quality of classes at proces of masses." />
         <link rel="icon" href="/icon.png" />
       </Head>
@@ -102,7 +134,7 @@ const Signup = () => {
             </div>
 
             <div>
-              <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              {loading ? <CircularProgress color="primary" /> : <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
 
                   <svg className="h-5 w-5 text-blue-500 group-hover:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -110,7 +142,7 @@ const Signup = () => {
                   </svg>
                 </span>
                 Sign Up
-              </button>
+              </button>}
             </div>
           </form>
         </div>

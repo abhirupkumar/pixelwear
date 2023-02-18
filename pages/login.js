@@ -4,19 +4,22 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { setToken } from '../features/cartSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { CircularProgress } from '@mui/material'
 
 const Login = () => {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-
+  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
+  const token = useSelector((state) => state.cartItems.token)
   useEffect(() => {
-    if (localStorage.getItem('myuser')) {
-      router.push('/')
+    if (token) {
+      router.push('/');
     }
-
   }, [])
-
 
   const handleChange = async (e) => {
     if (e.target.name == 'email') {
@@ -29,6 +32,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault() //prevents reloading the form after setup
+    setLoading(true)
     const data = { email, password }
     let res = await fetch(`/api/login`, {
       method: 'POST', // or 'PUT'
@@ -40,8 +44,9 @@ const Login = () => {
     let response = await res.json()
     setEmail('')
     setPassword('')
+    setLoading(false)
     if (response.success) {
-      localStorage.setItem('myuser', JSON.stringify({ token: response.token, email: response.email }))
+      dispatch(setToken({ token: response.token }))
       toast.success('Your are successfully logged in!', {
         position: "top-left",
         autoClose: 2000,
@@ -53,7 +58,7 @@ const Login = () => {
       });
       setTimeout(() => {
         router.push(`${process.env.NEXT_PUBLIC_HOST}`)
-      }, 2000);
+      }, 1000);
     }
     else {
       toast.error(response.error, {
@@ -71,7 +76,7 @@ const Login = () => {
   return (
     <div>
       <Head>
-        <title>Login - MissNeha</title>
+        <title>Login - Le-Soft</title>
         <meta name="description" content="Quality of classes at proces of masses." />
         <link rel="icon" href="/icon.png" />
       </Head>
@@ -115,8 +120,8 @@ const Login = () => {
               </div>
             </div>
 
-            <div>
-              <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <div className="justify-center">
+              {loading ? <CircularProgress color="primary" /> : <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
 
                   <svg className="h-5 w-5 text-blue-500 group-hover:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -124,7 +129,7 @@ const Login = () => {
                   </svg>
                 </span>
                 Sign in
-              </button>
+              </button>}
             </div>
           </form>
         </div>

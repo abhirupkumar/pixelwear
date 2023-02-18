@@ -12,10 +12,12 @@ import mongoose from 'mongoose'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import Video from "../../models/Video";
+import { useSelector } from "react-redux";
+const jwt = require('jsonwebtoken');
 
 const Index = ({ images, videos }) => {
     const router = useRouter()
-    const [admin, setAdmin] = useState(true)
+    const [admin, setAdmin] = useState(false)
     const [value1, setValue1] = useState('')
     const [value2, setValue2] = useState('')
     const [value3, setValue3] = useState('')
@@ -23,20 +25,21 @@ const Index = ({ images, videos }) => {
     const [value5, setValue5] = useState('')
     const [videoValue, setVideoValue] = useState('')
 
+    const token = useSelector((state) => state.cartItems.token)
+    let email = ''
+
     useEffect(() => {
-        const myuser = JSON.parse(localStorage.getItem('myuser'));
-        if (!myuser) {
-            router.push('/');
+        if (token) {
+            email = jwt.decode(token).email
         }
-        if (myuser && myuser.token && (myuser.email == 'abhirupkumar2003@gmail.com' || myuser.email == 'kabirlesoft@gmail.com')) {
-            setAdmin(true);
+        if (token && email != '' && (email == process.env.EMAIL1 || email == process.env.EMAIL2)) {
+            setAdmin(true)
+            fetchimages()
+            fetchvideos()
         }
         else {
-            setAdmin(false);
-            router.push('/');
+            setAdmin(false)
         }
-        fetchimages()
-        fetchvideos()
     }, [])
 
     const fetchimages = () => {
