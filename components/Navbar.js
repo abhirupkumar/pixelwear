@@ -3,12 +3,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { AiFillCloseCircle, AiOutlineShoppingCart } from 'react-icons/ai';
+import { AiFillCloseCircle, AiOutlineSearch, AiOutlineShoppingCart } from 'react-icons/ai';
 import { BsFillBagCheckFill } from 'react-icons/bs';
 import { MdAccountCircle } from 'react-icons/md';
 import { menuItems } from '../menuItems';
 import MenuItems from "./MenuItems";
-import { Drawer, Box, Typography, IconButton } from '@mui/material'
+import { Drawer, Box, Typography, IconButton, Modal } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close';
 import { List, ListItem, ListItemText, ListItemButton, Divider } from '@mui/material';
@@ -20,6 +20,8 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 const jwt = require('jsonwebtoken');
 
+
+
 const Navbar = () => {
 
   const dispatch = useDispatch();
@@ -28,19 +30,19 @@ const Navbar = () => {
   const subTotal = useSelector((state) => state.cartItems.subTotal)
   const [dropdown, setDropdown] = useState(false)
   const [sidebar, setSidebar] = useState(false)
+  const [search, setSearch] = useState('')
   const [admin, setAdmin] = useState(true)
   const [menu, setMenu] = useState(false)
+  const [searchbar, setSearchbar] = useState(false)
   const router = useRouter()
 
   const animation = ["fadeIn", "fadeOut"];
   let email = ''
-
   useEffect(() => {
     if (token) {
       email = jwt.decode(token).email
     }
-    if (token && email != '' && (email == process.env.EMAIL1 || email == process.env.EMAIL2)) {
-
+    if (token && email != '' && (email == process.env.NEXT_PUBLIC_EMAIL1 || email == process.env.NEXT_PUBLIC_EMAIL2)) {
       setAdmin(true)
     }
     else {
@@ -69,6 +71,17 @@ const Navbar = () => {
   const [open, setOpen] = useState({});
   const [open2, setOpen2] = useState({});
 
+  const handleChange = (e) => {
+    setSearch(e.target.value)
+  }
+
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' || e.type === 'click' || e.type === 'submit') {
+      router.push(`/search_result?query=${search.toLowerCase()}`)
+      setSearch("")
+    }
+  }
+
   function handleClick(id) {
     setOpen((prevState => ({ ...prevState, [id]: !prevState[id] })))
   }
@@ -83,10 +96,9 @@ const Navbar = () => {
   }
   return (
     <>
-      {!sidebar && <span onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }} className='fixed right-12 top-4 z-50 cursor-pointer lg:block hidden' >
-        {dropdown && <div className="absolute lg:block hidden right-6 bg-indigo-100 shadow-lg top-7 py-4 rounded-md px-5 w-32 z-30">
+      {!sidebar && <span onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }} className='fixed right-12 top-4 z-50 cursor-pointer md:block hidden' >
+        {dropdown && <div className="absolute md:block hidden right-6 bg-indigo-100 shadow-lg top-7 py-4 rounded-md px-5 w-32 z-30">
           <ul>
-            {admin && <Link href={'/admin'}><a><li className='py-1 hover:text-indigo-700 text-sm font-bold'>Admin Panel</li></a></Link>}
             <Link href={'/myaccount'}><a><li className='py-1 hover:text-indigo-700 text-sm font-bold'>My Account</li></a></Link>
             <Link href={'/orders'}><a><li className='py-1 hover:text-indigo-700 text-sm font-bold'>My Orders</li></a></Link>
             <li onClick={() => {
@@ -95,13 +107,12 @@ const Navbar = () => {
             }} className='py-1 hover:text-indigo-700 text-sm font-bold'>Logout</li>
           </ul>
         </div>}
-        <span onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>
-          {token && <MdAccountCircle className="text-2xl mx-5 my-2" />}
-        </span>
+        <div>
+        </div>
 
       </span>}
-      <div className='lg:hidden block fixed left-8 top-0 z-[27]'>
-        <IconButton size='large' edge='start' color='inherit' aria-label='logo' sx={{ top: '14px' }} onClick={() => setIsDrawerOpen(true)}>
+      <div className='md:hidden block fixed left-8 top-0 z-[27]'>
+        <IconButton size='large' edge='start' color='inherit' aria-label='logo' sx={{ top: '8px' }} onClick={() => setIsDrawerOpen(true)}>
           <MenuIcon />
         </IconButton>
       </div>
@@ -167,24 +178,38 @@ const Navbar = () => {
         </Box>
       </Drawer>
 
-      <div className={`navbar-show flex flex-row bg-white md:justify-start justify-center items-center py-0 md:py-0 shadow-md top-0 z-[25] fixed w-full ${!sidebar && 'overflow-hidden'}`}>
+      <div className={`navbar-show flex md:flex-row flex-col bg-white md:justify-start justify-center items-center py-0 md:py-0 shadow-md top-0 z-[25] sticky w-full ${!sidebar && 'overflow-hidden'}`}>
         <div className="logo my-1">
-          <Link href={'/'}><a className="mx-4"><Image src="/logo.png" alt="" width={150} height={50} /></a></Link>
+          <Link href={'/'}><a className="mx-4"><Image src="/logo.png" alt="" width={150} height={50} className="" /></a></Link>
         </div>
-        <div className="lg:block hidden">
-          <ul className="flex items-center space-x-1 font-bold text-md ">
+        <div className="md:block hidden">
+          <ul className="flex items-center space-x-1 font-bold">
             {menuItems.map((menu, index) => {
               const depthLevel = 0;
               return <MenuItems items={menu} key={index} depthLevel={depthLevel} />;
             })}
           </ul>
         </div>
-        <div className="cart lg:flex hidden absolute right-0 top-4 mx-6 cursor-pointer">
-          {token == null && <Link href={'/login'}><a>
-            <button className='lg:flex hidden mr-2 text-white bg-indigo-500 border-0 py-2 px-3 focus:outline-none hover:bg-indigo-600 rounded text-sm' >Login</button>
-          </a></Link>}
-          <AiOutlineShoppingCart onClick={toggleCart} className="text-2xl mt-2" />
-          {Object.keys(cart).length > 0 && <span className='absolute right-0 mx-[-5px] mt-[-2px] px-1 text-xs border border-indigo-500 bg-[#9933ff] text-white rounded-full'> {cart?.length} </span>}
+        <div className='md:flex md:flex-1 justify-end'>
+          <div className="md:flex flex-1 top-3 justify-end items-center lg:mx-10 mx-2 hidden">
+            <input onKeyDown={handleSearch} onChange={handleChange} value={search} className='border-2 border-gray-300 bg-white h-10 px-5 pr-16 w-[80%] lg:flex hidden rounded-lg text-sm focus:outline-none' type="search" name="search" placeholder="Search" />
+            <button type="submit" onClick={handleSearch} className="absolute mx-2 text-xl text-gray-400 flex md:hidden sm:flex">
+              <AiOutlineSearch />
+            </button>
+            <button type="submit" onClick={() => setSearchbar(true)} className="absolute mx-2 text-xl text-gray-400 hidden md:flex lg:hidden">
+              <AiOutlineSearch />
+            </button>
+          </div>
+          <span className="md:block hidden" onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>
+            {token && <MdAccountCircle className="text-2xl mt-2" />}
+          </span>
+          <div className="cart md:flex hidden right-0 top-4 mx-6 cursor-pointer">
+            {token == null && <Link href={'/login'}><a>
+              <button className='md:flex hidden mr-2 text-white bg-indigo-500 border-0 py-2 px-3 focus:outline-none hover:bg-indigo-600 rounded text-sm' >Login</button>
+            </a></Link>}
+            <AiOutlineShoppingCart onClick={toggleCart} className="text-2xl mt-2" />
+            {Object.keys(cart).length > 0 && <span className='absolute right-0 mx-[-5px] mt-[-2px] px-1 text-xs border border-indigo-500 bg-[#9933ff] text-white rounded-full'> {cart?.length} </span>}
+          </div>
         </div>
         <Drawer anchor='right' open={sidebar} onClose={() => setSidebar(false)} className="z-[45]">
           <div className={`h-[100vh] md:w-[40rem] top-0 bg-[#f2e5ff] px-8 py-10 transition-all overflow-y-scroll`}>
@@ -217,7 +242,34 @@ const Navbar = () => {
             </div>
           </div>
         </Drawer>
-      </div></>
+        <Modal
+          open={searchbar}
+          keepMounted
+          onClose={() => setSearchbar(false)}
+          aria-labelledby="modal-modal-search"
+          aria-describedby="modal-modal-searchbar"
+        >
+          <Box sx={{
+            position: 'absolute',
+            top: '15%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: "80vw",
+            bgcolor: 'white',
+            boxShadow: 24,
+            border: "1px solid white",
+            borderRadius: "8px",
+          }}>
+            <div className={`flex justify-end items-center`}>
+              <input onKeyDown={handleSearch} onChange={handleChange} value={search} className='border-2 border-gray-300 bg-white h-10 w-[100%] rounded-lg text-sm focus:outline-none' type="search" name="search" placeholder="Search" />
+              <button type="submit" onClick={handleSearch} className="absolute mx-2 text-xl text-gray-400">
+                <AiOutlineSearch />
+              </button>
+            </div>
+          </Box>
+        </Modal>
+      </div>
+    </>
   )
 }
 

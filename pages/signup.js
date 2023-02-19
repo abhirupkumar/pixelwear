@@ -10,6 +10,9 @@ import { CircularProgress } from '@mui/material';
 
 const Signup = () => {
   const router = useRouter()
+  const [otp, setOtp] = useState('')
+  const [otpPin, setOtpPin] = useState('')
+  const [sendOtp, setSendOtp] = useState(false)
 
   const token = useSelector((state) => state.cartItems.token)
   useEffect(() => {
@@ -34,13 +37,43 @@ const Signup = () => {
     else if (e.target.name == 'password') {
       setPassword(e.target.value)
     }
+    else if (e.target.name == 'otp') {
+      setOtp(e.target.value)
+    }
+  }
+
+  const OtpSend = async (e) => {
+    otpPin = Math.floor(Math.random() * 1000000);
+    setOtpPin(otpPin)
+    e.preventDefault() //prevents reloading the form after setup
+    const data = { name, email, password, sendOtp: true, otp: otpPin }
+
+    let res = await fetch(`/api/signup`, {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    let response = await res.json()
+    toast.success('OTP Sent Successfully to the entered email id!', {
+      position: "top-left",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    sendOtp = true;
+    setSendOtp(sendOtp)
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault() //prevents reloading the form after setup
     setLoading(true)
     const data = { name, email, password }
-    let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/signup`, {
+    let res = await fetch(`/api/signup`, {
       method: 'POST', // or 'PUT'
       headers: {
         'Content-Type': 'application/json',
@@ -132,9 +165,25 @@ const Signup = () => {
                 <input value={password} onChange={handleChange} id="password" name="password" type="password" autoComplete="current-password" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="Password" />
               </div>
             </div>
-
             <div>
-              {loading ? <CircularProgress color="primary" /> : <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              <button type="button" onClick={OtpSend} className="my-6 group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <span className="absolute left-0 inset-y-0 flex items-center pl-3">
+
+                  <svg className="h-5 w-5 text-blue-500 group-hover:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                  </svg>
+                </span>
+                {!sendOtp ? "Send Otp" : "Resend Otp"}
+              </button>
+            </div>
+            {sendOtp && <div>
+              <label htmlFor="otp" className="sr-only">Otp</label>
+              <input value={otp} onChange={handleChange} id="otp" name="otp" type="text" autoComplete="otp" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="OTP" />
+            </div>}
+            <div>
+              {otp && otp != otpPin && <span className='text-red-500'>Otp didn't match.</span>}
+              {otp && otp == otpPin && <span className='text-green-500'>Otp matched.</span>}
+              {loading ? <CircularProgress color="primary" /> : sendOtp && <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
 
                   <svg className="h-5 w-5 text-blue-500 group-hover:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

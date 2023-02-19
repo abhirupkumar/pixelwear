@@ -37,8 +37,8 @@ const InnerWear = ({ products, filter, colorfilter }) => {
                 <meta name="description" content="Quality of classes at proces of masses." />
                 <link rel="icon" href="/icon.png" />
             </Head>
-            <div className="text-gray-600 body-font min-h-screen flex lg:flex-row flex-col mt-10">
-                {<div className={`lg:mx-2 lg:my-12 lg:w-[300px] my-4 border border-gray-400 w-full rounded-md lg:h-full lg:relative sticky top-0 bg-white z-20 ${showFilter ? '' : 'lg:border-gray-400 border-gray-300'}`}>
+            <div className="text-gray-600 body-font min-h-screen flex lg:flex-row flex-col ">
+                {<div className={`lg:mx-2 lg:my-12 lg:w-[300px] border border-gray-400 w-full rounded-md lg:h-full lg:relative sticky top-0 bg-white z-20 ${showFilter ? '' : 'lg:border-gray-400 border-gray-300'}`}>
                     <p className='lg:flex lg:flex-row hidden justify-center px-1 my-2 mx-10 text-xl'>Filter</p>
                     <button className='flex lg:hidden justify-center px-1 my-2 mx-auto text-xl' onClick={changeFilter}>Filter {showFilter ? <FilterListIcon /> : <FilterListOffIcon />}</button>
                     <div className={`${showFilter ? 'lg:block transition-all' : 'lg:block hidden'}`}>
@@ -86,20 +86,20 @@ const InnerWear = ({ products, filter, colorfilter }) => {
                         {Object.keys(products)?.map((item) => {
                             return <Link passHref={true} key={products[item]._id} href={`/product/${products[item].slug}`}><div className="lg:w-[310px] w-[39%] cursor-pointer m-4">
                                 <a className="flex justify-center lg:h-[480px] relative overflow-hidden">
-                                    <img alt="ecommerce" className="m-auto md:m-0 lg:h-[480px] object-contain block" src={products[item].img} />
+                                    <img alt="ecommerce" className="m-auto md:m-0 lg:h-[480px] object-contain block" src={products[item].img} loading="lazy" />
                                 </a>
                                 <div className="text-center md:text-left">
                                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{products[item].category.toUpperCase()}</h3>
                                     <h2 className="text-gray-900 text-left title-font lg:text-lg ms:text-md sm:text-sm text-xs font-medium">{products[item].title}</h2>
-                                    <p className="mt-1 text-left">₹{products[item].price}</p>
+                                    <p className="mt-1 text-left lg:text-lg ms:text-md sm:text-sm text-xs">₹{products[item].price}</p>
                                     <div className="mt-1 flex items-start">
-                                        {products[item].size.includes('S') && <span className='border border-gray-500 px-1 mx-1'>S</span>}
-                                        {products[item].size.includes('M') && <span className='border border-gray-500 px-1 mx-1'>M</span>}
-                                        {products[item].size.includes('L') && <span className='border border-gray-500 px-1 mx-1'>L</span>}
-                                        {products[item].size.includes('XL') && <span className='border border-gray-500 px-1 mx-1'>XL</span>}
+                                        {products[item].size.includes('S') && <span className='border border-gray-500 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>S</span>}
+                                        {products[item].size.includes('M') && <span className='border border-gray-500 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>M</span>}
+                                        {products[item].size.includes('L') && <span className='border border-gray-500 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>L</span>}
+                                        {products[item].size.includes('XL') && <span className='border border-gray-500 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>XL</span>}
                                         {products[item].size.includes('2XL') && <span className='border border-gray-300 px-1 mx-1'>2XL</span>}
-                                        {products[item].size.includes('3XL') && <span className='border border-gray-500 px-1 mx-1'>3XL</span>}
-                                        {products[item].size.includes('Free') && <span className='border border-gray-500 px-1 mx-1'>Free</span>}
+                                        {products[item].size.includes('3XL') && <span className='border border-gray-500 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>3XL</span>}
+                                        {products[item].size.includes('Free') && <span className='border border-gray-500 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>Free</span>}
                                     </div>
                                 </div>
                             </div>

@@ -56,20 +56,20 @@ const Home = ({ videos, images, products }) => {
   };
 
   return (
-    <div className='mt-[4rem] lg:mt-[4.7rem]'>
+    <div className=''>
       <Head>
         <title>Le-Soft - Women's Leading Fashion Brand</title>
         <meta name="description" content="Quality of classes at prices of masses." />
         <link rel="icon" href="/icon.png" />
       </Head>
       <div className='carousel-wrapper'>
-        <Slider {...settings}>
-          {Object.keys(images).map((item, index) => {
+        {images && images[0].img && <Slider {...settings}>
+          {images[0].img.map((item, index) => {
             return <div key={index}>
-              <img src={`${images[item].img}`} />
+              <img src={`${item}`} loading="lazy" />
             </div>
           })}
-        </Slider>
+        </Slider>}
       </div>
       <div className="text-gray-600 body-font">
         <div className="w-full px-5 py-12 mx-auto">
@@ -199,7 +199,7 @@ const Home = ({ videos, images, products }) => {
               </div>
             </div>
           </div>
-          <Link href={'/bottoms?category=ankleleggings'}><button className="flex mx-auto mt-16 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Checkout All Latest Collections</button></Link>
+          <Link href={'/bottoms?category=ankleleggings'}><button className="flex mx-auto mt-16 text-white bg-[#9933ff] border-0 py-2 px-8 focus:outline-none hover:bg-[#8000ff] rounded text-lg">Checkout All The Trendy Collections</button></Link>
         </div>
       </div>
 

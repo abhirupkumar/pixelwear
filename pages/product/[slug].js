@@ -114,14 +114,14 @@ const Post = ({ product, variants, error }) => {
         <meta name="description" content="Quality of classes at proces of masses." />
         <link rel="icon" href="/icon.png" />
       </Head>
-      <div className="container px-5 py-16 mx-auto mt-12">
+      <div className="container px-5 mx-auto mt-4">
         <div className="mx-auto flex flex-wrap">
           {/* <img alt="ecommerce" className="lg:w-1/2 w-full lg:h-auto px-24 object-cover object-center rounded" src={product.img} /> */}
           <div className='lg:w-1/2 mx-auto items-center justify-center'>
             <div className='flex flex-row'>
               {imgarr?.length > 1 && <div className="w-[15%] mx-auto flex flex-col">
                 {imgarr?.map((item, index) => (
-                  <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`md:w-16 w-8 rounded-sm m-2`} src={item} />
+                  <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`md:w-16 w-8 rounded-sm m-2`} src={item} loading="lazy" />
                 ))}
               </div>}
               <div className='md:block hidden w-[85%] mx-auto'>
@@ -147,7 +147,7 @@ const Post = ({ product, variants, error }) => {
                 }} />
               </div>
               <div className='md:hidden block w-[85%] mx-auto'>
-                <img alt="product-image" src={image} />
+                <img alt="product-image" src={image} loading="lazy" />
               </div>
             </div>
           </div>
@@ -229,7 +229,7 @@ const Post = ({ product, variants, error }) => {
             <div className="flex">
               {product.availableQty > 0 && <span className="title-font font-medium text-2xl text-gray-900">₹{product.price}</span>}
               {product.availableQty <= 0 && <span className="title-font font-medium text-2xl text-red-600">Out Of Stock!</span>}
-              <button disabled={product.availableQty <= 0} onClick={() => { buyNow(slug, qty, product.price, product.title, size, color, product.category, product.theme, product.img, product.fabric) }} className="flex ml-4 text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Buy Now</button>
+              <button disabled={product.availableQty <= 0} onClick={() => dispatch(addToCart({ slug, qty: qty, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img }))} className="flex ml-4 text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Buy Now</button>
               <button disabled={product.availableQty <= 0} onClick={() => dispatch(addToCart({ slug, qty: qty, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img }))} className="flex ml-4 text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Add To Cart</button>
             </div>
             <div className="pin mt-6 flex space-x-2 text-sm">

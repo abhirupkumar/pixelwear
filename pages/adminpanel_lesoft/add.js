@@ -153,7 +153,7 @@ const Add = () => {
         if (token) {
             email = jwt.decode(token).email
         }
-        if (token && email != '' && (email == process.env.EMAIL1 || email == process.env.EMAIL2)) {
+        if (token && email != '' && (email == process.env.NEXT_PUBLIC_EMAIL1 || email == process.env.NEXT_PUBLIC_EMAIL2)) {
             setAdmin(true)
         }
         else {
@@ -334,6 +334,59 @@ const Add = () => {
                                     </TextField>
                                 })}
 
+                                <div className="flex space-x-6 items-center">
+                                    <TextField onChange={onChange} value={form.img ? form.img : ""} name="img" label="Main Image Link" variant="outlined" className="flex-1" />
+                                    {form.img && form.img != "" && <img src={form.img} alt={`product-main-image`} className="w-14" loading="lazy" />}
+                                </div>
+
+                                <div className="flex space-x-4">
+                                    <TextField
+                                        label="Optional Images Link"
+                                        value={newLink}
+                                        onChange={(e) => setNewLink(e.target.value)}
+                                        className="flex-1 pr-4"
+                                    />
+                                    <Button variant="contained" color="primary" sx={{ height: '50px' }} onClick={handleAddLink}>
+                                        Add Link
+                                    </Button>
+                                </div>
+                                {imageLinks.length !== 0 && <Typography variant="subtitle1">Entered Image Links:</Typography>}
+                                <div className="flex space-x-4">
+                                    {imageLinks.map((link, index) => (
+                                        <div key={index} style={{ alignItems: 'center' }}>
+                                            <img src={link} alt={`img-${index}`} className="h-14" loading="lazy" />
+                                            <IconButton onClick={() => handleRemoveLink(index)}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="flex space-x-4 items-center">
+                                    <TextField
+                                        label="Description"
+                                        value={newDesc}
+                                        onChange={(e) => setNewDesc(e.target.value)}
+                                        multiline
+                                        rows={3}
+                                        className="flex-1 pr-4"
+                                    />
+                                    <Button variant="contained" color="primary" sx={{ height: '50px' }} onClick={handleAddDesc}>
+                                        Add Desc
+                                    </Button>
+                                </div>
+                                {desc.length !== 0 && <Typography variant="subtitle1">Entered Descriptions:</Typography>}
+                                <div className="flex flex-col space-x-4">
+                                    {desc.map((item, index) => (
+                                        <div key={index} className="items-center flex">
+                                            <p className="bg-gray-200 text-black flex-1 py-1 pl-3 rounded-sm">{item}</p>
+                                            <IconButton onClick={() => handleRemoveDesc(index)}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </div>
+                                    ))}
+                                </div>
+
                                 <FormControl>
                                     <FormLabel id="demo-radio-buttons-group-label">Size</FormLabel>
                                     <RadioGroup
@@ -399,59 +452,6 @@ const Add = () => {
                                         </div>
                                     </RadioGroup>
                                 </FormControl>
-
-                                <div className="flex space-x-6 items-center">
-                                    <TextField onChange={onChange} value={form.img ? form.img : ""} name="img" label="Main Image Link" variant="outlined" className="flex-1" />
-                                    {form.img && form.img != "" && <img src={form.img} alt={`product-main-image`} className="w-14" />}
-                                </div>
-
-                                <div className="flex space-x-4">
-                                    <TextField
-                                        label="Optional Images Link"
-                                        value={newLink}
-                                        onChange={(e) => setNewLink(e.target.value)}
-                                        className="flex-1 pr-4"
-                                    />
-                                    <Button variant="contained" color="primary" sx={{ height: '50px' }} onClick={handleAddLink}>
-                                        Add Link
-                                    </Button>
-                                </div>
-                                {imageLinks.length !== 0 && <Typography variant="subtitle1">Entered Image Links:</Typography>}
-                                <div className="flex space-x-4">
-                                    {imageLinks.map((link, index) => (
-                                        <div key={index} style={{ alignItems: 'center' }}>
-                                            <img src={link} alt={`img-${index}`} className="h-14" />
-                                            <IconButton onClick={() => handleRemoveLink(index)}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div className="flex space-x-4 items-center">
-                                    <TextField
-                                        label="Description"
-                                        value={newDesc}
-                                        onChange={(e) => setNewDesc(e.target.value)}
-                                        multiline
-                                        rows={3}
-                                        className="flex-1 pr-4"
-                                    />
-                                    <Button variant="contained" color="primary" sx={{ height: '50px' }} onClick={handleAddDesc}>
-                                        Add Desc
-                                    </Button>
-                                </div>
-                                {desc.length !== 0 && <Typography variant="subtitle1">Entered Descriptions:</Typography>}
-                                <div className="flex flex-col space-x-4">
-                                    {desc.map((item, index) => (
-                                        <div key={index} className="items-center flex">
-                                            <p className="bg-gray-200 text-black flex-1 py-1 pl-3 rounded-sm">{item}</p>
-                                            <IconButton onClick={() => handleRemoveDesc(index)}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </div>
-                                    ))}
-                                </div>
 
                                 <div className='flex space-x-6'>
                                     <Autocomplete

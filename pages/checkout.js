@@ -105,7 +105,8 @@ const Checkout = () => {
     }
   }
 
-  const initiatePayment = async () => {
+  const initiatePayment = async (e) => {
+    e.preventDefault()
     let oid = Math.floor(Math.random() * Date.now());
     setLoading(true)
     //Get a transaction token

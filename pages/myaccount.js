@@ -49,7 +49,7 @@ const Myaccount = () => {
     }
 
     const handleUserSubmit = async () => {
-        let data = { token: user.token, name, phone, address, pincode }
+        let data = { token: token, name, phone, address, pincode }
         let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/updateuser`, {
             method: 'POST', // or 'PUT'
             headers: {
@@ -74,7 +74,7 @@ const Myaccount = () => {
     const handlePassword = async () => {
         let res;
         if (npassword == cpassword) {
-            let data = { token: user.token, password, cpassword, npassword }
+            let data = { token: token, password, cpassword, npassword }
             let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/updatepassword`, {
                 method: 'POST', // or 'PUT'
                 headers: {

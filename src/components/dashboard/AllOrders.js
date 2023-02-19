@@ -15,7 +15,7 @@ const AllOrders = ({ orders }) => {
 
   let date = 12;
   const [type, setType] = useState('')
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState('unshipped')
 
   const handleRadioChange = (event) => {
     setType(event.target.name)
@@ -155,7 +155,7 @@ const AllOrders = ({ orders }) => {
                       color: "blue",
                     }}
                   >
-                    <Link href={'/admin/orderstatus?id=' + order._id}>{order.orderId}</Link>
+                    <Link href={'/adminpanel_lesoft/orderstatus?id=' + order._id}>{order.orderId}</Link>
                   </Typography>
                 </TableCell>
                 <TableCell align="center">

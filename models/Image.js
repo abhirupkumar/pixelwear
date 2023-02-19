@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const ImageSchema = new mongoose.Schema({
-    img: { type: String, required: true, unique: false }
+    img: { type: Array, required: true, unique: false }
 }, { timestamps: true });
 
 //   mongoose.models = {}

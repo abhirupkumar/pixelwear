@@ -24,7 +24,7 @@ const Allproducts = ({ products }) => {
         if (token) {
             email = jwt.decode(token).email
         }
-        if (token && email != '' && (email == process.env.EMAIL1 || email == process.env.EMAIL2)) {
+        if (token && email != '' && (email == process.env.NEXT_PUBLIC_EMAIL1 || email == process.env.NEXT_PUBLIC_EMAIL2)) {
             setAdmin(true)
         }
         else {
@@ -65,7 +65,14 @@ export async function getServerSideProps(context) {
     if (!mongoose.connections[0].readyState) {
         await mongoose.connect(process.env.MONGO_URI)
     }
-    let products = await Product.find()
+    let obj = {}
+    if (context.query.category) {
+        obj['category'] = context.query.category
+    }
+    if (context.query.theme) {
+        obj['theme'] = context.query.theme
+    }
+    let products = await Product.find(obj)
 
     return {
         props: { products: JSON.parse(JSON.stringify(products)) },

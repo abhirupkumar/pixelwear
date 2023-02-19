@@ -1,4 +1,4 @@
-import { Grid, Stack, ImageList, ImageListItem, Box, ImageListItemBar, TextField } from "@mui/material";
+import { Grid, Stack, ImageList, ImageListItem, Box, ImageListItemBar, TextField, Button, IconButton, Typography } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../src/theme/theme";
 import FullLayout from "../../src/layouts/FullLayout";
@@ -11,6 +11,7 @@ import Image from "/models/Image"
 import mongoose from 'mongoose'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Video from "../../models/Video";
 import { useSelector } from "react-redux";
 const jwt = require('jsonwebtoken');
@@ -18,12 +19,18 @@ const jwt = require('jsonwebtoken');
 const Index = ({ images, videos }) => {
     const router = useRouter()
     const [admin, setAdmin] = useState(false)
-    const [value1, setValue1] = useState('')
-    const [value2, setValue2] = useState('')
-    const [value3, setValue3] = useState('')
-    const [value4, setValue4] = useState('')
-    const [value5, setValue5] = useState('')
+    const [imageLinks, setImageLinks] = useState([]);
+    const [newLink, setNewLink] = useState('');
     const [videoValue, setVideoValue] = useState('')
+
+    const handleAddLink = () => {
+        setImageLinks([...imageLinks, newLink]);
+        setNewLink('');
+    };
+
+    const handleRemoveLink = (index) => {
+        setImageLinks(imageLinks.filter((_, i) => i !== index));
+    };
 
     const token = useSelector((state) => state.cartItems.token)
     let email = ''
@@ -32,7 +39,7 @@ const Index = ({ images, videos }) => {
         if (token) {
             email = jwt.decode(token).email
         }
-        if (token && email != '' && (email == process.env.EMAIL1 || email == process.env.EMAIL2)) {
+        if (token && email != '' && (email == process.env.NEXT_PUBLIC_EMAIL1 || email == process.env.NEXT_PUBLIC_EMAIL2)) {
             setAdmin(true)
             fetchimages()
             fetchvideos()
@@ -43,33 +50,13 @@ const Index = ({ images, videos }) => {
     }, [])
 
     const fetchimages = () => {
-        setValue1(images[0].img.toString())
-        setValue2(images[1].img.toString())
-        setValue3(images[2].img.toString())
-        setValue4(images[3].img.toString())
-        setValue5(images[4].img.toString())
+        if (images && images[0]) {
+            setImageLinks(images[0].img)
+        }
     }
 
     const fetchvideos = () => {
         setVideoValue(videos[0].vid.toString())
-    }
-
-    const onChange = (e) => {
-        if (e.target.name == 'img1') {
-            setValue1(e.target.value)
-        }
-        if (e.target.name == 'img2') {
-            setValue2(e.target.value)
-        }
-        if (e.target.name == 'img3') {
-            setValue3(e.target.value)
-        }
-        if (e.target.name == 'img4') {
-            setValue4(e.target.value)
-        }
-        if (e.target.name == 'img5') {
-            setValue5(e.target.value)
-        }
     }
 
     const onVChange = (e) => {
@@ -80,30 +67,8 @@ const Index = ({ images, videos }) => {
 
     const handleClick = async (e) => {
         let data = [{
-            _id: images[0]._id,
-            category: "frontimage",
-            img: value1
-        },
-        {
-            _id: images[1]._id,
-            category: "frontimage",
-            img: value2
-        },
-        {
-            _id: images[2]._id,
-            category: "frontimage",
-            img: value3
-        },
-        {
-            _id: images[3]._id,
-            category: "frontimage",
-            img: value4
-        },
-        {
-            _id: images[4]._id,
-            category: "frontimage",
-            img: value5
-        },
+            img: imageLinks
+        }
         ]
         let a = await fetch(`/api/updateimage`, {
             method: 'POST', // or 'PUT'
@@ -123,9 +88,6 @@ const Index = ({ images, videos }) => {
                 draggable: true,
                 progress: undefined,
             });
-            setTimeout(() => {
-                router.push(`${process.env.NEXT_PUBLIC_HOST}/admin`)
-            }, 2000);
         }
         else {
             toast.error("Some Error Occured ! Could not Update products", {
@@ -142,7 +104,6 @@ const Index = ({ images, videos }) => {
 
     const handleVClick = async (e) => {
         let data = [{
-            _id: images[0]._id,
             vid: videoValue
         }]
         let a = await fetch(`/api/updatevideo`, {
@@ -203,31 +164,33 @@ const Index = ({ images, videos }) => {
                     draggable
                     pauseOnHover
                 />
-                <Grid container spacing={0}>
-                    <BaseCard>
-                        <Stack spacing={4}>
-                            <ImageList sx={{ width: '100%', height: '100%' }} cols={1} rowHeight={164}>
-                                {images[0] && <div>
-                                    <img src={`${value1}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
-                                    <TextField onChange={onChange} value={value1} name='img1' label={"Image1"} variant="outlined" fullWidth />
-                                </div>}
-                                {images[1] && <div>
-                                    <img src={`${value2}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
-                                    <TextField onChange={onChange} value={value2} name='img2' label={"Image2"} variant="outlined" fullWidth />
-                                </div>}
-                                {images[2] && <div>
-                                    <img src={`${value3}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
-                                    <TextField onChange={onChange} value={value3} name='img3' label={"Image3"} variant="outlined" fullWidth />
-                                </div>}
-                                {images[3] && <div>
-                                    <img src={`${value4}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
-                                    <TextField onChange={onChange} value={value4} name='img4' label={"Image4"} variant="outlined" fullWidth />
-                                </div>}
-                                {images[4] && <div>
-                                    <img src={`${value5}`} alt={'photo'} loading='lazy' className='mt-5 mb-2' />
-                                    <TextField onChange={onChange} value={value5} name='img5' label={"Image5"} variant="outlined" fullWidth />
-                                </div>}
-                            </ImageList>
+                <Grid>
+                    <BaseCard style={{
+                        width: '100%',
+                    }}>
+                        <Stack spacing={4} >
+                            <div className="flex space-x-4">
+                                <TextField
+                                    label="Optional Images Link"
+                                    value={newLink}
+                                    onChange={(e) => setNewLink(e.target.value)}
+                                    className="flex-1 pr-4"
+                                />
+                                <Button variant="contained" color="primary" sx={{ height: '50px' }} onClick={handleAddLink}>
+                                    Add Link
+                                </Button>
+                            </div>
+                            {imageLinks && imageLinks?.length !== 0 && <Typography variant="subtitle1">Entered Image Links:</Typography>}
+                            <div className="flex space-x-4">
+                                {imageLinks && imageLinks?.map((link, index) => (
+                                    <div key={index} style={{ alignItems: 'center' }}>
+                                        <img src={link} alt={`img-${index}`} className="h-14" />
+                                        <IconButton onClick={() => handleRemoveLink(index)}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </div>
+                                ))}
+                            </div>
                             <button onClick={handleClick} className="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-lg text-white my-3">Change</button>
                         </Stack>
 
@@ -257,7 +220,7 @@ export async function getServerSideProps(context) {
         await mongoose.connect(process.env.MONGO_URI)
     }
 
-    let images = await Image.find({ category: "frontimage" });
+    let images = await Image.find();
     let videos = await Video.find();
 
     return {

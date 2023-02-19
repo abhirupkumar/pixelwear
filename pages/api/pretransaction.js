@@ -27,13 +27,13 @@ const handler = async (req, res) => {
         }
 
         for (let item in cart) {
-            product = await Product.findOne({ slug: item })
-            sumTotal += cart[item].price * cart[item].qty
-
+            product = await Product.findOne({ slug: cart[item].slug })
             if (product == null) {
                 res.status(200).json({ success: false, error: "Some Error Occured!", cartClear: true })
                 return;
             }
+            sumTotal += cart[item].price * cart[item].qty
+
 
             //Check if the cart items are out of stock
             if (product.availableQty < cart[item].qty) {
@@ -81,7 +81,7 @@ const handler = async (req, res) => {
         paytmParams.body = {
             "requestType": "Payment",
             "mid": process.env.NEXT_PUBLIC_PAYTM_MID,
-            "websiteName": "MissNeha.in",
+            "websiteName": "lesoft.in",
             "orderId": req.body.oid,
             "callbackUrl": `${process.env.NEXT_PUBLIC_HOST}/api/posttransaction`,
             "txnAmount": {

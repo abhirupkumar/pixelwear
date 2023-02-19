@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -11,8 +12,9 @@ const Forgot = () => {
   const [cpassword, setCpassword] = useState('')
 
   const router = useRouter()
+  const actualToken = useSelector((state) => state.cartItems.token)
   useEffect(() => {
-    if (localStorage.getItem('token')) {
+    if (actualToken) {
       router.push('/')
     }
 
@@ -38,7 +40,7 @@ const Forgot = () => {
         email,
         sendMail: true
       }
-      let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/forgot`, {
+      let a = await fetch(`/api/forgot`, {
         method: 'POST', // or 'PUT'
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +82,7 @@ const Forgot = () => {
         password,
         sendMail: false
       }
-      let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/forgot`, {
+      let a = await fetch(`/api/forgot`, {
         method: 'POST', // or 'PUT'
         headers: {
           'Content-Type': 'application/json',

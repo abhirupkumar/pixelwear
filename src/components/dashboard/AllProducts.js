@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Typography,
   Table,
   TableBody,
   TableCell,
   TableHead,
-  TableRow, FormControlLabel, FormControl, FormLabel, RadioGroup, Radio, Button, MenuItem, TextField
+  TableRow, FormControlLabel, FormControl, FormLabel, RadioGroup, Radio, Button, MenuItem, TextField, Pagination, Box
 } from "@mui/material";
 import BaseCard from "../baseCard/BaseCard";
 import { useState } from 'react';
 import Link from 'next/link'
+import { useRouter } from "next/router";
 
 const AllProducts = ({ products }) => {
 
@@ -92,16 +93,27 @@ const AllProducts = ({ products }) => {
 
   const [type, setType] = useState('')
 
+  const router = useRouter()
+
   const handleRadioChange = (event) => {
     setType(event.target.name)
+    setSubcategory("")
   }
 
   const [subcategory, setSubcategory] = useState('')
+  const [count, setCount] = useState('')
 
   const handleChange = (e) => {
-    const value = e.target.value
-    setSubcategory(value)
+    setTimeout(() => {
+      const value = e.target.value
+      setSubcategory(value)
+    });
+    router.push(`/adminpanel_lesoft/allproducts?category=${type}&theme=${e.target.value}`)
   }
+
+  useEffect(() => {
+    setCount(products.length)
+  }, [router])
 
   return (
     <BaseCard title="All Products">
@@ -110,7 +122,7 @@ const AllProducts = ({ products }) => {
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"
           name="radio-buttons-group">
-          <div className='flex flex-col lg:flex-row overflow-x-scroll'>
+          <div className='flex flex-col lg:flex-row'>
             <FormControlLabel
               value='sarees'
               control={<Radio />}
@@ -159,7 +171,7 @@ const AllProducts = ({ products }) => {
 
       <div className="my-3">
         {productcatelogue.map((item) => {
-          return type == item.title && <TextField label='Subcategory' name='subcategory' select value={subcategory} onChange={handleChange} fullWidth>
+          return type == item.title && <TextField key={item.title} label='Subcategory' name='subcategory' select value={subcategory} onChange={handleChange} fullWidth>
             {item.submenu && item.submenu.map((subitems, index) => {
               return (<MenuItem key={index} value={subitems.title}>{subitems.title}</MenuItem>);
             })}
@@ -183,27 +195,17 @@ const AllProducts = ({ products }) => {
             </TableCell>
             <TableCell align="center">
               <Typography color="textSecondary" variant="h6">
-                Fabric
+                Image
               </Typography>
             </TableCell>
             <TableCell align="center">
               <Typography color="textSecondary" variant="h6">
-                Size/Color
+                SkuId
               </Typography>
             </TableCell>
             <TableCell align="center">
               <Typography color="textSecondary" variant="h6">
-                Available Qty
-              </Typography>
-            </TableCell>
-            <TableCell align="center">
-              <Typography color="textSecondary" variant="h6">
-                Price
-              </Typography>
-            </TableCell>
-            <TableCell align="center">
-              <Typography color="textSecondary" variant="h6">
-                Link
+                Edit
               </Typography>
             </TableCell>
             <TableCell align="center">
@@ -214,57 +216,74 @@ const AllProducts = ({ products }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {products.map((product) => (
-            <TableRow key={product._id}>
-              {product.theme == subcategory && <TableCell align="center">
-                <Typography
+          {products?.map((product) => {
+            return <TableRow key={product?._id}>
+              {<TableCell align="center">
+                <Box
                   sx={{
+                    display: 'flex',
                     fontSize: "13px",
-                    fontWeight: "500",
-                    flexWrap: "wrap",
+                    flexDirection: "column",
+                    justifyContent: 'left',
                   }}
                 >
-                  {product.title}
+                  <p className="font-bold text-gray-700">{product?.title}</p>
                   <Typography sx={{
                     display: 'flex',
                     flexDirection: 'row',
+                    fontSize: "13px",
+                    color: "grey",
+                    paddingLeft: "32px",
                   }}>
-                    <img style={{ height: '100px' }} src={product.img} alt='1' />
-                    {product.img2 && <img style={{ height: '100px' }} src={product.img2} alt='2' />}
-                    {product.img3 && <img style={{ height: '100px' }} src={product.img3} alt='3' />}
-                    {product.img4 && <img style={{ height: '100px' }} src={product.img4} alt='4' />}
+                    Fabric: <p className="font-bold text-gray-700">{product?.fabric}</p>
                   </Typography>
-                </Typography>
+                  <Typography sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    fontSize: "13px",
+                    color: "grey",
+                    paddingLeft: "32px",
+                  }}>
+                    Size/Color: <p className="font-bold text-gray-700">{product?.size}/{product?.color}</p>
+                  </Typography>
+                  <Typography sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    fontSize: "13px",
+                    color: "grey",
+                    paddingLeft: "32px",
+                  }}>
+                    Price: <p className="font-bold text-gray-700">{product?.price}</p>
+                  </Typography>
+                  <Typography sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    fontSize: "13px",
+                    color: "grey",
+                    paddingLeft: "32px",
+                  }}>
+                    Available Qty: <p className="font-bold text-gray-700">{product?.availableQty}</p>
+                  </Typography>
+                </Box>
               </TableCell>}
-              {product.theme == subcategory && <TableCell align="center">
+              {<TableCell align="center">
                 <Typography
                   sx={{
                     fontSize: "13px",
                     fontWeight: "500",
                   }}
                 >
-                  {product.fabric}
+                  <img style={{ height: '100px' }} src={product?.img} alt='1' loading="lazy" />
                 </Typography>
               </TableCell>}
-
-              {product.theme == subcategory && <TableCell align="center">
-                <Typography color="textSecondary" variant="h6">
-                  {product.size}/{product.color}
-                </Typography>
+              {<TableCell align="center">
+                <Typography variant="h6">{product?.skuId}</Typography>
               </TableCell>}
-              {product.theme == subcategory && <TableCell align="center">
-                <Typography variant="h6">
-                  {product.availableQty}
-                </Typography>
-              </TableCell>}
-              {product.theme == subcategory && <TableCell align="center">
-                <Typography variant="h6">₹{product.price}</Typography>
-              </TableCell>}
-              {product.theme == subcategory && <TableCell align="center">
-                <div className="text-blue-700"><Link href={'/admin/update?slug=' + product.slug}>
+              {<TableCell align="center">
+                <div className="text-blue-700"><Link href={'/adminpanel_lesoft/update?slug=' + product?.slug}>
                   Edit</Link></div>
               </TableCell>}
-              {product.theme == subcategory && <TableCell align="center">
+              {<TableCell align="center">
                 <Typography
                   sx={{
                     fontSize: "13px",
@@ -272,11 +291,11 @@ const AllProducts = ({ products }) => {
                     color: 'blue'
                   }}
                 >
-                  <Link href={'/product/' + product.slug}>Details</Link>
+                  <Link href={'/product/' + product?.slug}>Details</Link>
                 </Typography>
               </TableCell>}
             </TableRow>
-          ))}
+          })}
         </TableBody>
       </Table>
     </BaseCard>

@@ -2,22 +2,22 @@ const Menuitems = [
   {
     title: "Dashboard",
     icon: "home",
-    href: "/admin",
+    href: "/adminpanel_lesoft",
   },
   {
     title: "Add Products",
     icon: "plus-circle",
-    href: "/admin/add",
+    href: "/adminpanel_lesoft/add",
   },
   {
     title: "View Products",
     icon: "eye",
-    href: "/admin/allproducts",
+    href: "/adminpanel_lesoft/allproducts",
   },
   {
     title: "Orders",
     icon: "shopping-cart",
-    href: "/admin/allorders",
+    href: "/adminpanel_lesoft/allorders",
   },
 ];
 

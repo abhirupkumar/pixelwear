@@ -39,10 +39,17 @@ const MenuItems = ({ items, depthLevel, mobile }) => {
         <li className={`menu-items lg:relative flex sm:flex-col px-2 rounded-lg`} ref={ref} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} >
             {items.submenu ? (
                 <>
-                    <button type="button" aria-haspopup="menu" className={`w-full flex flex-row mx-auto text-center items-center hover:text-indigo-700 ${dropdownClass} rounded-lg`} aria-expanded={dropdown ? "true" : "false"}
+                    <button type="button" aria-haspopup="menu" className={`w-full flex flex-row mx-auto text-center items-center hover:text-indigo-700 text-sm ${dropdownClass} rounded-lg md:hidden lg:flex`} aria-expanded={dropdown ? "true" : "false"}
                         onClick={() => {
                             setDropdown((prev) => !prev)
                             router.push(items.link)
+                        }} >
+                        {items.title}
+                        {depthLevel > 0 ? <span className="text-xs font-semibold"><IoIosArrowForward /></span> : <span className="text-xs font-thin"><IoIosArrowDown /></span>}
+                    </button>
+                    <button type="button" aria-haspopup="menu" className={`w-full flex flex-row mx-auto text-center items-center hover:text-indigo-700 lg:text-sm text-xs ${dropdownClass} rounded-lg lg:hidden block`} aria-expanded={dropdown ? "true" : "false"}
+                        onClick={() => {
+                            setDropdown((prev) => !prev)
                         }} >
                         {items.title}
                         {depthLevel > 0 ? <span className="text-xs font-semibold"><IoIosArrowForward /></span> : <span className="text-xs font-thin"><IoIosArrowDown /></span>}
@@ -52,7 +59,7 @@ const MenuItems = ({ items, depthLevel, mobile }) => {
                     </div>
                 </>
             ) : (
-                <Link href={`${items.link}`}><a className={`hover:text-indigo-700 py-0 rounded-lg`}>{items.title}</a></Link>
+                <Link href={`${items.link}`}><a className={`hover:text-indigo-700 py-0 rounded-lg lg:text-sm text-xs`}>{items.title}</a></Link>
             )}
         </li>
     );

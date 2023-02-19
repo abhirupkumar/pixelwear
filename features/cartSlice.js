@@ -2,8 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     cart: [],
-    token: null,
     subTotal: 0,
+    token: null,
 }
 
 export const cartSlice = createSlice({
@@ -54,7 +54,7 @@ export const cartSlice = createSlice({
         setToken: (state, action) => {
             state.token = action.payload.token;
         },
-        removeToken: (state) => {
+        removeToken: (state, action) => {
             state.token = null;
         }
     },

@@ -55,3 +55,8 @@
     right: 0!important;
     width: 10px;
 }
+
+.MuiList-root{
+    padding-top: 1px!important;
+    padding-bottom: 1px!important;
+}

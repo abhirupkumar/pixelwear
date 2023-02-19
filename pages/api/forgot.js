@@ -7,7 +7,7 @@ const nodemailer = require('nodemailer');
 export default async function handler(req, res) {
 
     if (req.method == 'POST') {
-        
+
         if (req.body.sendMail) {
             //Check if the user exists in the database
             let user = await User.findOne({ email: req.body.email })
@@ -43,12 +43,12 @@ export default async function handler(req, res) {
                     secure: true, // true for 465, false for other ports
                     auth: {
                         user: "abhirupkumar2003@gmail.com", //  user
-                        pass: "wimfjbrwobpikaii", //  password
+                        pass: "vcinbyieriftnctz", //  password
                     },
                 });
 
                 const mailOptions = {
-                    from: 'no-reply@missneha.in', // Sender address
+                    from: 'Le-Soft Team <no-reply@lesoft.in>', // Sender address
                     to: req.body.email, // List of recipients
                     subject: 'Password Reset Link', // Subject line
                     html: emailMessage

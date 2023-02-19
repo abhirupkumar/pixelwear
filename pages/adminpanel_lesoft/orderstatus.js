@@ -35,7 +35,7 @@ const Orderstatus = ({ order, orders }) => {
         if (token) {
             email = jwt.decode(token).email
         }
-        if (token && email != '' && (email == process.env.EMAIL1 || email == process.env.EMAIL2)) {
+        if (token && email != '' && (email == process.env.NEXT_PUBLIC_EMAIL1 || email == process.env.NEXT_PUBLIC_EMAIL2)) {
             setAdmin(true)
         }
         else {
