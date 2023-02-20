@@ -8,18 +8,22 @@ import { Provider } from 'react-redux'
 import { persistor, store } from '../store';
 import { PersistGate } from 'redux-persist/integration/react';
 import Bottom from '../components/Bottom';
+import { LinearProgress } from '@mui/material';
 
 function MyApp({ Component, pageProps }) {
 
   const [key, setKey] = useState()
   const [progress, setProgress] = useState(0)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
     router.events.on('routeChangeStart', () => {
+      setLoading(true)
       setProgress(40);
     })
     router.events.on('routeChangeComplete', () => {
+      setLoading(false)
       setProgress(100);
     })
     setKey(Math.random())
@@ -35,7 +39,11 @@ function MyApp({ Component, pageProps }) {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         {key && <Navbar key={key} />}
-        <Component {...pageProps} />
+        {loading ? <div className='flex flex-col items-center mt-28 min-h-screen'>
+          <p className="text-[#60259b] font-bold text-2xl">Loading</p>
+          <LinearProgress color="secondary" sx={{
+            width: '20%',
+          }} /></div> : <Component {...pageProps} />}
         <Bottom />
         <Footer />
       </PersistGate>

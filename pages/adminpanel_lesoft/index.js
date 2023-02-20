@@ -142,10 +142,16 @@ const Index = ({ images, videos }) => {
     }
 
     return (
-        <ThemeProvider theme={theme}>
+        <>
+            <Head>
+                <title>Le-Soft - Admin Panel</title>
+                <meta name="description" content="Quality of classes at prices of masses." />
+                <link rel="icon" href="/icon.png" />
+            </Head>
+            <ThemeProvider theme={theme}>
 
-            {admin && <FullLayout>
-                <style jsx global>{`
+                {admin && <FullLayout>
+                    <style jsx global>{`
                 .navbar-show{
                     display: none;
                 }
@@ -153,65 +159,66 @@ const Index = ({ images, videos }) => {
                     display: none;
                 }
                 `}</style>
-                <ToastContainer
-                    position="top-left"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                />
-                <Grid>
-                    <BaseCard style={{
-                        width: '100%',
-                    }}>
-                        <Stack spacing={4} >
-                            <div className="flex space-x-4">
-                                <TextField
-                                    label="Optional Images Link"
-                                    value={newLink}
-                                    onChange={(e) => setNewLink(e.target.value)}
-                                    className="flex-1 pr-4"
-                                />
-                                <Button variant="contained" color="primary" sx={{ height: '50px' }} onClick={handleAddLink}>
-                                    Add Link
-                                </Button>
-                            </div>
-                            {imageLinks && imageLinks?.length !== 0 && <Typography variant="subtitle1">Entered Image Links:</Typography>}
-                            <div className="flex space-x-4">
-                                {imageLinks && imageLinks?.map((link, index) => (
-                                    <div key={index} style={{ alignItems: 'center' }}>
-                                        <img src={link} alt={`img-${index}`} className="h-14" />
-                                        <IconButton onClick={() => handleRemoveLink(index)}>
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </div>
-                                ))}
-                            </div>
-                            <button onClick={handleClick} className="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-lg text-white my-3">Change</button>
-                        </Stack>
+                    <ToastContainer
+                        position="top-left"
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                    />
+                    <Grid>
+                        <BaseCard style={{
+                            width: '100%',
+                        }}>
+                            <Stack spacing={4} >
+                                <div className="flex space-x-4">
+                                    <TextField
+                                        label="Optional Images Link"
+                                        value={newLink}
+                                        onChange={(e) => setNewLink(e.target.value)}
+                                        className="flex-1 pr-4"
+                                    />
+                                    <Button variant="contained" color="primary" sx={{ height: '50px' }} onClick={handleAddLink}>
+                                        Add Link
+                                    </Button>
+                                </div>
+                                {imageLinks && imageLinks?.length !== 0 && <Typography variant="subtitle1">Entered Image Links:</Typography>}
+                                <div className="flex space-x-4">
+                                    {imageLinks && imageLinks?.map((link, index) => (
+                                        <div key={index} style={{ alignItems: 'center' }}>
+                                            <img src={link} alt={`img-${index}`} className="h-14" />
+                                            <IconButton onClick={() => handleRemoveLink(index)}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </div>
+                                    ))}
+                                </div>
+                                <button onClick={handleClick} className="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-lg text-white my-3">Change</button>
+                            </Stack>
 
-                        <Stack spacing={2}>
-                            <iframe width="100%" height="400" style={{ marginTop: "3rem" }} src={videoValue} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                            <TextField onChange={onVChange} value={videoValue} name="vid" label="Video" variant="outlined" />
-                            <button onClick={handleVClick} className="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-lg text-white my-3">Change</button>
-                        </Stack>
+                            <Stack spacing={2}>
+                                <iframe width="100%" height="400" style={{ marginTop: "3rem" }} src={videoValue} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                                <TextField onChange={onVChange} value={videoValue} name="vid" label="Video" variant="outlined" />
+                                <button onClick={handleVClick} className="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-lg text-white my-3">Change</button>
+                            </Stack>
 
-                    </BaseCard>
-                </Grid>
-            </FullLayout>}
-            {!admin && <div className="min-h-screen flex m-auto">
-                <Head>
-                    <title>404 - Page Not Found</title>
-                    <meta name="description" content="Quality of classes at proces of masses." />
-                    <link rel="icon" href="/icon.png" />
-                </Head>
-                <h1 className="m-auto font-semibold text-xl">404 - Page Not Found</h1>
-            </div>}
-        </ThemeProvider>
+                        </BaseCard>
+                    </Grid>
+                </FullLayout>}
+                {!admin && <div className="min-h-screen flex m-auto">
+                    <Head>
+                        <title>404 - Page Not Found</title>
+                        <meta name="description" content="Quality of classes at proces of masses." />
+                        <link rel="icon" href="/icon.png" />
+                    </Head>
+                    <h1 className="m-auto font-semibold text-xl">404 - Page Not Found</h1>
+                </div>}
+            </ThemeProvider>
+        </>
     );
 }
 

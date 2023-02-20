@@ -14,6 +14,15 @@ const SearchResult = ({ products, filter, colorfilter }) => {
     const router = useRouter()
     const [showFilter, setShowFilter] = useState(false)
 
+    const handleChange = (event) => {
+        if (router.query.category) {
+            router.push(`${router.asPath.replace(router.query.category, event.target.value)}`)
+        }
+        else {
+            router.push(`${router.asPath}&category=${event.target.value}`)
+        }
+    }
+
     const changeFilter = (event) => {
         setShowFilter(!showFilter)
     }
@@ -34,6 +43,19 @@ const SearchResult = ({ products, filter, colorfilter }) => {
                     <button className='flex lg:hidden justify-center px-1 my-2 mx-auto text-xl' onClick={changeFilter}>Filter {showFilter ? <FilterListIcon /> : <FilterListOffIcon />}</button>
                     <div className={`${showFilter ? 'lg:block transition-all overflow-y-scroll' : 'lg:block hidden'}`}>
                         <hr className='lg:mt-2 mt-1' />
+                        <div className={`flex flex-col px-10 mx-auto text-base`}>
+                            <FormControl>
+                                <p className='flex flex-row justify-center px-1 my-2 text-lg text-semibold'>Categories</p>
+                                <RadioGroup name='job-experience-group-label' aria-labelledby='job-experience-group-label' onChange={handleChange} col='true'>
+                                    <FormControlLabel control={<Radio size='medium' color='primary' />} value='sarees' label='Sarees' />
+                                    <FormControlLabel control={<Radio size='medium' color='primary' />} value='bottoms' label='Bottoms' />
+                                    <FormControlLabel control={<Radio size='medium' color='primary' />} value='tops' label='Tops' />
+                                    <FormControlLabel control={<Radio size='medium' color='primary' />} value='innerwear' label='Inner Wear' />
+                                    <FormControlLabel control={<Radio size='medium' color='primary' />} value='kids' label='Kids' />
+                                    <FormControlLabel control={<Radio size='medium' color='primary' />} value='loungewear' label='Lounge Wear' />
+                                </RadioGroup>
+                            </FormControl>
+                        </div>
                         {Object.keys(filter).length != 0 && <><hr className='mt-2' />
                             <p className='flex flex-row justify-center px-1 my-2 mx-10 text-lg text-semibold'>Fabric</p>
                             <div className='flex flex-col px-20 mx-auto text-base'>
@@ -167,6 +189,12 @@ export async function getServerSideProps(context) {
     }
 
     let unique = []
+    let products2 = await Product.find()
+    for (let item of products2) {
+        if (!(colorfilter.includes(item.color))) {
+            colorfilter.push(item.color)
+        }
+    }
 
     for (let i = 0; i < titlefilter.length; i++) {
         if (unique.indexOf(titlefilter[i]) === -1) {

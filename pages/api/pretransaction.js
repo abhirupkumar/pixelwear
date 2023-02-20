@@ -135,7 +135,6 @@ const handler = async (req, res) => {
                         let ress = JSON.parse(response).body;
                         ress.success = true
                         ress.cartClear = false
-                        resolve(ress)
                     });
                 });
 

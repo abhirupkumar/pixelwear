@@ -218,63 +218,53 @@ const AllProducts = ({ products }) => {
         <TableBody>
           {products?.map((product) => {
             return <TableRow key={product?._id}>
-              {<TableCell align="center">
-                <Box
-                  sx={{
-                    display: 'flex',
-                    fontSize: "13px",
-                    flexDirection: "column",
-                    justifyContent: 'left',
-                  }}
-                >
+              {<TableCell sx={{
+                paddingRight: '4px',
+                maxWidth: '20rem',
+                overflowX: 'auto',
+                paddingBottom: '0px',
+              }}>
+                <div className="flex flex-col max-w-xs">
                   <p className="font-bold text-gray-700">{product?.title}</p>
-                  <Typography sx={{
+                  <Box sx={{
                     display: 'flex',
                     flexDirection: 'row',
                     fontSize: "13px",
                     color: "grey",
-                    paddingLeft: "32px",
                   }}>
                     Fabric: <p className="font-bold text-gray-700">{product?.fabric}</p>
-                  </Typography>
-                  <Typography sx={{
+                  </Box>
+                  <Box sx={{
                     display: 'flex',
                     flexDirection: 'row',
                     fontSize: "13px",
                     color: "grey",
-                    paddingLeft: "32px",
                   }}>
                     Size/Color: <p className="font-bold text-gray-700">{product?.size}/{product?.color}</p>
-                  </Typography>
-                  <Typography sx={{
+                  </Box>
+                  <Box sx={{
                     display: 'flex',
                     flexDirection: 'row',
                     fontSize: "13px",
                     color: "grey",
-                    paddingLeft: "32px",
                   }}>
                     Price: <p className="font-bold text-gray-700">{product?.price}</p>
-                  </Typography>
-                  <Typography sx={{
+                  </Box>
+                  <Box sx={{
                     display: 'flex',
                     flexDirection: 'row',
                     fontSize: "13px",
                     color: "grey",
-                    paddingLeft: "32px",
                   }}>
                     Available Qty: <p className="font-bold text-gray-700">{product?.availableQty}</p>
-                  </Typography>
-                </Box>
+                  </Box>
+                </div>
               </TableCell>}
-              {<TableCell align="center">
-                <Typography
-                  sx={{
-                    fontSize: "13px",
-                    fontWeight: "500",
-                  }}
-                >
-                  <img style={{ height: '100px' }} src={product?.img} alt='1' loading="lazy" />
-                </Typography>
+              {<TableCell align="center" sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}>
+                <img style={{ height: '100px' }} src={product?.img} alt='1' loading="lazy" />
               </TableCell>}
               {<TableCell align="center">
                 <Typography variant="h6">{product?.skuId}</Typography>

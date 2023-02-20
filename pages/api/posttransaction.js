@@ -22,7 +22,7 @@ const handler = async (req, res) => {
     if (!isValidChecksum) {
         res.status(500).send("Some Error Occured")
         return
-    } 
+    }
 
     //Update into Orders table after checking the transaction status
     let order;
@@ -34,7 +34,7 @@ const handler = async (req, res) => {
         let products = order.products
     }
     else if (req.body.STATUS == 'PENDING') {
-        order = await Order.findOneAndUpdate({ orderId: req.body.ORDERID }, { status: "Pending", paymentinfo: JSON.stringfy(req.body), transactionid: req.body.TXNID  })
+        order = await Order.findOneAndUpdate({ orderId: req.body.ORDERID }, { status: "Pending", paymentinfo: JSON.stringfy(req.body), transactionid: req.body.TXNID })
     }
     //Initiate Shipping
 

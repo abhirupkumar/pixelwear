@@ -55,7 +55,26 @@ const Bottom = () => {
         if (exempted.includes(router.pathname)) {
             setSidebar(false)
         }
-    }, [])
+    }, [token])
+
+    useEffect(() => {
+        if (token) {
+            const expirationTime = getTokenExpiration(token);
+            if (expirationTime < Date.now()) {
+                dispatch(removeToken())
+            }
+        }
+    }, [router.query, token, sidebar])
+
+    function getTokenExpiration(token) {
+        try {
+            const decoded = jwt.decode(token);
+            return decoded.exp ? decoded.exp * 1000 : null; // convert to milliseconds
+        } catch (err) {
+            console.error('Error decoding JWT token:', err);
+            return null;
+        }
+    }
 
     useEffect(() => {
         setBottom('Home')

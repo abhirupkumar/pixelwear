@@ -12,8 +12,9 @@ import { useDispatch } from 'react-redux';
 import { addToCart, clearCart } from '../../features/cartSlice';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import PicModal from '../../components/PicModal';
 
-const Post = ({ product, variants, error }) => {
+const Post = ({ product, variants, error, slugImgArr }) => {
   const dispatch = useDispatch();
   const router = useRouter()
   const { slug } = router.query
@@ -50,9 +51,12 @@ const Post = ({ product, variants, error }) => {
 
 
   const checkServiceability = async () => {
-    let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`)
+    let url = 'https://api.postalpincode.in/pincode/' + pin
+    let pins = await fetch(url, {
+      Method: 'GET'
+    })
     let pinJson = await pins.json()
-    if (Object.keys(pinJson).includes(pin)) {
+    if (pinJson[0].Status == 'Success') {
       toast.success('Your pincode is serviceable', {
         position: "bottom-center",
         autoClose: 1000,
@@ -116,35 +120,35 @@ const Post = ({ product, variants, error }) => {
       </Head>
       <div className="container px-5 mx-auto mt-4">
         <div className="mx-auto flex flex-wrap">
-          {/* <img alt="ecommerce" className="lg:w-1/2 w-full lg:h-auto px-24 object-cover object-center rounded" src={product.img} /> */}
           <div className='lg:w-1/2 mx-auto items-center justify-center'>
             <div className='flex flex-row'>
               {imgarr?.length > 1 && <div className="w-[15%] mx-auto flex flex-col">
                 {imgarr?.map((item, index) => (
-                  <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`md:w-16 w-8 rounded-sm m-2`} src={item} loading="lazy" />
+                  <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`md:w-16 w-8 md:h-24 h-14 rounded-sm m-2 object-cover`} src={item} loading="lazy" />
                 ))}
               </div>}
               <div className='md:block hidden w-[85%] mx-auto'>
-                <ReactImageMagnify className='z-10' {...{
-                  smallImage: {
-                    alt: `${product.title}`,
-                    isFluidWidth: true,
-                    src: `${image}`,
-                  },
-                  largeImage: {
-                    src: `${image}`,
-                    width: 1200,
-                    height: 1800
-                  },
-                  enlargedImageContainerDimensions: {
-                    width: '200%',
-                    height: '100%',
-                  },
-                  lensSize: 150,
-                  isHintEnabled: true,
-                  shouldHideHintAfterFirstActivation: false,
-                  zoomContainerBorderSize: 8,
-                }} />
+                {/* <ReactImageMagnify className='z-10'
+                  {...{
+                    smallImage: {
+                      alt: `${product.title}`,
+                      isFluidWidth: true,
+                      src: `${image}`,
+                    },
+                    largeImage: {
+                      src: `${image}`,
+                    },
+                    enlargedImageContainerDimensions: {
+                      width: '100%',
+                      height: '100%',
+                    },
+                    lensSize: 150,
+                    isHintEnabled: true,
+                    shouldHideHintAfterFirstActivation: false,
+                    zoomContainerBorderSize: 8,
+                  }}
+                /> */}
+                <PicModal img={image} />
               </div>
               <div className='md:hidden block w-[85%] mx-auto'>
                 <img alt="product-image" src={image} loading="lazy" />
@@ -193,12 +197,7 @@ const Post = ({ product, variants, error }) => {
             <ul className="flex flex-col justify-start flex-wrap list-disc pl-10 lg:text-base md:text-sm text-xs">
               {product?.desc && product?.desc.map((desc, index) => <li key={index} className="leading-relaxed text-md">{desc}</li>)}
             </ul>
-            <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
-              <div className="flex">
-                <span className="mr-3">Color</span>
-                {Object.keys(variants) && Object.keys(variants).map((color1, index) => wordToHex[color1] && <button key={index} onClick={() => { refreshVariant(Object.keys(variants[color1]), color1) }} className={`border-2 mx-[1px] rounded-full w-6 h-6 focus:outline-none ${color === color1 ? 'border-black' : 'border-gray-300'}`} style={{ backgroundColor: wordToHex[color1] }}></button>
-                )}
-              </div>
+            <div className="flex flex-col mt-6 items-left pl-10 pb-5 border-b-2 border-gray-100 mb-5 space-y-4">
               <div className="flex flex-wrap ml-3 items-center">
                 <span className="mr-3">Size</span>
                 <div className="relative">
@@ -219,6 +218,16 @@ const Post = ({ product, variants, error }) => {
                   </span>
                 </div>
               </div>
+              <div className="flex mx-3">
+                Color:
+                <p className="mx-1 font-semibold">{product.color}</p>
+              </div>
+              <div className="flex ml-3 flex-wrap">
+                {Object.keys(variants) && Object.keys(variants).map((color1, index) => <button key={index} onClick={() => { refreshVariant(Object.keys(variants[color1]), color1) }} className={`border-2 mx-[1px] w-14 focus:outline-none ${color === color1 ? 'border-black' : 'border-gray-300'}`}>
+                  <img src={slugImgArr[color1]} alt={`img-${index}`} />
+                </button>
+                )}
+              </div>
             </div>
             {product.availableQty > 0 && <div className=" flex my-8 space-x-4">
               <p className="font-medium">Quantity: </p>
@@ -232,8 +241,9 @@ const Post = ({ product, variants, error }) => {
               <button disabled={product.availableQty <= 0} onClick={() => dispatch(addToCart({ slug, qty: qty, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img }))} className="flex ml-4 text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Buy Now</button>
               <button disabled={product.availableQty <= 0} onClick={() => dispatch(addToCart({ slug, qty: qty, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img }))} className="flex ml-4 text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Add To Cart</button>
             </div>
-            <div className="pin mt-6 flex space-x-2 text-sm">
-              <input onChange={onChangePin} className="px-2 border-2 border-gray-400 rounded-md" type="text" placeholder='Enter your pincode' />
+            <div className="pin my-6 flex space-x-2 text-sm items-center flex-wrap">
+              <p className='md:mr-4 mr-1 font-medium lg:text-lg text-base'>Availability:</p>
+              <input onChange={onChangePin} className="px-2 py-1 border-2 border-gray-400 rounded-md" type="text" placeholder='Enter your pincode' />
               <button onClick={checkServiceability} className="flex ml-14 text-white bg-[#9933ff] border-0 py-2 px-6 focus:outline-none hover:bg-[#8000ff] rounded">Check</button>
             </div>
             {(!service && service != null) && <div className="text-red-700 text-sm mt-3">
@@ -262,18 +272,21 @@ export async function getServerSideProps(context) {
   }
   let variant = await Product.find({ title: product.title, category: product.category })
   let colorSizeSlug = {}
+  let imgarr = {}
   for (let item of variant) {
     if (Object.keys(colorSizeSlug).includes(item.color)) {
       colorSizeSlug[item.color][item.size] = { slug: item.slug }
+      imgarr[item.color] = item.img
     }
     else {
       colorSizeSlug[item.color] = {}
       colorSizeSlug[item.color][item.size] = { slug: item.slug }
+      imgarr[item.color] = item.img
     }
   }
 
   return {
-    props: { error: error, product: JSON.parse(JSON.stringify(product)), variants: JSON.parse(JSON.stringify(colorSizeSlug)) }, // will be passed to the page component as props
+    props: { error: error, product: JSON.parse(JSON.stringify(product)), variants: JSON.parse(JSON.stringify(colorSizeSlug)), slugImgArr: imgarr }, // will be passed to the page component as props
   }
 }
 

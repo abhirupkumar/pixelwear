@@ -18,7 +18,7 @@ const Bottoms = ({ products, filter, colorfilter }) => {
 
     const handleChange = (event) => {
         setValue(event.target.value)
-        router.push(`/bottoms?category=${event.target.value}`)
+        router.push(`/sarees?category=${event.target.value}`)
     }
 
     const changeFilter = (event) => {
@@ -28,7 +28,6 @@ const Bottoms = ({ products, filter, colorfilter }) => {
     useEffect(() => {
         setValue(router.query.category)
     }, [router])
-
 
     return (
         <div>
@@ -69,7 +68,7 @@ const Bottoms = ({ products, filter, colorfilter }) => {
                     </div>
                 </div>}
                 <div className="flex w-full px-2 justify-center">
-                    <div className="flex flex-wrap justify-center items-center">
+                    <div className="flex flex-wrap justify-center">
                         {Object.keys(products)?.length === 0 && <p className="">Sorry all the {value} are currently out of stock. New stock comming soon. Stay Tuned!</p>}
                         {Object.keys(products)?.map((item) => {
                             return <Link passHref={true} key={products[item]._id} href={`/product/${products[item].slug}`}><div className="lg:w-[310px] w-[39%] cursor-pointer m-4">
@@ -145,6 +144,13 @@ export async function getServerSideProps(context) {
                     colorfilter.push(item.color)
                 }
             }
+        }
+    }
+
+    let products2 = await Product.find({ category: 'sarees' })
+    for (let item of products2) {
+        if (!(colorfilter.includes(item.color))) {
+            colorfilter.push(item.color)
         }
     }
 

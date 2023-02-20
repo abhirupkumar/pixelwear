@@ -46,7 +46,7 @@ const Kids = ({ products, filter, colorfilter }) => {
                         <div className={`flex flex-col px-10 mx-auto text-base`}>
                             <FormControl>
                                 <p className='flex flex-row justify-center px-1 my-2 text-lg text-semibold'>Categories</p>
-                                <RadioGroup name='job-experience-group-label' aria-labelledby='job-experience-group-label' value={value} onChange={handleChange} col='true'>
+                                <RadioGroup name='job-experience-group-label' aria-labelledby='job-experience-group-label' value={value ? value : ''} onChange={handleChange} col='true'>
                                     <FormControlLabel control={<Radio size='small' color='primary' />} value='bottom/ankleleggings' label={<span className='text-sm' >Ankle Leggings</span>} />
                                     <FormControlLabel control={<Radio size='small' color='primary' />} value='bottom/capri' label={<span className='text-sm' >Capri</span>} />
                                     <FormControlLabel control={<Radio size='small' color='primary' />} value='shorts' label={<span className='text-sm' >Shorts</span>} />
@@ -165,6 +165,13 @@ export async function getServerSideProps(context) {
                     colorfilter.push(item.color)
                 }
             }
+        }
+    }
+
+    let products2 = await Product.find({ category: 'kids' })
+    for (let item of products2) {
+        if (!(colorfilter.includes(item.color))) {
+            colorfilter.push(item.color)
         }
     }
 

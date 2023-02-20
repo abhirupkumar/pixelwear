@@ -238,9 +238,10 @@ const Add = () => {
         setForm('')
         type = ''
         setType('')
-        size = ''
+        setSize('')
         setSubcategory('')
-        setSize(null)
+        setDesc([])
+        setNewDesc('')
         setColor('')
         setImageLinks([])
     }
@@ -325,8 +326,8 @@ const Add = () => {
                                     </RadioGroup>
                                 </FormControl>
 
-                                {productcatelogue.map((item) => {
-                                    return type == item.title && <TextField label='Subcategory' name='subcategory' select value={subcategory} onChange={handleChange} fullWidth
+                                {productcatelogue.map((item, index) => {
+                                    return type == item.title && <TextField key={index} label='Subcategory' name='subcategory' select value={subcategory} onChange={handleChange} fullWidth
                                     >
                                         {item.submenu && item.submenu.map((subitems, index) => {
                                             return (<MenuItem key={index} value={subitems.title}>{subitems.title}</MenuItem>);

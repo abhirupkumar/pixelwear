@@ -46,7 +46,7 @@ const InnerWear = ({ products, filter, colorfilter }) => {
                         <div className={`flex flex-col px-10 mx-auto text-base`}>
                             <FormControl>
                                 <p className='flex flex-row justify-center px-1 my-2 text-lg text-semibold'>Categories</p>
-                                <RadioGroup name='job-experience-group-label' aria-labelledby='job-experience-group-label' value={value} onChange={handleChange} col='true'>
+                                <RadioGroup name='job-experience-group-label' aria-labelledby='job-experience-group-label' value={value ? value : ''} onChange={handleChange} col='true'>
                                     <FormControlLabel control={<Radio size='small' color='primary' />} value='shorts' label={<span className='text-sm' >Shorts</span>} />
                                 </RadioGroup>
                             </FormControl>
@@ -173,6 +173,13 @@ export async function getServerSideProps(context) {
     }
 
     let unique = []
+
+    let products2 = await Product.find({ category: 'innerwear' })
+    for (let item of products2) {
+        if (!(colorfilter.includes(item.color))) {
+            colorfilter.push(item.color)
+        }
+    }
 
     for (let i = 0; i < titlefilter.length; i++) {
         if (unique.indexOf(titlefilter[i]) === -1) {
