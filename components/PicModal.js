@@ -14,7 +14,7 @@ const PicModal = ({ img }) => {
     };
 
     return (
-        <div>
+        <>
             <img src={img} alt="Product Image" onClick={handleOpen} className="cursor-pointer" />
             <Modal open={open} onClose={handleClose}>
                 <div style={{
@@ -46,7 +46,7 @@ const PicModal = ({ img }) => {
                     }} onClick={handleClose} />
                 </div>
             </Modal>
-        </div>
+        </>
     );
 
 }

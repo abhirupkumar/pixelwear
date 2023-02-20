@@ -150,8 +150,8 @@ const Post = ({ product, variants, error, slugImgArr }) => {
                 /> */}
                 <PicModal img={image} />
               </div>
-              <div className='md:hidden block w-[85%] mx-auto'>
-                <img alt="product-image" src={image} loading="lazy" />
+              <div className='md:hidden flex w-[85%] mx-auto justify-center items-center'>
+                <img alt="product-image" src={image} loading="lazy" className='max-h-[450px]' />
               </div>
             </div>
           </div>
