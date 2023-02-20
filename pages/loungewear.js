@@ -17,8 +17,12 @@ const LoungeWear = ({ products, filter, colorfilter }) => {
     const [showFilter, setShowFilter] = useState(false)
 
     const handleChange = (event) => {
-        setValue(event.target.value)
-        router.push(`/loungewear?category=${event.target.value}`)
+        if (router.query.category) {
+            router.push(`${router.asPath.replace(router.query.category, event.target.value)}`)
+        }
+        else {
+            router.push(`${router.asPath}&category=${event.target.value}`)
+        }
     }
 
     const changeFilter = (event) => {
