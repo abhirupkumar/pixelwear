@@ -239,7 +239,7 @@ const Add = () => {
 
     const clear = () => {
         setForm('')
-        type = ''
+        setType('')
         setType('')
         setSize('')
         setSubcategory('')
