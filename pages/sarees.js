@@ -3,13 +3,13 @@ import Link from 'next/link'
 import Product from "/models/Product"
 import mongoose from 'mongoose'
 import { useRouter } from 'next/router'
-import { Box, FormControl, FormControlLabel, RadioGroup, Radio } from '@mui/material'
+import { Box, FormControl, FormControlLabel, RadioGroup, Radio, Pagination } from '@mui/material'
 import { wordToHex } from '../colorhex'
 import Head from 'next/head'
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 
-const Bottoms = ({ products, filter, colorfilter }) => {
+const Bottoms = ({ products, filter, colorfilter, page, totalPages }) => {
 
     const router = useRouter()
 
@@ -21,12 +21,31 @@ const Bottoms = ({ products, filter, colorfilter }) => {
             router.push(`${router.asPath.replace(router.query.category, event.target.value)}`)
         }
         else {
-            router.push(`${router.asPath}&category=${event.target.value}`)
+            if (router.asPath.includes('?')) {
+                router.push(`${router.asPath}&category=${event.target.value}`)
+            }
+            else {
+                router.push(`${router.asPath}?category=${event.target.value}`)
+            }
         }
     }
 
     const changeFilter = (event) => {
         setShowFilter(!showFilter)
+    }
+
+    const handlePageChange = (event, value) => {
+        if (router.query.page) {
+            router.push(`${router.asPath.replace(router.query.page, value)}`)
+        }
+        else {
+            if (router.asPath.includes('?')) {
+                router.push(`${router.asPath}&page=${value}`)
+            }
+            else {
+                router.push(`${router.asPath}?page=${value}`)
+            }
+        }
     }
 
     useEffect(() => {
@@ -41,7 +60,7 @@ const Bottoms = ({ products, filter, colorfilter }) => {
                 <link rel="icon" href="/icon.png" />
             </Head>
             <div className="text-gray-600 body-font min-h-screen flex lg:flex-row flex-col">
-                {<div className={`lg:mx-2 lg:my-12 border border-gray-400 lg:w-[300px] w-full rounded-md lg:h-full lg:relative sticky bg-white z-20 ${showFilter ? '' : 'lg:border-gray-400 border-gray-300'} `}>
+                {colorfilter && colorfilter.length > 0 && <div className={`lg:mx-2 lg:my-12 border border-gray-400 lg:w-[300px] w-full rounded-md lg:h-full lg:relative sticky bg-white z-20 ${showFilter ? '' : 'lg:border-gray-400 border-gray-300'} `}>
                     <p className='lg:flex lg:flex-row hidden justify-center px-1 my-2 mx-10 text-xl'>Filter</p>
                     <button className='flex lg:hidden justify-center px-1 my-2 mx-auto text-xl' onClick={changeFilter}>Filter {showFilter ? <FilterListIcon /> : <FilterListOffIcon />}</button>
                     <div className={`${showFilter ? 'lg:block transition-all' : 'lg:block hidden'}`}>
@@ -90,6 +109,13 @@ const Bottoms = ({ products, filter, colorfilter }) => {
                             </div>
                             </Link>
                         })}
+                        {Object.keys(products)?.length > 0 && <Pagination
+                            count={totalPages}
+                            page={page}
+                            onChange={handlePageChange}
+                            style={{ marginTop: '3rem', marginBottom: '3rem' }}
+                            variant="outlined" color="secondary"
+                        />}
                     </div>
                 </div>
             </div>
@@ -172,8 +198,20 @@ export async function getServerSideProps(context) {
         }
     }
 
+    let page = 1
+    if (context.query.page && context.query.page !== 0) {
+        page = context.query.page
+    }
+    const productsPerPage = 15;
+    const startIndex = (page - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+
+    const filteredProducts = Object.fromEntries(
+        Object.entries(sarees).slice(startIndex, endIndex)
+    );
+
     return {
-        props: { products: JSON.parse(JSON.stringify(sarees)), filter: unique, colorfilter: colorfilter }, // will be passed to the page component as props
+        props: { products: JSON.parse(JSON.stringify(filteredProducts)), filter: unique, colorfilter: colorfilter, page: Number(page), totalPages: Math.ceil(Object.values(sarees).length / productsPerPage), }, // will be passed to the page component as props
         // props: { products: JSON.parse(JSON.stringify(products)) }, // will be passed to the page component as props
     }
 }

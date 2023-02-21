@@ -19,7 +19,9 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     router.events.on('routeChangeStart', () => {
-      setLoading(true)
+      if (!(router.asPath.includes("adminpanel_lesoft"))) {
+        setLoading(true)
+      }
       setProgress(40);
     })
     router.events.on('routeChangeComplete', () => {

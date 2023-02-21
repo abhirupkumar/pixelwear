@@ -15,7 +15,7 @@ const PicModal = ({ img }) => {
 
     return (
         <>
-            <img src={img} alt="Product Image" onClick={handleOpen} className="cursor-pointer" />
+            <img src={img} alt="Product Image" onClick={handleOpen} className="cursor-pointer" loading="lazy" />
             <Modal open={open} onClose={handleClose}>
                 <div style={{
                     display: 'flex',
@@ -37,7 +37,7 @@ const PicModal = ({ img }) => {
                         width: '100%',
                         objectFit: 'none',
                         height: '100%',
-                    }} />
+                    }} loading="lazy" />
                     <CloseIcon style={{
                         position: 'absolute',
                         top: "5px",

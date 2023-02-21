@@ -122,18 +122,21 @@ const Add = () => {
     const ref = useRef(null)
 
     const handleAddLink = () => {
-        setImageLinks([...imageLinks, newLink]);
-        setNewLink('');
+        if (newLink != '' && newLink != ' ') {
+            setImageLinks([...imageLinks, newLink]);
+            setNewLink('');
+        }
     };
 
     const handleRemoveLink = (index) => {
         setImageLinks(imageLinks.filter((_, i) => i !== index));
     };
 
-
     const handleAddDesc = () => {
-        setDesc([...desc, newDesc]);
-        setNewDesc('');
+        if (newDesc != '' && newDesc != ' ') {
+            setDesc([...desc, newDesc]);
+            setNewDesc('');
+        }
     };
 
     const handleRemoveDesc = (index) => {
@@ -184,7 +187,7 @@ const Add = () => {
         const newSkuId = generateSkuId()
         let data = [{
             title: form.title,
-            slug: (form?.title?.toLowerCase().replaceAll(' ', '-') + "-" + type + "-" + newSkuId + '-' + color + "-" + size.toLowerCase()),
+            slug: (form?.title?.toLowerCase().replaceAll(' ', '-') + "-" + type + '-' + subcategory + '-' + color + "-" + size.toLowerCase()),
             skuId: newSkuId,
             desc: desc,
             img: form.img,
@@ -221,7 +224,7 @@ const Add = () => {
             form.theme = ''
         }
         else {
-            toast.error("Some Error Occured ! Could not add products", {
+            toast.error(res.error, {
                 position: "top-center",
                 autoClose: 3000,
                 hideProgressBar: false,

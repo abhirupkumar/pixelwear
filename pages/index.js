@@ -136,7 +136,7 @@ const Home = ({ videos, images, products }) => {
                   }}
                   renderPrevButton={renderPrevButton}
                   renderNextButton={renderNextButton}>
-                  {Object.keys(products).map((item) => {
+                  {Object.keys(products).reverse().map((item) => {
                     return <Link key={products[item]._id} href={`/product/${products[item].slug}`}>
                       <div className="lg:w-[310px] cursor-pointer m-4">
                         <a className="flex justify-center lg:h-[480px] relative overflow-hidden">

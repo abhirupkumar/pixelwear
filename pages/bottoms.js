@@ -3,13 +3,13 @@ import Link from 'next/link'
 import Product from "/models/Product"
 import mongoose from 'mongoose'
 import { useRouter } from 'next/router'
-import { Box, FormControl, FormControlLabel, RadioGroup, Radio } from '@mui/material'
+import { Box, FormControl, FormControlLabel, RadioGroup, Radio, makeStyles, Pagination } from '@mui/material'
 import { wordToHex } from '../colorhex'
 import Head from 'next/head'
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 
-const Bottoms = ({ products, filter, colorfilter }) => {
+const Bottoms = ({ products, filter, colorfilter, page, totalPages }) => {
 
     const router = useRouter()
 
@@ -21,7 +21,12 @@ const Bottoms = ({ products, filter, colorfilter }) => {
             router.push(`${router.asPath.replace(router.query.category, event.target.value)}`)
         }
         else {
-            router.push(`${router.asPath}&category=${event.target.value}`)
+            if (router.asPath.includes('?')) {
+                router.push(`${router.asPath}&category=${event.target.value}`)
+            }
+            else {
+                router.push(`${router.asPath}?category=${event.target.value}`)
+            }
         }
     }
 
@@ -33,6 +38,19 @@ const Bottoms = ({ products, filter, colorfilter }) => {
         setValue(router.query.category)
     }, [router])
 
+    const handlePageChange = (event, value) => {
+        if (router.query.page) {
+            router.push(`${router.asPath.replace(router.query.page, value)}`)
+        }
+        else {
+            if (router.asPath.includes('?')) {
+                router.push(`${router.asPath}&page=${value}`)
+            }
+            else {
+                router.push(`${router.asPath}?page=${value}`)
+            }
+        }
+    }
 
     return (
         <div>
@@ -42,7 +60,7 @@ const Bottoms = ({ products, filter, colorfilter }) => {
                 <link rel="icon" href="/icon.png" />
             </Head>
             <div className="text-gray-600 body-font min-h-screen flex lg:flex-row flex-col">
-                {Object.keys(products).length !== 0 && <div className={`lg:mx-2 lg:my-12 lg:w-[300px] border border-gray-400 w-full rounded-md lg:h-full lg:relative sticky top-0 bg-white z-20 ${showFilter ? '' : 'lg:border-gray-400 border-gray-300'}`}>
+                {colorfilter && colorfilter.length > 0 && <div className={`lg:mx-2 lg:my-12 lg:w-[300px] border border-gray-400 w-full rounded-md lg:h-full lg:relative sticky top-0 bg-white z-20 ${showFilter ? '' : 'lg:border-gray-400 border-gray-300'}`}>
                     <p className='lg:flex lg:flex-row hidden justify-center px-1 my-2 mx-10 text-xl'>Filter</p>
                     <button className='flex lg:hidden justify-center px-1 my-2 mx-auto text-xl' onClick={changeFilter}>Filter {showFilter ? <FilterListIcon /> : <FilterListOffIcon />}</button>
                     <div className={`${showFilter ? 'lg:block transition-all overflow-y-scroll' : 'lg:block hidden'}`}>
@@ -89,7 +107,7 @@ const Bottoms = ({ products, filter, colorfilter }) => {
                         </>}
                     </div>
                 </div>}
-                <div className="flex w-full px-2 justify-center">
+                <div className="flex flex-col w-full px-2 justify-center items-center">
                     <div className="flex flex-wrap justify-center items-center">
                         {Object.keys(products)?.length === 0 && <p className="">Sorry all the {value} are currently out of stock. New stock comming soon. Stay Tuned!</p>}
                         {Object.keys(products)?.map((item) => {
@@ -106,7 +124,7 @@ const Bottoms = ({ products, filter, colorfilter }) => {
                                         {products[item].size.includes('M') && <span className='border border-gray-500 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>M</span>}
                                         {products[item].size.includes('L') && <span className='border border-gray-500 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>L</span>}
                                         {products[item].size.includes('XL') && <span className='border border-gray-500 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>XL</span>}
-                                        {products[item].size.includes('2XL') && <span className='border border-gray-300 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>2XL</span>}
+                                        {products[item].size.includes('2XL') && <span className='border border-gray-500 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>2XL</span>}
                                         {products[item].size.includes('3XL') && <span className='border border-gray-500 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>3XL</span>}
                                         {products[item].size.includes('Free') && <span className='border border-gray-500 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>Free</span>}
                                     </div>
@@ -115,6 +133,13 @@ const Bottoms = ({ products, filter, colorfilter }) => {
                             </Link>
                         })}
                     </div>
+                    {Object.keys(products)?.length > 0 && <Pagination
+                        count={totalPages}
+                        page={page}
+                        onChange={handlePageChange}
+                        style={{ marginTop: '3rem', marginBottom: '3rem' }}
+                        variant="outlined" color="secondary"
+                    />}
                 </div>
             </div>
         </div>
@@ -188,6 +213,18 @@ export async function getServerSideProps(context) {
         }
     }
 
+    let page = 1
+    if (context.query.page && context.query.page !== 0) {
+        page = context.query.page
+    }
+    const productsPerPage = 15;
+    const startIndex = (page - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+
+    const filteredProducts = Object.fromEntries(
+        Object.entries(bottoms).slice(startIndex, endIndex)
+    );
+
     let unique = []
 
     for (let i = 0; i < titlefilter.length; i++) {
@@ -197,7 +234,7 @@ export async function getServerSideProps(context) {
     }
 
     return {
-        props: { products: JSON.parse(JSON.stringify(bottoms)), filter: unique, colorfilter: colorfilter }, // will be passed to the page component as props
+        props: { products: JSON.parse(JSON.stringify(filteredProducts)), filter: unique, colorfilter: colorfilter, page: Number(page), totalPages: Math.ceil(Object.values(bottoms).length / productsPerPage), }, // will be passed to the page component as props
         // props: { products: JSON.parse(JSON.stringify(products)) }, // will be passed to the page component as props
     }
 }
