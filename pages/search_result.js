@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Product from "/models/Product"
 import mongoose from 'mongoose'
 import { useRouter } from 'next/router'
-import { Box, FormControl, FormControlLabel, RadioGroup, Radio, Pagination } from '@mui/material'
+import { Box, FormControl, FormControlLabel, RadioGroup, Radio, Pagination, Checkbox } from '@mui/material'
 import { wordToHex } from '../colorhex'
 import Head from 'next/head'
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -13,6 +13,57 @@ const SearchResult = ({ products, filter, colorfilter, page, totalPages }) => {
 
     const router = useRouter()
     const [showFilter, setShowFilter] = useState(false)
+    const [selectedFilters, setSelectedFilters] = useState({
+        colors: [],
+        categories: [],
+        fabrics: [],
+        sizes: [],
+    });
+
+    useEffect(() => {
+        const { colors = [], categories = [], fabrics = [], sizes = [] } = router.query;
+        setSelectedFilters({
+            colors: Array.isArray(colors) ? colors : colors.split(','),
+            categories: Array.isArray(categories) ? categories : categories.split(','),
+            fabrics: Array.isArray(fabrics) ? fabrics : fabrics.split(','),
+            sizes: Array.isArray(sizes) ? sizes : sizes.split(','),
+        });
+    }, [router.query]);
+
+    const handleFilterChange = (event) => {
+        setSelectedFilters({
+            ...selectedFilters,
+            [event.target.name]: event.target.checked ? [...selectedFilters[event.target.name], event.target.value] : selectedFilters[event.target.name].filter((filter) => filter !== event.target.value),
+        });
+    };
+
+    const applyFilters = () => {
+        const filterParams = [];
+
+        for (const filterType in selectedFilters) {
+            const filters = selectedFilters[filterType];
+
+            if (filters.length > 0) {
+                filterParams.push(`${filterType}=${filters.join(',')}`);
+            }
+        }
+
+        const queryString = filterParams.length > 0 ? `?${filterParams.join('&')}` : '';
+        const filteredUrl = `/search_result${queryString}&query=${router.query.query}`;
+
+        router.push(filteredUrl);
+    };
+
+    const clearFilters = () => {
+        setSelectedFilters({
+            colors: [],
+            categories: [],
+            fabrics: [],
+            sizes: [],
+        });
+
+        router.push(`/search_result?query=${router.query.query}`);
+    };
 
     const changeFilter = (event) => {
         setShowFilter(!showFilter)
@@ -20,20 +71,6 @@ const SearchResult = ({ products, filter, colorfilter, page, totalPages }) => {
 
     useEffect(() => {
     }, [router.query.query])
-
-    const handleChange = (event) => {
-        if (router.query.category) {
-            router.push(`${router.asPath.replace(router.query.category, event.target.value)}`)
-        }
-        else {
-            if (router.asPath.includes('?')) {
-                router.push(`${router.asPath}&category=${event.target.value}`)
-            }
-            else {
-                router.push(`${router.asPath}?category=${event.target.value}`)
-            }
-        }
-    }
 
     const handlePageChange = (event, value) => {
         if (router.query.page) {
@@ -57,33 +94,48 @@ const SearchResult = ({ products, filter, colorfilter, page, totalPages }) => {
                 <link rel="icon" href="/icon.png" />
             </Head>
             <div className="text-gray-600 body-font min-h-screen flex lg:flex-row flex-col">
-                {colorfilter && colorfilter.length > 0 && Object.keys(products).length !== 0 && <div className={`lg:mx-2 lg:my-12 lg:w-[300px] border border-gray-400 w-full rounded-md lg:h-full lg:relative sticky top-0 bg-white z-20 ${showFilter ? '' : 'lg:border-gray-400 border-gray-300'}`}>
+                {colorfilter && colorfilter.length > 0 && <div className={`lg:mx-2 lg:my-12 lg:w-[300px] border border-gray-400 w-full rounded-md h-full lg:relative sticky top-0 bg-white z-20 ${showFilter ? '' : 'lg:border-gray-400 border-gray-300'}`}>
                     <p className='lg:flex lg:flex-row hidden justify-center px-1 my-2 mx-10 text-xl'>Filter</p>
                     <button className='flex lg:hidden justify-center px-1 my-2 mx-auto text-xl' onClick={changeFilter}>Filter {showFilter ? <FilterListIcon /> : <FilterListOffIcon />}</button>
                     <div className={`${showFilter ? 'lg:block transition-all overflow-y-scroll' : 'lg:block hidden'}`}>
+                        <hr className='lg:mt-2 mt-1 mb-2' />
+                        <div className="flex items-center justify-center">
+                            <button onClick={applyFilters} className="flex mr-2 text-white bg-[#9933ff] border-0 py-2 px-3 focus:outline-none hover:bg-[#8000ff] rounded text-sm">Apply Filter</button>
+                            <button onClick={clearFilters} className="flex mr-2 text-white bg-[#9933ff] border-0 py-2 px-3 focus:outline-none hover:bg-[#8000ff] rounded text-sm">Clear Filter</button>
+                        </div>
+                        <hr className='lg:mt-2 mt-1' />
                         {Object.keys(filter).length != 0 && <><hr className='mt-2' />
                             <p className='flex flex-row justify-center px-1 my-2 mx-10 text-lg text-semibold'>Fabric</p>
                             <div className='flex flex-col px-20 mx-auto text-base'>
-                                {Object.keys(filter).map((item, index) => { return <Link passHref={true} key={index} href={`${router.asPath}&fabric=${filter[item]}`}><li className='text-base cursor-pointer hover:text-blue-600 hover:underline'>{filter[item]}</li></Link> })}
+                                {Object.keys(filter).map((item, index) => {
+                                    return <FormControlLabel
+                                        key={index}
+                                        control={<Checkbox checked={!!selectedFilters.fabrics.includes(filter[item])} onChange={handleFilterChange} name="fabrics" value={filter[item]} />}
+                                        label={filter[item]}
+                                    />
+                                })}
                             </div></>}
                         <hr className='mt-2' />
                         <p className='flex flex-row justify-center px-1 my-2 mx-10 text-lg'>Sizes</p>
                         <div className='flex flex-wrap justify-center px-6 mx-auto'>
-                            <Link href={`${router.asPath}&size=S`}><span className='border border-gray-300 px-2 mx-1 text-base my-1  cursor-pointer hover:text-blue-600 hover:border-blue-600'>S</span></Link>
-                            <Link href={`${router.asPath}&size=M`}><span className='border border-gray-300 px-2 mx-1 text-base my-1  cursor-pointer hover:text-blue-600 hover:border-blue-600'>M</span></Link>
-                            <Link href={`${router.asPath}&size=L`}><span className='border border-gray-300 px-2 mx-1 text-base my-1  cursor-pointer hover:text-blue-600 hover:border-blue-600'>L</span></Link>
-                            <Link href={`${router.asPath}&size=XL`}><span className='border border-gray-300 px-2 mx-1 text-base my-1  cursor-pointer hover:text-blue-600 hover:border-blue-600'>XL</span></Link>
-                            <Link href={`${router.asPath}&size=2XL`}><span className='border border-gray-300 px-2 mx-1 text-base my-1  cursor-pointer hover:text-blue-600 hover:border-blue-600'>2XL</span></Link>
-                            <Link href={`${router.asPath}&size=3XL`}><span className='border border-gray-300 px-2 mx-1 text-base my-1  cursor-pointer hover:text-blue-600 hover:border-blue-600'>3XL</span></Link>
-                            <Link href={`${router.asPath}&size=Free`}><span className='border border-gray-300 px-2 mx-1 text-base my-1  cursor-pointer hover:text-blue-600 hover:border-blue-600'>Free</span></Link>
-                            <Link href={`${router.asPath}&size=Standard`}><span className='border border-gray-300 px-2 mx-1 text-base my-1  cursor-pointer hover:text-blue-600 hover:border-blue-600'>Standard</span></Link>
+                            {['S', 'M', 'L', 'XL', '2XL', '3XL', 'Free', 'Standard'].map((item, index) => {
+                                return <FormControlLabel
+                                    key={index}
+                                    control={<Checkbox checked={!!selectedFilters.sizes.includes(item)} onChange={handleFilterChange} name="sizes" value={item} />}
+                                    label={item}
+                                />
+                            })}
                         </div>
                         {colorfilter && colorfilter.length > 0 && <>
                             <hr className='mt-3' />
                             <p className='flex flex-row justify-center px-1 my-2 mx-10 text-lg text-semibold'>Color</p>
                             <div className='flex flex-col pl-10 mx-auto text-base pb-2'>
                                 {colorfilter && colorfilter.map((color, index) => {
-                                    return <div key={index} className='flex flex-row gap-x-3 py-1'><div style={{ backgroundColor: `${wordToHex[color]}` }} className="border-2 border-gray-300 ml-1 rounded-full w-6 h-6 focus:outline-none"></div><Link passHref={true} key={index} href={`${router.asPath}&color=${color}`}><a className='text-base cursor-pointer hover:text-blue-600 hover:underline'>{color}</a></Link></div>
+                                    return <FormControlLabel
+                                        key={index}
+                                        control={<Checkbox checked={!!selectedFilters.colors.includes(color)} onChange={handleFilterChange} name="colors" value={color} />}
+                                        label={color}
+                                    />
                                 })}
                             </div>
                             <div className="lg:hidden py-10">
@@ -91,40 +143,36 @@ const SearchResult = ({ products, filter, colorfilter, page, totalPages }) => {
                         </>}
                     </div>
                 </div>}
-                <div className="flex w-full px-2 justify-center">
+                <div className={`w-full px-2 justify-start items-center ${showFilter ? 'hidden' : 'flex flex-col'}`}>
                     <div className="flex flex-wrap justify-center items-center">
-                        {Object.keys(products)?.length === 0 && <p className="">Sorry result not found!</p>}
-                        {products && Object.keys(products)?.map((item) => {
-                            return <Link passHref={true} key={products[item]?._id} href={`/product/${products[item]?.slug}`}><div className="lg:w-[310px] w-[39%] cursor-pointer m-4">
+                        {Object.keys(products)?.length === 0 && <p className="mt-10">Sorry, Search not found!</p>}
+                        {Object.keys(products)?.map((item) => {
+                            return <Link passHref={true} key={products[item]._id} href={`/product/${products[item].slug}`}><div className="lg:w-[310px] w-[39%] cursor-pointer m-4 overlfow-x-hiden">
                                 <a className="flex justify-center lg:h-[480px] relative overflow-hidden">
-                                    <img alt="ecommerce" className="m-auto md:m-0 lg:h-[480px] object-contain block" src={products[item]?.img} loading="lazy" />
+                                    <img alt="ecommerce" className="m-auto md:m-0 lg:h-[480px] object-contain block" src={products[item].img} loading="lazy" />
                                 </a>
                                 <div className="text-center md:text-left">
-                                    <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{products[item]?.category.toUpperCase()}</h3>
-                                    <h2 className="text-gray-900 text-left title-font lg:text-lg ms:text-md sm:text-sm text-xs font-medium">{products[item]?.title}</h2>
-                                    <p className="mt-1 text-left">₹{products[item]?.price}</p>
+                                    <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{products[item].category.toUpperCase()}</h3>
+                                    <h2 className="text-gray-900 text-left title-font lg:text-lg ms:text-md sm:text-sm text-xs font-medium">{products[item].title}</h2>
+                                    <p className="mt-1 text-left lg:text-lg ms:text-md sm:text-sm text-xs">₹{products[item].price}</p>
                                     <div className="mt-1 flex items-start">
-                                        {products[item]?.size.includes('S') && products[item]?.category !== 'sarees' && <span className='border border-gray-500 px-1 mx-1'>S</span>}
-                                        {products[item]?.size.includes('M') && products[item]?.category !== 'sarees' && <span className='border border-gray-500 px-1 mx-1'>M</span>}
-                                        {products[item]?.size.includes('L') && products[item]?.category !== 'sarees' && <span className='border border-gray-500 px-1 mx-1'>L</span>}
-                                        {products[item]?.size.includes('XL') && products[item]?.category !== 'sarees' && <span className='border border-gray-500 px-1 mx-1'>XL</span>}
-                                        {products[item]?.size.includes('2XL') && products[item]?.category !== 'sarees' && <span className='border border-gray-300 px-1 mx-1'>2XL</span>}
-                                        {products[item]?.size.includes('3XL') && products[item]?.category !== 'sarees' && <span className='border border-gray-500 px-1 mx-1'>3XL</span>}
-                                        {products[item]?.size.includes('Free') && products[item]?.category !== 'sarees' && <span className='border border-gray-500 px-1 mx-1'>Free</span>}
-                                        {products[item]?.size.includes('Standard') && products[item]?.category === 'sarees' && <span className='border border-gray-500 px-1 mx-1'>Standard</span>}
+                                        {products[item].size.slice(0, 3).map((size, index) => {
+                                            return <span key={index} className='border border-gray-500 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>{size}</span>
+                                        })}
+                                        {products[item].size.length > 3 && <span className='border border-gray-500 lg:px-1 px-[0.10rem] mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>+{products[item].size.length - 3} more</span>}
                                     </div>
                                 </div>
                             </div>
                             </Link>
                         })}
-                        {Object.keys(products)?.length > 0 && <Pagination
-                            count={totalPages}
-                            page={page}
-                            onChange={handlePageChange}
-                            style={{ marginTop: '3rem', marginBottom: '3rem' }}
-                            variant="outlined" color="secondary"
-                        />}
                     </div>
+                    {Object.keys(products)?.length > 0 && <Pagination
+                        count={totalPages}
+                        page={page}
+                        onChange={handlePageChange}
+                        style={{ marginTop: '3rem', marginBottom: '3rem' }}
+                        variant="outlined" color="secondary"
+                    />}
                 </div>
             </div>
         </div>
@@ -136,17 +184,17 @@ export async function getServerSideProps(context) {
         await mongoose.connect(process.env.MONGO_URI)
     }
     let obj = {}
-    if (context.query.category) {
-        obj['theme'] = context.query.category
+    if (context.query.categories) {
+        obj['theme'] = Array.isArray(context.query.categories) ? context.query.categories : context.query.categories.split(',')
     }
-    if (context.query.color) {
-        obj['color'] = context.query.color
+    if (context.query.colors) {
+        obj['color'] = Array.isArray(context.query.colors) ? context.query.colors : context.query.colors.split(',')
     }
-    if (context.query.fabric) {
-        obj['fabric'] = context.query.fabric
+    if (context.query.fabrics) {
+        obj['fabric'] = Array.isArray(context.query.fabrics) ? context.query.fabrics : context.query.fabrics.split(',')
     }
-    if (context.query.size) {
-        obj['size'] = context.query.size
+    if (context.query.sizes) {
+        obj['size'] = Array.isArray(context.query.sizes) ? context.query.sizes : context.query.sizes.split(',')
     }
     let products = await Product.find(obj)
     let bottoms = {}
@@ -185,11 +233,11 @@ export async function getServerSideProps(context) {
 
 
     let results = []
-    for (let product in Object.keys(products)) {
-        const productString = (products[product].title + " " + products[product].category + " " + products[product].color + " " + products[product].theme).toLowerCase();
+    for (let product in bottoms) {
+        const productString = (bottoms[product].title + " " + bottoms[product].category + " " + bottoms[product].color + " " + bottoms[product].theme).toLowerCase();
         const queryWords = context.query.query.toLowerCase().split(' ');
         if (queryWords.every(word => productString.includes(word))) {
-            results.push(products[product])
+            results.push(bottoms[product])
         }
     };
 

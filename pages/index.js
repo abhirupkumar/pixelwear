@@ -167,9 +167,9 @@ const Home = ({ videos, images, products }) => {
             <h1 className="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">Quality Of Classes, At Prices Of Masses</h1>
             <p className="lg:w-1/2 w-full leading-relaxed text-gray-500">The collection of products, we make available, neatly stitched using stretchable and anti-piling fabric which guarantees the comfort of the wearer.</p>
           </div>
-          <div className="flex justify-center">
+          {videos && videos[0] && <div className="flex justify-center">
             <iframe width="1239" height="400" src={videos[0].vid} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-          </div>
+          </div>}
           <div className="flex flex-wrap -m-4 mt-20">
             <div className="xl:w-1/3 md:w-1/2 p-4">
               <div className="border border-gray-200 p-6 rounded-lg text-center">

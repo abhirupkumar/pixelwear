@@ -9,7 +9,7 @@ import Head from 'next/head';
 import ReactImageMagnify from "react-image-magnify";
 import { wordToHex } from '../../colorhex';
 import { useDispatch } from 'react-redux';
-import { addToCart, clearCart } from '../../features/cartSlice';
+import { addToCart, clearCart, removeFromCart } from '../../features/cartSlice';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import PicModal from '../../components/PicModal';
@@ -24,6 +24,7 @@ const Post = ({ product, variants, error, slugImgArr }) => {
   const [size, setSize] = useState()
   const [image, setImage] = useState()
   const [imgarr, setImgarr] = useState([])
+  const [hoveredColor, setHoveredColor] = useState('');
   const [qty, setQty] = useState(1)
 
   useEffect(() => {
@@ -87,7 +88,7 @@ const Post = ({ product, variants, error, slugImgArr }) => {
   }
 
   const refreshVariant = (newsize, newcolor) => {
-    let url = `${process.env.NEXT_PUBLIC_HOST}/product/${variants[newcolor][newsize]['slug']}`
+    let url = `/product/${variants[newcolor][newsize]['slug']}`
     router.push(url)
   }
 
@@ -223,8 +224,15 @@ const Post = ({ product, variants, error, slugImgArr }) => {
                 <p className="mx-1 font-semibold">{product.color}</p>
               </div>
               <div className="flex ml-3 flex-wrap">
-                {Object.keys(variants) && Object.keys(variants).map((color1, index) => <button key={index} onClick={() => { refreshVariant(Object.keys(variants[color1]), color1) }} className={`border-2 mx-[1px] w-14 focus:outline-none ${color === color1 ? 'border-black' : 'border-gray-300'}`}>
+                {Object.keys(variants) && Object.keys(variants).map((color1, index) => <button key={index} onClick={() => { refreshVariant(size, color1) }} className={`border-2 mx-[1px] w-16 focus:outline-none opacity-[1]  image-container relative ${color === color1 ? 'border-black' : 'border-gray-300'}`}
+                  onMouseEnter={() => setHoveredColor(color1)}
+                  onMouseLeave={() => setHoveredColor('')}>
                   <img src={slugImgArr[color1]} alt={`img-${index}`} />
+                  {hoveredColor === color1 && (
+                    <div className='color-label'>
+                      {color1}
+                    </div>
+                  )}
                 </button>
                 )}
               </div>
@@ -238,7 +246,11 @@ const Post = ({ product, variants, error, slugImgArr }) => {
             <div className="flex">
               {product.availableQty > 0 && <span className="title-font font-medium text-2xl text-gray-900">₹{product.price}</span>}
               {product.availableQty <= 0 && <span className="title-font font-medium text-2xl text-red-600">Out Of Stock!</span>}
-              <button disabled={product.availableQty <= 0} onClick={() => dispatch(addToCart({ slug, qty: qty, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img }))} className="flex ml-4 text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Buy Now</button>
+              <button disabled={product.availableQty <= 0} onClick={() => {
+                dispatch(clearCart())
+                dispatch(addToCart({ slug, qty: qty, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img }))
+                router.push('/checkout')
+              }} className="flex ml-4 text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Buy Now</button>
               <button disabled={product.availableQty <= 0} onClick={() => dispatch(addToCart({ slug, qty: qty, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img }))} className="flex ml-4 text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Add To Cart</button>
             </div>
             <div className="pin my-6 flex space-x-2 text-sm items-center flex-wrap">

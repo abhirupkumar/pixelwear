@@ -201,7 +201,7 @@ const Update = ({ product }) => {
         let data = [{
             _id: product._id,
             title: title,
-            slug: (title?.toLowerCase().replaceAll(' ', '-') + "-" + type + "-" + product.skuId + '-' + color + "-" + size.toLowerCase()),
+            slug: ((((title.toLowerCase().replaceAll(' ', '-')).replaceAll('%', '+')).replaceAll('/', '+')).replaceAll('@', '-') + "-" + type + "-" + product.skuId + '-' + color + "-" + size.toLowerCase()),
             skuId: product.skuId,
             desc: desc,
             img: img,
@@ -470,7 +470,7 @@ const Update = ({ product }) => {
                                 </FormControl>
 
                                 <div className='flex space-x-6 my-[1rem]'>
-                                    <Autocomplete
+                                    {/* <Autocomplete
                                         options={Object.keys(wordToHex)}
                                         noOptionsText='No Option Found'
                                         value={color}
@@ -496,7 +496,8 @@ const Update = ({ product }) => {
                                             marginTop: 0,
                                         }}
                                         ref={ref}
-                                    />
+                                    /> */}
+                                    <TextField onChange={handleOtherChange} value={color} name="color" label="Color" variant="outlined" />
                                     <TextField onChange={handleOtherChange} value={qty} name="qty" label="Quantity" variant="outlined" />
 
                                     <TextField onChange={handleOtherChange} value={fabric} name="fabric" label="Fabric" variant="outlined" />

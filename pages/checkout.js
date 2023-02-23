@@ -111,7 +111,7 @@ const Checkout = () => {
     setLoading(true)
     //Get a transaction token
     const data = { cart, subTotal, oid, email: email, name, address, pincode, phone, state, city };
-    let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pretransaction`, {
+    let a = await fetch(`/api/pretransaction`, {
       method: 'POST', // or 'PUT'
       headers: {
         'Content-Type': 'application/json',

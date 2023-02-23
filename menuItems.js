@@ -1,34 +1,34 @@
 export const menuItems = [
     {
         title: "Sarees",
-        link: "/sarees?category=sarees",
+        link: "/sarees?categories=sarees",
     },
     {
         title: "Bottoms",
         link: "/bottoms",
         submenu: [{
             title: "Ankle Leggings",
-            link: "/bottoms?category=ankleleggings",
+            link: "/bottoms?categories=ankleleggings",
         },
         {
             title: "Capri Leggings",
-            link: "/bottoms?category=caprileggings",
+            link: "/bottoms?categories=caprileggings",
         },
         {
             title: "Churidar Leggings",
-            link: "/bottoms?category=churidarleggings",
+            link: "/bottoms?categories=churidarleggings",
         },
         {
             title: "Palazzo",
-            link: "/bottoms?category=palazzo",
+            link: "/bottoms?categories=palazzo",
         },
         {
             title: "Patiala",
-            link: "/bottoms?category=patiala",
+            link: "/bottoms?categories=patiala",
         },
         {
             title: "Straight Pant",
-            link: "/bottoms?category=straightpant",
+            link: "/bottoms?categories=straightpant",
         },
         ],
     },
@@ -37,11 +37,11 @@ export const menuItems = [
         link: "/tops",
         submenu: [{
             title: "T-shirts",
-            link: "/tops?category=tshirts",
+            link: "/tops?categories=tshirts",
         },
         {
             title: "Hoodies",
-            link: "/tops?category=hoodies",
+            link: "/tops?categories=hoodies",
         },
         ],
     },
@@ -50,7 +50,7 @@ export const menuItems = [
         link: "/innerwear",
         submenu: [{
             title: "Shorts",
-            link: "/innerwear?category=shorts",
+            link: "/innerwear?categories=shorts",
         },
         ],
     },
@@ -59,21 +59,21 @@ export const menuItems = [
         link: "/kids",
         submenu: [{
             title: "Bottoms",
-            link: "/kids?category=bottom/ankleleggings",
+            link: "/kids?categories=bottom/ankleleggings",
             submenu: [
                 {
                     title: "Ankle Leggings",
-                    link: "/kids?category=bottom/ankleleggings",
+                    link: "/kids?categories=bottom/ankleleggings",
                 },
                 {
                     title: "Capri",
-                    link: "/kids?category=bottom/capri",
+                    link: "/kids?categories=bottom/capri",
                 },
             ],
         },
         {
             title: "Shorts",
-            link: "/kids?category=shorts",
+            link: "/kids?categories=shorts",
         },
         ],
     },
@@ -82,19 +82,19 @@ export const menuItems = [
         link: "/loungewear",
         submenu: [{
             title: "Pyjama Set",
-            link: "/loungewear?category=pyjama",
+            link: "/loungewear?categories=pyjama",
         },
         {
             title: "Capri Set",
-            link: "/loungewear?category=capri",
+            link: "/loungewear?categories=capri",
         },
         {
             title: "Shorty Set",
-            link: "/loungewear?category=shorty",
+            link: "/loungewear?categories=shorty",
         },
         {
             title: "Long Tee",
-            link: "/loungewear?category=longtee",
+            link: "/loungewear?categories=longtee",
         },
         ],
     },

@@ -56,7 +56,9 @@ const Index = ({ images, videos }) => {
     }
 
     const fetchvideos = () => {
-        setVideoValue(videos[0].vid.toString())
+        if (videos && videos[0]) {
+            setVideoValue(videos[0].vid.toString())
+        }
     }
 
     const onVChange = (e) => {
@@ -125,7 +127,7 @@ const Index = ({ images, videos }) => {
                 progress: undefined,
             });
             setTimeout(() => {
-                router.push(`${process.env.NEXT_PUBLIC_HOST}/admin`)
+                router.push(`/adminpanel_lesoft`)
             }, 2000);
         }
         else {

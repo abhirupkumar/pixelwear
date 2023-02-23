@@ -187,7 +187,7 @@ const Add = () => {
         const newSkuId = generateSkuId()
         let data = [{
             title: form.title,
-            slug: (form?.title?.toLowerCase().replaceAll(' ', '-') + "-" + type + '-' + subcategory + '-' + color + "-" + size.toLowerCase()),
+            slug: ((((form?.title?.toLowerCase().replaceAll(' ', '-')).replaceAll('%', '+')).replaceAll('/', '+')).replaceAll('@', '-') + "-" + type + '-' + subcategory + '-' + form?.color + "-" + size.toLowerCase()),
             skuId: newSkuId,
             desc: desc,
             img: form.img,
@@ -195,7 +195,7 @@ const Add = () => {
             category: type,
             theme: subcategory,
             size: size,
-            color: color,
+            color: form.color,
             fabric: form.fabric,
             price: form.price,
             availableQty: form.qty,
@@ -458,7 +458,7 @@ const Add = () => {
                                 </FormControl>
 
                                 <div className='flex space-x-6'>
-                                    <Autocomplete
+                                    {/* <Autocomplete
                                         options={Object.keys(wordToHex)}
                                         noOptionsText='No Option Found'
                                         loadingText='Loading...'
@@ -483,7 +483,8 @@ const Add = () => {
                                             marginTop: 0,
                                         }}
                                         ref={ref}
-                                    />
+                                    /> */}
+                                    <TextField onChange={onChange} value={form.color ? form.color : ""} name="color" label="Color" variant="outlined" />
                                     <TextField onChange={onChange} value={form.qty ? form.qty : ""} name="qty" label="Quantity" variant="outlined" />
 
                                     <TextField onChange={onChange} value={form.fabric ? form.fabric : ""} name="fabric" label="Fabric" variant="outlined" />
