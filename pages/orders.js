@@ -43,7 +43,10 @@ const Orders = () => {
                                     <thead className="bg-white border-b">
                                         <tr>
                                             <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                #
+                                                Order Id
+                                            </th>
+                                            <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                                Date
                                             </th>
                                             <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
                                                 Email
@@ -60,6 +63,7 @@ const Orders = () => {
                                         {orders.map((item) => {
                                             return <tr key={item._id} className="bg-white border-b transition duration-300 ease-in-out hover:bg-indigo-100">
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.orderId}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{new Date(item.createdAt).toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td>
                                                 <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                                     {item.email}
                                                 </td>

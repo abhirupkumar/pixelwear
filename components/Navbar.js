@@ -223,7 +223,7 @@ const Navbar = () => {
               <AiOutlineSearch />
             </button>
           </div>
-          <span className="md:block hidden" onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>
+          <span className="md:block hidden cursor-pointer" onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>
             {token && <MdAccountCircle className="text-2xl mt-2" />}
           </span>
           <div className="cart md:flex hidden top-4 mx-6 cursor-pointer">

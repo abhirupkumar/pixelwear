@@ -14,51 +14,26 @@ import { Stack } from "@mui/material";
 const AllOrders = ({ orders }) => {
 
   let date = 12;
-  const [type, setType] = useState('')
   const [status, setStatus] = useState('unshipped')
-
-  const handleRadioChange = (event) => {
-    setType(event.target.name)
-  }
+  const [amount, setAmount] = useState(0)
 
   const handleChange = (event) => {
     setStatus(event.target.name)
   }
 
+  useEffect(() => {
+    let sum = 0;
+    for (let order in orders) {
+      if (orders[order].status == 'Payment Successful')
+        sum = sum + orders[order].amount
+    }
+    setAmount(sum)
+  }, [])
+
   return (
     <BaseCard title="All orders">
       <div className='overflow-x-auto'>
         <Stack spacing={2}>
-          {/* <FormControl>
-            <FormLabel id="demo-radio-buttons-group-label">Payment Category</FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              name="radio-buttons-group">
-              <div className='flex flex-col lg:flex-row '>
-                <FormControlLabel
-                  value='Payment Successful'
-                  control={<Radio />}
-                  label="Payment Successful"
-                  name="Payment Successful"
-                  onChange={handleRadioChange}
-                />
-                <FormControlLabel
-                  value='Initiated'
-                  control={<Radio />}
-                  label="Initiated"
-                  name="Initiated"
-                  onChange={handleRadioChange}
-                />
-                <FormControlLabel
-                  value='Pending'
-                  control={<Radio />}
-                  label="Pending"
-                  name="Pending"
-                  onChange={handleRadioChange}
-                />
-              </div>
-            </RadioGroup>
-          </FormControl> */}
           {<FormControl>
             <FormLabel id="demo-radio-buttons-group-label">Delivery Category</FormLabel>
             <RadioGroup
@@ -67,18 +42,19 @@ const AllOrders = ({ orders }) => {
               <div className='flex flex-col lg:flex-row '>
                 <FormControlLabel
                   value='dispatched'
-                  control={<Radio />}
+                  control={<Radio checked={!!(status == 'dispatched')} />}
                   label="Dispatched"
                   name="dispatched"
                   onChange={handleChange}
                 />
                 <FormControlLabel
                   value='unshipped'
-                  control={<Radio />}
+                  control={<Radio checked={!!(status == 'unshipped')} />}
                   label="Unshipped"
                   name="unshipped"
                   onChange={handleChange}
                 />
+                <div className="flex flex-1 justify-end"><b className="mr-2">Total Amount:</b>₹{amount}</div>
               </div>
             </RadioGroup>
           </FormControl>}

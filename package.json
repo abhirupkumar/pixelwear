@@ -30,6 +30,7 @@
     "nodemailer": "^6.7.6",
     "paytmchecksum": "^1.5.0",
     "postcss": "^8.4.16",
+    "razorpay": "^2.8.6",
     "react": "^18.2.0",
     "react-alice-carousel": "^2.7.0",
     "react-dom": "18.2.0",

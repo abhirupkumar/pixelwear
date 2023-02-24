@@ -14,7 +14,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import PicModal from '../../components/PicModal';
 
-const Post = ({ product, variants, error, slugImgArr }) => {
+const Post = ({ product, variants, error }) => {
   const dispatch = useDispatch();
   const router = useRouter()
   const { slug } = router.query
@@ -224,16 +224,18 @@ const Post = ({ product, variants, error, slugImgArr }) => {
                 <p className="mx-1 font-semibold">{product.color}</p>
               </div>
               <div className="flex ml-3 flex-wrap">
-                {Object.keys(variants) && Object.keys(variants).map((color1, index) => <button key={index} onClick={() => { refreshVariant(size, color1) }} className={`border-2 mx-[1px] w-16 focus:outline-none opacity-[1]  image-container relative ${color === color1 ? 'border-black' : 'border-gray-300'}`}
-                  onMouseEnter={() => setHoveredColor(color1)}
-                  onMouseLeave={() => setHoveredColor('')}>
-                  <img src={slugImgArr[color1]} alt={`img-${index}`} />
-                  {hoveredColor === color1 && (
-                    <div className='color-label'>
-                      {color1}
-                    </div>
-                  )}
-                </button>
+                {Object.keys(variants) && Object.keys(variants).map((color1, index) => {
+                  return variants[color1][size] && <button key={index} onClick={() => { refreshVariant(size, color1) }} className={`border-2 mx-[1px] w-16 focus:outline-none opacity-[1]  image-container relative ${color === color1 ? 'border-black' : 'border-gray-300'}`}
+                    onMouseEnter={() => setHoveredColor(color1)}
+                    onMouseLeave={() => setHoveredColor('')}>
+                    <img src={variants[color1][size]['img']} alt={`img-${index}`} />
+                    {hoveredColor === color1 && (
+                      <div className='color-label'>
+                        {color1}
+                      </div>
+                    )}
+                  </button>
+                }
                 )}
               </div>
             </div>
@@ -284,21 +286,18 @@ export async function getServerSideProps(context) {
   }
   let variant = await Product.find({ title: product.title, category: product.category })
   let colorSizeSlug = {}
-  let imgarr = {}
   for (let item of variant) {
     if (Object.keys(colorSizeSlug).includes(item.color)) {
-      colorSizeSlug[item.color][item.size] = { slug: item.slug }
-      imgarr[item.color] = item.img
+      colorSizeSlug[item.color][item.size] = { slug: item.slug, img: item.img }
     }
     else {
       colorSizeSlug[item.color] = {}
-      colorSizeSlug[item.color][item.size] = { slug: item.slug }
-      imgarr[item.color] = item.img
+      colorSizeSlug[item.color][item.size] = { slug: item.slug, img: item.img }
     }
   }
 
   return {
-    props: { error: error, product: JSON.parse(JSON.stringify(product)), variants: JSON.parse(JSON.stringify(colorSizeSlug)), slugImgArr: imgarr }, // will be passed to the page component as props
+    props: { error: error, product: JSON.parse(JSON.stringify(product)), variants: JSON.parse(JSON.stringify(colorSizeSlug)) }, // will be passed to the page component as props
   }
 }
 

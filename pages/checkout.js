@@ -11,10 +11,12 @@ import { addToCart, increment, clearCart, removeFromCart } from '../features/car
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { CircularProgress } from '@mui/material';
+import { useRouter } from 'next/router';
 const jwt = require('jsonwebtoken');
 
 const Checkout = () => {
 
+  const router = useRouter()
   const cart = useSelector((state) => state.cartItems.cart);
   const subTotal = useSelector((state) => state.cartItems.subTotal);
   const dispatch = useDispatch();
@@ -28,6 +30,10 @@ const Checkout = () => {
   const [disabled, setDisabled] = useState(true)
   const [user, setUser] = useState({ value: null })
   const [loading, setLoading] = useState(false)
+  const [paid, setPaid] = useState(false)
+  let CGST_tax = parseFloat(subTotal * 5.5 / 100);
+  let SGST_tax = parseFloat(subTotal * 5.5 / 100);
+  let amount = parseFloat(subTotal + CGST_tax + SGST_tax).toFixed(2);
 
   const token = useSelector((state) => state.cartItems.token)
 
@@ -50,7 +56,7 @@ const Checkout = () => {
 
   const fetchData = async (token) => {
     let data = { token: token }
-    let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getuser`, {
+    let a = await fetch(`/api/getuser`, {
       method: 'POST', // or 'PUT'
       headers: {
         'Content-Type': 'application/json',
@@ -105,57 +111,39 @@ const Checkout = () => {
     }
   }
 
-  const initiatePayment = async (e) => {
-    e.preventDefault()
-    let oid = Math.floor(Math.random() * Date.now());
-    setLoading(true)
-    //Get a transaction token
-    const data = { cart, subTotal, oid, email: email, name, address, pincode, phone, state, city };
-    let a = await fetch(`/api/pretransaction`, {
+  const initializeRazorpay = async (e) => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+
+      document.body.appendChild(script);
+    });
+  }
+
+  const transactions = async (data, id) => {
+    let payments = await fetch(`/api/posttransaction`, {
       method: 'POST', // or 'PUT'
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     })
-    let txnRes = await a.json()
-    if (txnRes.success) {
-
-      let txnToken = txnRes.txnToken
-
-
-      var config = {
-        "root": "",
-        "flow": "DEFAULT",
-        "data": {
-          "orderId": oid, /* update order id */
-          "token": txnToken, /* update token value */
-          "tokenType": "TXN_TOKEN",
-          "amount": subTotal /* update amount */
-        },
-        "handler": {
-          "notifyMerchant": function (eventName, data) {
-            console.log("notifyMerchant handler function called");
-            console.log("eventName => ", eventName);
-            console.log("data => ", data);
-          }
-        }
-      };
-
-      window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
-        window.Paytm.CheckoutJS.invoke();
-      }).catch(function onError(error) {
-        console.log("error => ", error);
-      });
+    let pay = await payments.json()
+    if (pay.success) {
+      setPaid(true)
+      router.push(`/order?clearCart=1&id=${id}`)
     }
     else {
-      console.log(txnRes.error)
-      if (txnRes.cartClear) {
-        clearCart()
-      }
-      toast.error(txnRes.error, {
+      toast.error("Some error occured!", {
         position: "top-center",
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -163,8 +151,73 @@ const Checkout = () => {
         progress: undefined,
       });
     }
+  };
+
+  const makePayment = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    const res = await initializeRazorpay();
+    let oid = Math.floor(Math.random() * Date.now());
+    if (!res) {
+      alert("Your are offline.... Razorpay SDK Failed to load");
+      return;
+    }
+    const pdata = { cart, amount: amount, subTotal: subTotal, cgst: CGST_tax, sgst: SGST_tax, email: email, name, address, oid, pincode, phone, state, city };
+    let sdata = await fetch(`/api/pretransaction`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(pdata),
+    })
+    let data = await sdata.json()
+
+    if (data.cartClear) {
+      dispatch(clearCart())
+    }
+
+    if (!data.success) {
+      toast.error(data.error, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+    else {
+      var options = {
+        key: process.env.RAZORPAY_KEY,
+        name: "Le-Soft",
+        currency: "INR",
+        amount: data.amount,
+        order_id: data.id,
+        description: "Thank You for purchasing from Le-Soft India.",
+        image: "/logo.png",
+        handler: function (response) {
+          let res = {
+            "razorpay_payment_id": response.razorpay_payment_id,
+            "razorpay_order_id": response.razorpay_order_id,
+            "razorpay_signature": response.razorpay_signature
+          }
+          const p2data = { cart, subTotal: subTotal, id: data.id, _id: data._id, payment_id: response.razorpay_payment_id, email: email, name, address, pincode, phone, state, city, response: res };
+          transactions(p2data, data._id);
+
+        },
+        prefill: {
+          name: name,
+          email: email,
+          contact: phone,
+        },
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    }
     setLoading(false)
-  }
+  };
 
   return (
     <div className="min-h-screen">
@@ -185,92 +238,109 @@ const Checkout = () => {
           <meta name="description" content="Quality of classes at prices of masses." />
           <link rel="icon" href="/icon.png" />
         </Head>
-        <Script type="application/javascript" crossOrigin="anonymous" src={`${process.env.NEXT_PUBLIC_PAYTM_HOST}/merchantpgpui/checkoutjs/merchants/${process.env.NEXT_PUBLIC_PAYTM_MID}.js`} />
-        <h2 className='text-5xl mt-[6rem] mb-[4rem] font-bold text-center'>Checkout</h2>
-        <div className='flex lg:flex-row flex-col space-x-4 items-center mb-10'>
-          <div className='lg:w-[60%] w-[100%]'>
-            <h2 className='font-semibold text-xl ml-1'>1. Delivery Details</h2>
-            <div className="mx-auto flex my-2">
-              <div className="px-2 w-1/2">
-                <div className="mb-4">
-                  <label htmlFor="name" className="leading-7 text-sm text-gray-600">Name</label>
-                  <input value={name} onChange={handleChange} type="text" id="name" name="name" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
-                </div>
-              </div>
-              <div className="px-2 w-1/2">
-                <div className="mb-4">
-                  <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
-                  {user && user.token ? <input value={user.email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" readOnly /> : <input value={email} onChange={handleChange} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />}
+        {!paid ? <>
+          <h2 className='text-5xl mt-[2rem] mb-[4rem] font-bold text-center'>Checkout</h2>
+          {token ? <>
+            <div className='flex lg:flex-row flex-col space-x-4 items-start mb-10 justify-start'>
+              <div className='lg:w-[50%] w-[100%]'>
+                <h2 className='font-semibold text-xl ml-1'>1. Delivery Details</h2>
+                <div className="mx-auto flex my-2">
+                  <div className="px-2 w-1/2">
+                    <div className="mb-4">
+                      <label htmlFor="name" className="leading-7 text-sm text-gray-600">Name</label>
+                      <input value={name} onChange={handleChange} type="text" id="name" name="name" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                    </div>
+                  </div>
+                  <div className="px-2 w-1/2">
+                    <div className="mb-4">
+                      <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
+                      {user && user.token ? <input value={user.email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" readOnly /> : <input value={email} onChange={handleChange} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />}
 
+                    </div>
+                  </div>
+                </div>
+                <div className="px-2 w-full">
+                  <div className="mb-4">
+                    <label htmlFor="address" className="leading-7 text-sm text-gray-600">Address</label>
+                    <textarea onChange={handleChange} value={address} name="address" id="address" cols="30" rows="2" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"></textarea>
+                  </div>
+                </div>
+                <div className="mx-auto flex my-2">
+                  <div className="px-2 w-1/2">
+                    <div className="mb-4">
+                      <label htmlFor="phone" className="leading-7 text-sm text-gray-600">Phone</label>
+                      <input value={phone} onChange={handleChange} placeholder="Your 10 digit phone number" type="phone" id="phone" name="phone" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                    </div>
+                  </div>
+                  <div className="px-2 w-1/2">
+                    <div className="mb-4">
+                      <label htmlFor="pincode" className="leading-7 text-sm text-gray-600">Pincode</label>
+                      <input value={pincode} onChange={handleChange} type="text" id="pincode" name="pincode" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                    </div>
+                  </div>
+                </div>
+                <div className="mx-auto flex my-2">
+                  <div className="px-2 w-1/2">
+                    <div className="mb-4">
+                      <label htmlFor="state" className="leading-7 text-sm text-gray-600">State</label>
+                      <input onChange={handleChange} value={state} type="text" id="state" name="state" className="w-full bg-[#E1E1E0] rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                    </div>
+                  </div>
+                  <div className="px-2 w-1/2">
+                    <div className="mb-4">
+                      <label htmlFor="city" className="leading-7 text-sm text-gray-600">District</label>
+                      <input onChange={handleChange} value={city} type="text" id="city" name="city" className="w-full bg-[#E1E1E0] rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="px-2 w-full">
-              <div className="mb-4">
-                <label htmlFor="address" className="leading-7 text-sm text-gray-600">Address</label>
-                <textarea onChange={handleChange} value={address} name="address" id="address" cols="30" rows="2" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"></textarea>
-              </div>
-            </div>
-            <div className="mx-auto flex my-2">
-              <div className="px-2 w-1/2">
-                <div className="mb-4">
-                  <label htmlFor="phone" className="leading-7 text-sm text-gray-600">Phone</label>
-                  <input value={phone} onChange={handleChange} placeholder="Your 10 digit phone number" type="phone" id="phone" name="phone" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
-                </div>
-              </div>
-              <div className="px-2 w-1/2">
-                <div className="mb-4">
-                  <label htmlFor="pincode" className="leading-7 text-sm text-gray-600">Pincode</label>
-                  <input value={pincode} onChange={handleChange} type="text" id="pincode" name="pincode" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
-                </div>
-              </div>
-            </div>
-            <div className="mx-auto flex my-2">
-              <div className="px-2 w-1/2">
-                <div className="mb-4">
-                  <label htmlFor="state" className="leading-7 text-sm text-gray-600">State</label>
-                  <input onChange={handleChange} value={state} type="text" id="state" name="state" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
-                </div>
-              </div>
-              <div className="px-2 w-1/2">
-                <div className="mb-4">
-                  <label htmlFor="city" className="leading-7 text-sm text-gray-600">District</label>
-                  <input onChange={handleChange} value={city} type="text" id="city" name="city" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className='lg:w-[40%] w-[100%] justify-center'>
-            <h2 className='font-semibold text-xl'>2. Review Cart Items & Pay</h2>
-            <div className="cartItems bg-[#f2e5ff] py-6 px-10">
+              <div className='lg:w-[50%] w-[100%] flex flex-col justify-start'>
+                <h2 className='font-semibold text-xl'>2. Review Cart Items & Pay</h2>
+                <div className="cartItems bg-[#f2e5ff] py-6 px-10">
 
-              <ol className='list-decimal font-semibold '>
-                {cart?.length == 0 && <div className='my-4 font-semibold'>Your cart is Empty!</div>}
-                {cart?.map((item, index) => {
-                  return <li key={index}>
-                    <div className="flex my-5 space-x-2 flex-row-reverse">
-                      <img style={{ height: '110px' }} src={item.img} alt={index} />
-                      <div className='flex flex-col'>
-                        <div className='max-w-[30rem] font-semibold flex flex-row'>{item.name} ({item.size}/{item.variant})</div>
-                        <div className='flex space-x-6'>
-                          <div className='flex items-center justify-start mt-2 font-semibold text-lg'><RemoveIcon onClick={() => { dispatch(removeFromCart({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#8000ff] text-[#f2e5ff] rounded-sm' /><span className='mx-2 text-sm' > {item.qty} </span><AddIcon onClick={() => { dispatch(increment({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#8000ff] text-[#f2e5ff] rounded-sm' /></div>
-                          <div className='flex mt-3 justify-start space-x-1'>
-                            <p>Price: </p>
-                            <p>₹{item.price * item.qty}</p>
+                  <ol className='list-decimal font-semibold '>
+                    {cart?.length == 0 && <div className='my-4 font-semibold'>Your cart is Empty!</div>}
+                    {cart?.map((item, index) => {
+                      return <li key={index}>
+                        <div className="flex my-5 space-x-2 flex-row-reverse">
+                          <img style={{ height: '110px' }} src={item.img} alt={index} />
+                          <div className='flex flex-col'>
+                            <div className='max-w-[30rem] font-semibold flex flex-row'>{item.name} ({item.size}/{item.variant})</div>
+                            <div className='flex space-x-6'>
+                              <div className='flex items-center justify-start mt-2 font-semibold text-lg'><RemoveIcon onClick={() => { dispatch(removeFromCart({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#8000ff] text-[#f2e5ff] rounded-sm' /><span className='mx-2 text-sm' > {item.qty} </span><AddIcon onClick={() => { dispatch(increment({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#8000ff] text-[#f2e5ff] rounded-sm' /></div>
+                              <div className='flex mt-3 justify-start space-x-1'>
+                                <p>Price: </p>
+                                <p>₹{item.price * item.qty}</p>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </li>
-                })}
-                <div className="font-bold my-2">Subtotal: ₹{subTotal}</div>
-              </ol>
-              <div className="mx-4">
-                {loading ? <CircularProgress color="secondary" /> : <Link href={'/checkout'} ><button disabled={disabled} onClick={initiatePayment} className="disabled:bg-[#c993ff] flex mx-auto mt-8 w-[15rem] text-white bg-[#9933ff] border-0 py-2 px-2 focus:outline-none hover:bg-[#a044fc] rounded-sm text-sm justify-center"><BsFillBagCheckFill className='m-1' />Complete Payment</button></Link>}
+                      </li>
+                    })}
+                    <div className="font-bold my-2">Subtotal: ₹{subTotal}</div>
+                    <div className="font-bold my-2">CGST(5.5%): ₹{CGST_tax}</div>
+                    <div className="font-bold my-2">SGST(5.5%): ₹{SGST_tax}</div>
+                    <div className="font-bold my-2">Amount Payable: ₹{amount}</div>
+                  </ol>
+                  <div className="mx-4">
+                    {loading ? <CircularProgress color="secondary" /> : <Link href={'/checkout'} ><button disabled={disabled} onClick={makePayment} className="disabled:bg-[#c993ff] flex mx-auto mt-8 w-[15rem] text-white bg-[#9933ff] border-0 py-2 px-2 focus:outline-none hover:bg-[#a044fc] rounded-sm text-sm justify-center"><BsFillBagCheckFill className='m-1' />Complete Payment</button></Link>}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </>
+            :
+            <div className="flex flex-col justify-center items-center">
+              <h1 className="text-2xl font-semibold">Login to Checkout</h1>
+              <div className="flex flex-col justify-center items-center">
+                <Link href='/login'><button className="flex mx-auto mt-8 w-[15rem] text-white bg-[#9933ff] border-0 py-2 px-2 focus:outline-none hover:bg-[#a044fc] rounded-sm text-sm justify-center"><BsFillBagCheckFill className='m-1' />Login</button></Link>
+              </div>
+            </div>}
+        </>
+          :
+          <div className="mt-10 flex w-full justify-center items-center">
+            <h1>Thank for Ordering from Le-Soft.</h1>
+          </div>}
       </div>
     </div>
   )

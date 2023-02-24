@@ -159,7 +159,7 @@ const Home = ({ videos, images, products }) => {
                       </div>
                     </Link>
                   })}
-                </AliceCarousel >
+                </AliceCarousel>
               </div>
             </div>
           </div>}
