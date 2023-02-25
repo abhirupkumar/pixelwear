@@ -55,7 +55,7 @@ const Orderstatus = ({ order, orders }) => {
         let data = [{
             _id: order._id,
             name: order.name,
-            phone: order.name,
+            phone: order.phone,
             orderId: order.orderId,
             paymentinfo: order.paymentinfo,
             products: order.products,
@@ -143,6 +143,7 @@ const Orderstatus = ({ order, orders }) => {
 
                                 {Object.keys(products).map((key, index) => {
                                     return <div className="flex flex-wrap my-3 space-x-2 flex-row px-4 shadow-md" key={index}>
+                                        <p className="mr-1 font-semibold text-sm">{index + 1}.</p>
                                         <div className='flex flex-col'>
                                             <div className='font-semibold flex flex-row text-black'>{products[key].name} ({products[key].size}/{products[key].variant})</div>
                                             <div className='flex space-x-6'>
@@ -181,7 +182,7 @@ const Orderstatus = ({ order, orders }) => {
                                     <p className="mb-2 text-sm"><b>District:</b> {order.district}</p>
                                     <p className="mb-2 text-sm"><b>State:</b> {order.state}</p>
                                     <p className="mb-2 text-sm"><b>Transaction ID:</b> {order.transactionid}</p>
-                                    <p className="mb-2 text-sm"><b>Delivery Status:</b> {order.deliveryStatus}</p>
+                                    {/* <p className="mb-2 text-sm"><b>Delivery Status:</b> {order.deliveryStatus}</p> */}
                                     <div className='flex flex-row'>
                                         <button disabled={order.deliveryStatus == 'dispatched'} className="m-4 p-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg cursor-pointer disabled:bg-blue-300" name='dispatched' onClick={handleChange}>Dispatch</button>
                                         <button disabled={order.deliveryStatus == 'unshipped'} className="m-4 p-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg cursor-pointer disabled:bg-blue-300" name='unshipped' onClick={handleChange}>Cancel Dispatch</button>

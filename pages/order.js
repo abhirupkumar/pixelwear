@@ -30,8 +30,9 @@ const MyOrder = ({ order }) => {
           <div className="w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
             <h2 className="text-sm title-font text-gray-500 tracking-widest">Le-Soft.in</h2>
             <h1 className="text-gray-900 text-2xl title-font font-medium mb-4">Order Id: {order.orderId}</h1>
-            <p className="leading-relaxed mb-4">Order placed on: <b>{date && date.toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</b> </p>
-            <p className="leading-relaxed mb-4">Status: <b>{order.status}!</b></p>
+            <p className="leading-relaxed mb-3">Order placed on: <b>{date && date.toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</b> </p>
+            <p className="leading-relaxed mb-2">Status: <b>{order.status}!</b></p>
+            <p className="leading-relaxed mb-6">Shipping Address: <b>{order.address}!</b></p>
             <div>
               {Object.keys(products).map((key, index) => {
                 return <div className="flex flex-wrap my-3 space-x-2 flex-row px-4 shadow-md" key={index}>

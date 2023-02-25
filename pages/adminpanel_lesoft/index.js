@@ -202,11 +202,11 @@ const Index = ({ images, videos }) => {
                                 <button onClick={handleClick} className="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-lg text-white my-3">Change</button>
                             </Stack>
 
-                            <Stack spacing={2}>
+                            {/* <Stack spacing={2}>
                                 <iframe width="100%" height="400" style={{ marginTop: "3rem" }} src={videoValue} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                                 <TextField onChange={onVChange} value={videoValue} name="vid" label="Video" variant="outlined" />
                                 <button onClick={handleVClick} className="bg-indigo-600 hover:bg-indigo-700 p-2 rounded-lg text-white my-3">Change</button>
-                            </Stack>
+                            </Stack> */}
 
                         </BaseCard>
                     </Grid>
