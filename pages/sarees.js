@@ -146,7 +146,7 @@ const Sarees = ({ products, filter, colorfilter, page, totalPages }) => {
                 </div>}
                 <div className={`w-full px-2 justify-start items-center ${showFilter ? 'hidden' : 'flex flex-col'}`}>
                     <div className="flex flex-wrap justify-center items-center">
-                        {Object.keys(products)?.length === 0 && <p className="">Sorry all the {value} are currently out of stock. New stock comming soon. Stay Tuned!</p>}
+                        {Object.keys(products)?.length === 0 && <p className="mt-10">Sorry all the {value} are currently out of stock. New stock comming soon. Stay Tuned!</p>}
                         {Object.keys(products)?.map((item) => {
                             return <Link passHref={true} key={products[item]._id} href={`/product/${products[item].slug}`}><div className="lg:w-[310px] w-[39%] cursor-pointer m-4 overlfow-x-hiden">
                                 <a className="flex justify-center lg:h-[480px] relative overflow-hidden">

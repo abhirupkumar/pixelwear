@@ -29,7 +29,7 @@ const Orders = () => {
             fetchOrders()
         }
 
-    }, [router.query])
+    }, [router.query, token])
 
     return (
         <div className='min-h-screen'>

@@ -63,7 +63,7 @@ const Home = ({ videos, images, products }) => {
         <link rel="icon" href="/icon.png" />
       </Head>
       <div className='carousel-wrapper'>
-        {images && images[0].img && <Slider {...settings}>
+        {images && images[0] && <Slider {...settings}>
           {images[0].img.map((item, index) => {
             return <div key={index}>
               <img src={`${item}`} loading="lazy" />
@@ -151,9 +151,10 @@ const Home = ({ videos, images, products }) => {
                             {products[item].size.includes('M') && <span className='border border-gray-500 px-1 mx-1'>M</span>}
                             {products[item].size.includes('L') && <span className='border border-gray-500 px-1 mx-1'>L</span>}
                             {products[item].size.includes('XL') && <span className='border border-gray-500 px-1 mx-1'>XL</span>}
-                            {products[item].size.includes('2XL') && <span className='border border-gray-300 px-1 mx-1'>2XL</span>}
+                            {products[item].size.includes('2XL') && <span className='border border-gray-500 px-1 mx-1'>2XL</span>}
                             {products[item].size.includes('3XL') && <span className='border border-gray-500 px-1 mx-1'>3XL</span>}
                             {products[item].size.includes('Free') && <span className='border border-gray-500 px-1 mx-1'>Free</span>}
+                            {products[item].size.includes('Standard') && <span className='border border-gray-500 px-1 mx-1'>Standard</span>}
                           </div>
                         </div>
                       </div>
