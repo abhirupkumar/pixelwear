@@ -71,7 +71,7 @@ const Orders = () => {
                                                     ₹{item.amount}
                                                 </td>
                                                 <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                    <Link href={'/order?id=' + item._id}><a className='text-blue-700 hover:underline'>Details</a></Link>
+                                                    <Link href={'/order?id=' + item._id}><p className='text-blue-700 hover:underline'>Details</p></Link>
                                                 </td>
                                             </tr>
                                         })}

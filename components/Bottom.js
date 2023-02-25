@@ -141,7 +141,7 @@ const Bottom = () => {
                         {cart?.map((item, index) => {
                             return <li key={index}>
                                 <div className="flex my-5 space-x-2 flex-row-reverse">
-                                    <img style={{ height: '110px' }} src={item.img} alt={index} />
+                                    <img style={{ height: '110px', maxWidth: "98px" }} src={item.img} alt={index} />
                                     <div className='flex flex-col'>
                                         <div className='max-w-[30rem] font-semibold flex flex-row'>{item.name} ({item.size}/{item.variant})</div>
                                         <div className='flex space-x-6'>

@@ -7,7 +7,6 @@ import {
 } from "@mui/material";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
-import Footer from "./footer/Footer";
 
 const MainWrapper = experimentalStyled("div")(() => ({
   display: "flex",
@@ -57,7 +56,6 @@ const FullLayout = ({ children }) => {
           }}
         >
           <Box sx={{ minHeight: "calc(100vh - 170px)" }}>{children}</Box>
-          <Footer />
         </Container>
       </PageWrapper>
     </MainWrapper>

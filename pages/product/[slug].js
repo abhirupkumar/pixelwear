@@ -6,8 +6,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Error from 'next/error'
 import Head from 'next/head';
-import ReactImageMagnify from "react-image-magnify";
-import { wordToHex } from '../../colorhex';
 import { useDispatch } from 'react-redux';
 import { addToCart, clearCart, removeFromCart } from '../../features/cartSlice';
 import AddIcon from '@mui/icons-material/Add';

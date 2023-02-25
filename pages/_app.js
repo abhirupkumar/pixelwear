@@ -47,7 +47,7 @@ function MyApp({ Component, pageProps }) {
             width: '20%',
           }} /></div> : <Component {...pageProps} />}
         <Bottom />
-        <Footer />
+        {!loading && <Footer />}
       </PersistGate>
     </Provider>
   </>

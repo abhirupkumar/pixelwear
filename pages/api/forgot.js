@@ -24,7 +24,7 @@ export default async function handler(req, res) {
                 let token = jwt.sign({ email: req.body.email, name: result }, process.env.JWT_SECRET, { expiresIn: "700s" })
 
                 let emailMessage = `
-                <div>We have sent you this email in response to your request to reset your password on MissNeha.in
+                <div>We have sent you this email in response to your request to reset your password on lesoft.in
 
         <br/>To reset your password, please follow the link below:
 

@@ -25,7 +25,7 @@ const handler = async (req, res) => {
         }
         else {
             let emailMessage = `
-                <div>We have sent you this email in response to your request to send the otp on Pixelwear website.
+                <div>We have sent you this email in response to your request to send the otp on Le-Soft website.
 
         <br/> Otp for signup --> <a>${req.body.otp}</a>
 
@@ -49,7 +49,7 @@ const handler = async (req, res) => {
             const mailOptions = {
                 from: 'Le-Soft Team <no-reply@lesoft>', // Sender address
                 to: req.body.email, // List of recipients
-                subject: 'Pixelwear OTP', // Subject line
+                subject: 'Le-Soft OTP', // Subject line
                 html: emailMessage
             };
 

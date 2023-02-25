@@ -59,7 +59,7 @@ const MenuItems = ({ items, depthLevel, mobile }) => {
                     </div>
                 </>
             ) : (
-                <Link href={`${items.link}`}><a className={`hover:text-indigo-700 py-0 rounded-lg lg:text-sm text-xs`}>{items.title}</a></Link>
+                <Link href={`${items.link}`}><div className={`hover:text-indigo-700 py-0 rounded-lg lg:text-sm text-xs`}>{items.title}</div></Link>
             )}
         </li>
     );

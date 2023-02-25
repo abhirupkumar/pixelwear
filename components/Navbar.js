@@ -122,8 +122,8 @@ const Navbar = () => {
       {!sidebar && <span onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }} className='fixed right-12 top-4 z-50 cursor-pointer md:block hidden' >
         {dropdown && <div className="absolute md:block hidden right-6 bg-indigo-100 shadow-lg top-7 py-4 rounded-md px-5 w-32 z-30">
           <ul>
-            <Link href={'/myaccount'}><a><li className='py-1 hover:text-indigo-700 text-sm font-bold'>My Account</li></a></Link>
-            <Link href={'/orders'}><a><li className='py-1 hover:text-indigo-700 text-sm font-bold'>My Orders</li></a></Link>
+            <Link href={'/myaccount'}><li className='py-1 hover:text-indigo-700 text-sm font-bold'>My Account</li></Link>
+            <Link href={'/orders'}><li className='py-1 hover:text-indigo-700 text-sm font-bold'>My Orders</li></Link>
             <li onClick={() => {
               dispatch(removeToken())
               setDropdown(false)
@@ -203,7 +203,7 @@ const Navbar = () => {
 
       <div className={`navbar-show flex md:flex-row flex-col bg-white md:justify-start justify-center items-center py-0 md:py-0 shadow-md top-0 z-[25] sticky w-full ${!sidebar && 'overflow-hidden'}`}>
         <div className="logo my-1">
-          <Link href={'/'}><a className="mx-4"><Image src="/logo.png" alt="" width={150} height={50} className="" /></a></Link>
+          <Link href={'/'}><div className="mx-4"><Image src="/logo.png" className="rounded-md" alt="" width={110} height={50} /></div></Link>
         </div>
         <div className="md:block hidden">
           <ul className="flex items-center space-x-1 font-bold">
@@ -227,9 +227,9 @@ const Navbar = () => {
             {token && <MdAccountCircle className="text-2xl mt-2" />}
           </span>
           <div className="cart md:flex hidden top-4 mx-6 cursor-pointer">
-            {token == null && <Link href={'/login'}><a>
+            {token == null && <Link href={'/login'}>
               <button className='md:flex hidden mr-2 text-white bg-[#9933ff] border-0 py-2 px-3 focus:outline-none hover:bg-[#8000ff] rounded text-sm' >Login</button>
-            </a></Link>}
+            </Link>}
             <AiOutlineShoppingCart onClick={toggleCart} className="text-2xl mt-2" />
             {Object.keys(cart).length > 0 && <span className='absolute right-4 px-1 text-xs border border-indigo-500 bg-[#9933ff] text-white rounded-full'> {cart?.length} </span>}
           </div>

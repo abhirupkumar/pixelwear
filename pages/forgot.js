@@ -144,10 +144,10 @@ const Forgot = () => {
           <div>
             <Link href={'/'}><img className="mx-auto h-12 w-auto cursor-pointer" src="/logo.png" alt="Workflow" /></Link>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Reset Password</h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
+            <div className="mt-2 text-center text-sm text-gray-600">
               Or
-              <Link href={'/login'}><a href="#" className="font-medium text-blue-600 hover:text-blue-500"> Login </a></Link>
-            </p>
+              <Link href={'/login'}><div href="#" className="font-medium text-blue-600 hover:text-blue-500"> Login </div></Link>
+            </div>
           </div>
           <form className="mt-8 space-y-6" method="POST">
             <input type="hidden" name="remember" value="true" />
@@ -181,10 +181,10 @@ const Forgot = () => {
           <div>
             <Link href={'/'}><img className="mx-auto h-12 w-auto cursor-pointer" src="/logo.png" alt="Workflow" /></Link>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Forgot Password</h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
+            <div className="mt-2 text-center text-sm text-gray-600">
               Or
-              <Link href={'/login'}><a href="#" className="font-medium text-blue-600 hover:text-blue-500"> Login </a></Link>
-            </p>
+              <Link href={'/login'}><div href="#" className="font-medium text-blue-600 hover:text-blue-500"> Login </div></Link>
+            </div>
           </div>
           <form className="mt-8 space-y-6" method="POST">
             <input type="hidden" name="remember" value="true" />
