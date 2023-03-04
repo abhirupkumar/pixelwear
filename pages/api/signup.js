@@ -62,23 +62,15 @@ const handler = async (req, res) => {
                     })
             }
 
-            const mailOptions = {
-                from: 'Le-Soft Team <no-reply@lesoft>', // Sender address
-                to: req.body.email, // List of recipients
-                subject: 'Le-Soft OTP', // Subject line
-                html: emailMessage
-            };
-
-            transporter.sendMail(mailOptions, function (err, info) {
-                if (err) {
-                    console.log(err)
-                    res.status(200).json({ success: false, message: "Error Occured." })
-                }
-                else {
-                    res.status(200).json({ success: true, token, message: "OTP have been sent in your mail." })
-                }
-            });
-            res.status(400).json({ success: true })
+            const mail = await sendEmail(req.body.email);
+            if (mail.body.Messages[0].Status != "success") {
+                res.status(400).json({ success: false, error: "Email not sent" })
+                return
+            }
+            else {
+                res.status(200).json({ success: true, message: "Email Sent" })
+                return
+            }
         }
     }
     else {
