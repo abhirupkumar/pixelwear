@@ -53,7 +53,7 @@ const handler = async (req, res) => {
                 html: emailMessage
             };
 
-            transporter.sendMail(mailOptions, function (err, info) {
+            await transporter.sendMail(mailOptions, function (err, info) {
                 if (err) {
                     console.log(err)
                     res.status(200).json({ success: false, message: "Error Occured." })
