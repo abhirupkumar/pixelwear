@@ -3,6 +3,10 @@ import connectDb from "../../middleware/mongoose"
 var CryptoJS = require("crypto-js");
 require('dotenv').config();
 const nodemailer = require('nodemailer');
+const mailjet = require("node-mailjet").apiConnect(
+    process.env.NEXT_PUBLIC_MAILJET_API_KEY,
+    process.env.NEXT_PUBLIC_MAILJET_SECRET_KEY
+);
 
 const handler = async (req, res) => {
     if (req.method == 'POST') {
@@ -31,38 +35,42 @@ const handler = async (req, res) => {
 
         <br/><br/>
 
-        We recommend that you keep do not share your otp with anyone.If you feel your password has been compromised, you can change it by going to your My Account Page and change your pasword.
+        We recommend that you do not share your otp with anyone.If you feel your password has been compromised, you can change it by going to your My Account Page and change your pasword.
 
         </div>`
 
+            function sendEmail(recipient) {
+                return mailjet
+                    .post("send", { version: 'v3.1' })
+                    .request({
+                        Messages: [
+                            {
+                                From: {
+                                    Email: "abhirupkumar2003@gmail.com",
+                                    Name: "Le-Soft Team <no-reply@lesoft.in>",
+                                },
+                                To: [
+                                    {
+                                        Email: recipient,
+                                    },
+                                ],
+                                Subject: "Le-Soft OTP",
+                                TextPart: "Le-Soft",
+                                HTMLPart: emailMessage,
+                            },
+                        ],
+                    })
+            }
 
-            let transporter = nodemailer.createTransport({
-                service: 'gmail',
-                port: 495,
-                secure: true, // true for 465, false for other ports
-                auth: {
-                    user: "abhirupkumar2003@gmail.com", //  user
-                    pass: "vcinbyieriftnctz", //  password
-                },
-            });
-
-            const mailOptions = {
-                from: 'Le-Soft Team <no-reply@lesoft>', // Sender address
-                to: req.body.email, // List of recipients
-                subject: 'Le-Soft OTP', // Subject line
-                html: emailMessage
-            };
-
-            transporter.sendMail(mailOptions, function (err, info) {
-                if (err) {
-                    console.log(err)
-                    res.status(200).json({ success: false, message: "Error Occured." })
-                }
-                else {
-                    res.status(200).json({ success: true, token, message: "OTP have been sent in your mail." })
-                }
-            });
-            res.status(400).json({ success: true })
+            const mail = await sendEmail(req.body.email);
+            if (mail.body.Messages[0].Status != "success") {
+                res.status(400).json({ success: false, error: "Email not sent" })
+                return
+            }
+            else {
+                res.status(200).json({ success: true, message: "Email Sent" })
+                return
+            }
         }
     }
     else {

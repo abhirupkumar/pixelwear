@@ -95,7 +95,7 @@ const Signup = () => {
       let response2 = await res2.json()
       dispatch(setToken({ token: response2.token }))
       router.push(`/`)
-      toast.success('Your account has been created! Please Login', {
+      toast.success('Your account has been created! Please Login If not logged in automatically.', {
         position: "top-left",
         autoClose: 2000,
         hideProgressBar: false,

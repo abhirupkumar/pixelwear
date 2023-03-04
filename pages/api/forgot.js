@@ -3,6 +3,10 @@ var jwt = require('jsonwebtoken');
 var CryptoJS = require("crypto-js");
 require('dotenv').config();
 const nodemailer = require('nodemailer');
+const mailjet = require("node-mailjet").apiConnect(
+    process.env.NEXT_PUBLIC_MAILJET_API_KEY,
+    process.env.NEXT_PUBLIC_MAILJET_SECRET_KEY
+);
 
 export default async function handler(req, res) {
 
@@ -36,37 +40,43 @@ export default async function handler(req, res) {
 
         </div>`
 
+                function sendEmail(recipient) {
+                    return mailjet
+                        .post("send", { version: 'v3.1' })
+                        .request({
+                            Messages: [
+                                {
+                                    From: {
+                                        Email: "abhirupkumar2003@gmail.com",
+                                        Name: "Le-Soft Team <no-reply@lesoft.in>",
+                                    },
+                                    To: [
+                                        {
+                                            Email: recipient,
+                                        },
+                                    ],
+                                    Subject: "Le-Soft Forgot Password",
+                                    TextPart: "Le-Soft",
+                                    HTMLPart: emailMessage,
+                                },
+                            ],
+                        })
+                }
 
-                let transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    port: 465,
-                    secure: true, // true for 465, false for other ports
-                    auth: {
-                        user: "abhirupkumar2003@gmail.com", //  user
-                        pass: "vcinbyieriftnctz", //  password
-                    },
-                });
-
-                const mailOptions = {
-                    from: 'Le-Soft Team <no-reply@lesoft.in>', // Sender address
-                    to: req.body.email, // List of recipients
-                    subject: 'Password Reset Link', // Subject line
-                    html: emailMessage
-                };
-
-                transporter.sendMail(mailOptions, function (err, info) {
-                    if (err) {
-                        console.log(err)
-                        res.status(200).json({ success: false, message: "Error Occured." })
-                    }
-                    else {
-                        res.status(200).json({ success: true, token, message: "Password Reset Link have been sent in your mail." })
-                    }
-                });
+                const mail = await sendEmail(req.body.email);
+                if (mail.body.Messages[0].Status != "success") {
+                    res.status(400).json({ success: false, error: "Email not sent" })
+                    return
+                }
+                else {
+                    res.status(200).json({ success: true, message: "Email Sent" })
+                    return
+                }
 
             }
             else {
                 res.status(400).json({ success: false, error: "User does not exist. Please sign up!" })
+                return
             }
         }
         else {

@@ -32,7 +32,7 @@ const Forgot = () => {
     }
   }
 
-  const token = '';
+  let token = '';
   const sendResetEmail = async (e) => {
     e.preventDefault()
     if (email != '') {
