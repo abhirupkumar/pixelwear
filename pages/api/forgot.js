@@ -40,8 +40,8 @@ export default async function handler(req, res) {
 
         </div>`
 
-                function sendEmail(recipient) {
-                    return mailjet
+                async function sendEmail(recipient) {
+                    const response = await mailjet
                         .post("send", { version: 'v3.1' })
                         .request({
                             Messages: [
@@ -61,6 +61,7 @@ export default async function handler(req, res) {
                                 },
                             ],
                         })
+                      return response;
                 }
 
                 const mail = await sendEmail(req.body.email);
