@@ -39,8 +39,8 @@ const handler = async (req, res) => {
 
         </div>`
 
-            function sendEmail(recipient) {
-                return mailjet
+            async function sendEmail(recipient) {
+                const response = await mailjet
                     .post("send", { version: 'v3.1' })
                     .request({
                         Messages: [
@@ -60,7 +60,8 @@ const handler = async (req, res) => {
                             },
                         ],
                     })
-            }
+                   return response;
+           }
 
             const mail = await sendEmail(req.body.email);
             if (mail.body.Messages[0].Status != "success") {
