@@ -48,14 +48,14 @@ export default async function handler(req, res) {
                                 {
                                     From: {
                                         Email: "abhirupkumar2003@gmail.com",
-                                        Name: "Le-Soft Team <no-reply@lesoft.in>",
+                                        Name: "Le-Soft Team • noreply@lesoft.in",
                                     },
                                     To: [
                                         {
                                             Email: recipient,
                                         },
                                     ],
-                                    Subject: "Le-Soft Forgot Password",
+                                    Subject: "Forgot Password",
                                     TextPart: "Le-Soft",
                                     HTMLPart: emailMessage,
                                 },

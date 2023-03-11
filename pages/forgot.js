@@ -1,3 +1,4 @@
+import { CircularProgress } from '@mui/material';
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -10,6 +11,8 @@ const Forgot = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [cpassword, setCpassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [loading2, setLoading2] = useState(false)
 
   const router = useRouter()
   const actualToken = useSelector((state) => state.cartItems.token)
@@ -35,6 +38,7 @@ const Forgot = () => {
   let token = '';
   const sendResetEmail = async (e) => {
     e.preventDefault()
+    setLoading(true)
     if (email != '') {
       let data = {
         email,
@@ -48,6 +52,7 @@ const Forgot = () => {
         body: JSON.stringify(data),
       })
       let res = await a.json()
+      setLoading(false)
       if (res.success) {
         toast.success(res.message, {
           position: "top-left",
@@ -76,6 +81,7 @@ const Forgot = () => {
 
   const resetPassword = async (e) => {
     e.preventDefault()
+    setLoading2(true)
     if (password == cpassword) {
       let data = {
         token: router.query.token,
@@ -90,6 +96,7 @@ const Forgot = () => {
         body: JSON.stringify(data),
       })
       let res = await a.json()
+      setLoading2(false)
       if (res.success) {
         toast.success(res.message, {
           position: "top-left",
@@ -124,6 +131,7 @@ const Forgot = () => {
         progress: undefined,
       });
     }
+    setLoading2(false)
   }
 
   return (
@@ -146,7 +154,7 @@ const Forgot = () => {
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Reset Password</h2>
             <div className="mt-2 text-center text-sm text-gray-600">
               Or
-              <Link href={'/login'}><div href="#" className="font-medium text-blue-600 hover:text-blue-500"> Login </div></Link>
+              <Link href={'/login'}><div href="#" className="font-medium text-[#8000ff] hover:text-[#9933ff]"> Login </div></Link>
             </div>
           </div>
           <form className="mt-8 space-y-6" method="POST">
@@ -162,11 +170,11 @@ const Forgot = () => {
               </div>
             </div>
 
-            <div>
-              <button disabled={password !== cpassword} onClick={resetPassword} type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300">
+            {loading2 ? <CircularProgress color="secondary" /> : <div>
+              <button disabled={password !== cpassword} onClick={resetPassword} type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#8000ff] hover:bg-[#8f1eff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300">
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
 
-                  <svg className="h-5 w-5 text-blue-500 group-hover:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <svg className="h-5 w-5 text-[#ddc1f8] group-hover:text-[#c796f8]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                   </svg>
                 </span>
@@ -174,7 +182,7 @@ const Forgot = () => {
               </button>
               {cpassword && password != cpassword && <span className='text-red-500'>Passwords didn't match.</span>}
               {password && password == cpassword && <span className='text-green-500'>Passwords matched.</span>}
-            </div>
+            </div>}
           </form>
         </div>}
         {!router.query.token && <div>
@@ -183,7 +191,7 @@ const Forgot = () => {
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Forgot Password</h2>
             <div className="mt-2 text-center text-sm text-gray-600">
               Or
-              <Link href={'/login'}><div href="#" className="font-medium text-blue-600 hover:text-blue-500"> Login </div></Link>
+              <Link href={'/login'}><div href="#" className="font-medium text-[#8000ff] hover:text-[#9933ff]"> Login </div></Link>
             </div>
           </div>
           <form className="mt-8 space-y-6" method="POST">
@@ -195,17 +203,17 @@ const Forgot = () => {
               </div>
             </div>
 
-            <div>
-              <button onClick={sendResetEmail} type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            {loading ? <CircularProgress color="secondary" /> : <div>
+              <button onClick={sendResetEmail} type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#8000ff] hover:bg-[#8f1eff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
 
-                  <svg className="h-5 w-5 text-blue-500 group-hover:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <svg className="h-5 w-5 text-[#ddc1f8] group-hover:text-[#c796f8]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                   </svg>
                 </span>
                 Continue
               </button>
-            </div>
+            </div>}
           </form>
         </div>}
       </div>

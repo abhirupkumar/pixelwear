@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 const jwt = require('jsonwebtoken');
 
 
-const Allproducts = ({ products }) => {
+const Allproducts = ({ products, page, totalPages }) => {
     const router = useRouter()
     const [admin, setAdmin] = useState(false)
     const token = useSelector((state) => state.cartItems.token);
@@ -45,7 +45,7 @@ const Allproducts = ({ products }) => {
                 `}</style>
                 <Grid container spacing={0}>
                     <Grid item xs={12} lg={12}>
-                        <AllProducts products={products} />
+                        <AllProducts products={products} totalPages={totalPages} page={page} />
                     </Grid>
                 </Grid>
             </FullLayout>}
@@ -73,9 +73,20 @@ export async function getServerSideProps(context) {
         obj['theme'] = context.query.theme
     }
     let products = await Product.find(obj)
+    let page = 1
+    if (context.query.page && context.query.page !== 0) {
+        page = context.query.page
+    }
+    const productsPerPage = 20;
+    const startIndex = (page - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+
+    const filteredProducts = Object.fromEntries(
+        Object.entries(products).slice(startIndex, endIndex)
+    );
 
     return {
-        props: { products: JSON.parse(JSON.stringify(products)) },
+        props: { products: JSON.parse(JSON.stringify(filteredProducts)), page: Number(page), totalPages: Math.ceil(Object.values(products).length / productsPerPage) },
     }
 }
 

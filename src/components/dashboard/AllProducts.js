@@ -12,7 +12,7 @@ import { useState } from 'react';
 import Link from 'next/link'
 import { useRouter } from "next/router";
 
-const AllProducts = ({ products }) => {
+const AllProducts = ({ products, page, totalPages }) => {
 
   const productcatelogue = [
     {
@@ -115,6 +115,20 @@ const AllProducts = ({ products }) => {
     setCount(products.length)
   }, [router])
 
+  const handlePageChange = (event, value) => {
+    if (router.query.page) {
+      router.push(`${router.asPath.replace(router.query.page, value)}`)
+    }
+    else {
+      if (router.asPath.includes('?')) {
+        router.push(`${router.asPath}&page=${value}`)
+      }
+      else {
+        router.push(`${router.asPath}?page=${value}`)
+      }
+    }
+  }
+
   return (
     <BaseCard title="All Products">
       <FormControl>
@@ -179,6 +193,14 @@ const AllProducts = ({ products }) => {
         })}
       </div>
 
+      {Object.keys(products)?.length > 0 && <Pagination
+        count={totalPages}
+        page={page}
+        onChange={handlePageChange}
+        style={{ marginTop: '1rem', marginBottom: '1rem' }}
+        variant="outlined" color="primary"
+      />}
+
       <Table
         aria-label="simple table"
         sx={{
@@ -216,23 +238,23 @@ const AllProducts = ({ products }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {products?.map((product) => {
-            return <TableRow key={product?._id}>
+          {Object.keys(products)?.map((product) => {
+            return <TableRow key={products[product]?._id}>
               {<TableCell sx={{
                 paddingRight: '4px',
                 maxWidth: '20rem',
-                overflowX: 'auto',
+                overflowX: "auto",
                 paddingBottom: '0px',
               }}>
                 <div className="flex flex-col max-w-xs">
-                  <p className="font-bold text-gray-700">{product?.title}</p>
+                  <p className="font-bold text-gray-700">{products[product]?.title}</p>
                   <Box sx={{
                     display: 'flex',
                     flexDirection: 'row',
                     fontSize: "13px",
                     color: "grey",
                   }}>
-                    Fabric: <p className="font-bold text-gray-700">{product?.fabric}</p>
+                    Fabric: <p className="font-bold text-gray-700">{products[product]?.fabric}</p>
                   </Box>
                   <Box sx={{
                     display: 'flex',
@@ -240,7 +262,7 @@ const AllProducts = ({ products }) => {
                     fontSize: "13px",
                     color: "grey",
                   }}>
-                    Size/Color: <p className="font-bold text-gray-700">{product?.size}/{product?.color}</p>
+                    Size/Color: <p className="font-bold text-gray-700">{products[product]?.size}/{products[product]?.color}</p>
                   </Box>
                   <Box sx={{
                     display: 'flex',
@@ -248,7 +270,7 @@ const AllProducts = ({ products }) => {
                     fontSize: "13px",
                     color: "grey",
                   }}>
-                    Price: <p className="font-bold text-gray-700">{product?.price}</p>
+                    Price: <p className="font-bold text-gray-700">{products[product]?.price}</p>
                   </Box>
                   <Box sx={{
                     display: 'flex',
@@ -256,7 +278,7 @@ const AllProducts = ({ products }) => {
                     fontSize: "13px",
                     color: "grey",
                   }}>
-                    Available Qty: <p className="font-bold text-gray-700">{product?.availableQty}</p>
+                    Available Qty: <p className="font-bold text-gray-700">{products[product]?.availableQty}</p>
                   </Box>
                 </div>
               </TableCell>}
@@ -264,13 +286,13 @@ const AllProducts = ({ products }) => {
                 display: "flex",
                 justifyContent: "center",
               }}>
-                <img style={{ height: '100px' }} src={product?.img} alt='1' loading="lazy" />
+                <img style={{ height: '100px' }} src={products[product]?.img} alt='1' loading="lazy" />
               </TableCell>}
               {<TableCell align="center">
-                <Typography variant="h6">{product?.skuId}</Typography>
+                <Typography variant="h6">{products[product]?.skuId}</Typography>
               </TableCell>}
               {<TableCell align="center">
-                <div className="text-blue-700"><Link href={'/adminpanel_lesoft/update?slug=' + product?.slug}>
+                <div className="text-blue-700"><Link href={'/adminpanel_lesoft/update?slug=' + products[product]?.slug}>
                   Edit</Link></div>
               </TableCell>}
               {<TableCell align="center">
@@ -281,13 +303,20 @@ const AllProducts = ({ products }) => {
                     color: 'blue'
                   }}
                 >
-                  <Link href={'/product/' + product?.slug}>Details</Link>
+                  <Link href={'/product/' + products[product]?.slug}>Details</Link>
                 </Typography>
               </TableCell>}
             </TableRow>
           })}
         </TableBody>
       </Table>
+      {Object.keys(products)?.length > 0 && <Pagination
+        count={totalPages}
+        page={page}
+        onChange={handlePageChange}
+        style={{ marginTop: '3rem', marginBottom: '3rem' }}
+        variant="outlined" color="primary"
+      />}
     </BaseCard>
   );
 };

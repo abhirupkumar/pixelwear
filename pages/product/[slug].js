@@ -11,6 +11,7 @@ import { addToCart, clearCart, removeFromCart } from '../../features/cartSlice';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import PicModal from '../../components/PicModal';
+import { CircularProgress } from '@mui/material';
 
 const Post = ({ product, variants, error }) => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const Post = ({ product, variants, error }) => {
   const [image, setImage] = useState()
   const [imgarr, setImgarr] = useState([])
   const [hoveredColor, setHoveredColor] = useState('');
+  const [loading, setLoading] = useState(false)
   const [qty, setQty] = useState(1)
 
   useEffect(() => {
@@ -50,6 +52,7 @@ const Post = ({ product, variants, error }) => {
 
 
   const checkServiceability = async () => {
+    setLoading(true)
     let url = 'https://api.postalpincode.in/pincode/' + pin
     let pins = await fetch(url, {
       Method: 'GET'
@@ -79,6 +82,7 @@ const Post = ({ product, variants, error }) => {
       });
       setService(false)
     }
+    setLoading(false)
   }
 
   const onChangePin = (e) => {
@@ -256,7 +260,7 @@ const Post = ({ product, variants, error }) => {
             <div className="pin my-6 flex space-x-2 text-sm items-center flex-wrap">
               <p className='md:mr-4 mr-1 font-medium lg:text-lg text-base'>Availability:</p>
               <input onChange={onChangePin} className="px-2 py-1 border-2 border-gray-400 rounded-md" type="text" placeholder='Enter your pincode' />
-              <button onClick={checkServiceability} className="flex ml-14 text-white bg-[#9933ff] border-0 py-2 px-6 focus:outline-none hover:bg-[#8000ff] rounded">Check</button>
+              {loading ? <CircularProgress color="secondary" /> : <button onClick={checkServiceability} className="flex ml-14 text-white bg-[#9933ff] border-0 py-2 px-6 focus:outline-none hover:bg-[#8000ff] rounded">Check</button>}
             </div>
             {(!service && service != null) && <div className="text-red-700 text-sm mt-3">
               Sorry! We do not deliver to this pincode yet

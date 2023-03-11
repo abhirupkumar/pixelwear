@@ -24,6 +24,7 @@ const Signup = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [pinLoading, setPinLoading] = useState(false)
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
 
@@ -43,10 +44,9 @@ const Signup = () => {
   }
 
   const OtpSend = async (e) => {
-    setOtpPin(Math.floor(Math.random() * 1000000))
     e.preventDefault() //prevents reloading the form after setup
-    const data = { name, email, password, sendOtp: true, otp: otpPin }
-
+    setPinLoading(true)
+    const data = { name, email, password, sendOtp: true, otp: Math.floor(Math.random() * 1000000) }
     let res = await fetch(`/api/signup`, {
       method: 'POST', // or 'PUT'
       headers: {
@@ -55,6 +55,8 @@ const Signup = () => {
       body: JSON.stringify(data),
     })
     let response = await res.json()
+    setOtpPin(response.pin);
+    setPinLoading(false)
     toast.success('OTP Sent Successfully to the entered email id!', {
       position: "top-left",
       autoClose: 2000,
@@ -84,6 +86,15 @@ const Signup = () => {
     setPassword('')
     setLoading(false)
     if (response.success) {
+      toast.info('Just wait your account is been created.', {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       const data2 = { email, password }
       let res2 = await fetch(`/api/login`, {
         method: 'POST', // or 'PUT'
@@ -163,7 +174,7 @@ const Signup = () => {
                 <input value={password} onChange={handleChange} id="password" name="password" type="password" autoComplete="current-password" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="Password" />
               </div>
             </div>
-            <div>
+            {pinLoading ? <CircularProgress color="secondary" /> : <div>
               <button type="button" onClick={OtpSend} className="my-6 group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#8000ff] hover:bg-[#8f1eff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
 
@@ -173,13 +184,13 @@ const Signup = () => {
                 </span>
                 {!sendOtp ? "Send Otp" : "Resend Otp"}
               </button>
-            </div>
+            </div>}
             {sendOtp && <div>
               <label htmlFor="otp" className="sr-only">Otp</label>
               <input value={otp} onChange={handleChange} id="otp" name="otp" type="text" autoComplete="otp" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="OTP" />
             </div>}
             <div>
-              {loading ? <CircularProgress color="primary" /> : sendOtp && <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#8000ff] hover:bg-[#8f1eff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              {loading ? <CircularProgress color="secondary" /> : sendOtp && <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#8000ff] hover:bg-[#8f1eff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
 
                   <svg className="h-5 w-5 text-[#ddc1f8] group-hover:text-[#c796f8]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

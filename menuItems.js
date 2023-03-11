@@ -1,9 +1,5 @@
 export const menuItems = [
     {
-        title: "Sarees",
-        link: "/sarees?categories=sarees",
-    },
-    {
         title: "Bottoms",
         link: "/bottoms",
         submenu: [{
@@ -97,5 +93,9 @@ export const menuItems = [
             link: "/loungewear?categories=longtee",
         },
         ],
+    },
+    {
+        title: "Sarees",
+        link: "/sarees?categories=sarees",
     },
 ];

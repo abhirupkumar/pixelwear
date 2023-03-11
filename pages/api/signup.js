@@ -47,14 +47,14 @@ const handler = async (req, res) => {
                             {
                                 From: {
                                     Email: "abhirupkumar2003@gmail.com",
-                                    Name: "Le-Soft Team <no-reply@lesoft.in>",
+                                    Name: "Le-Soft Team • noreply@lesoft.in",
                                 },
                                 To: [
                                     {
                                         Email: recipient,
                                     },
                                 ],
-                                Subject: "Le-Soft OTP",
+                                Subject: "OTP For Verfication",
                                 TextPart: "Le-Soft",
                                 HTMLPart: emailMessage,
                             },
@@ -64,11 +64,11 @@ const handler = async (req, res) => {
 
             const mail = await sendEmail(req.body.email);
             if (mail.body.Messages[0].Status != "success") {
-                res.status(400).json({ success: false, error: "Email not sent" })
+                res.status(400).json({ success: false, error: "Email not sent", pin: req.body.otp })
                 return
             }
             else {
-                res.status(200).json({ success: true, message: "Email Sent" })
+                res.status(200).json({ success: true, message: "Email Sent", pin: req.body.otp })
                 return
             }
         }
