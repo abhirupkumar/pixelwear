@@ -127,30 +127,10 @@ const Post = ({ product, variants, error }) => {
             <div className='flex flex-row'>
               {imgarr?.length > 1 && <div className="w-[15%] mx-auto flex flex-col">
                 {imgarr?.map((item, index) => (
-                  <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`md:w-16 w-8 md:h-24 h-14 rounded-sm m-2 object-cover`} src={item} loading="lazy" />
+                  <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`md:w-16 w-8 md:h-24 h-14 rounded-sm m-2 object-cover cursor-pointer`} src={item} loading="lazy" />
                 ))}
               </div>}
               <div className='md:block hidden w-[85%] mx-auto'>
-                {/* <ReactImageMagnify className='z-10'
-                  {...{
-                    smallImage: {
-                      alt: `${product.title}`,
-                      isFluidWidth: true,
-                      src: `${image}`,
-                    },
-                    largeImage: {
-                      src: `${image}`,
-                    },
-                    enlargedImageContainerDimensions: {
-                      width: '100%',
-                      height: '100%',
-                    },
-                    lensSize: 150,
-                    isHintEnabled: true,
-                    shouldHideHintAfterFirstActivation: false,
-                    zoomContainerBorderSize: 8,
-                  }}
-                /> */}
                 <PicModal img={image} />
               </div>
               <div className='md:hidden flex w-[85%] mx-auto justify-center items-center'>
@@ -227,7 +207,7 @@ const Post = ({ product, variants, error }) => {
               </div>
               <div className="flex ml-3 flex-wrap">
                 {Object.keys(variants) && Object.keys(variants).map((color1, index) => {
-                  return variants[color1][size] && <button key={index} onClick={() => { refreshVariant(size, color1) }} className={`border-2 mx-[1px] w-16 focus:outline-none opacity-[1]  image-container relative ${color === color1 ? 'border-black' : 'border-gray-300'}`}
+                  return variants[color1][size] && <button key={index} onClick={() => { refreshVariant(size, color1) }} className={`border-2 mx-[1px] w-16 focus:outline-none opacity-[1] image-container relative ${color === color1 ? 'border-black' : 'border-gray-300'}`}
                     onMouseEnter={() => setHoveredColor(color1)}
                     onMouseLeave={() => setHoveredColor('')}>
                     <img src={variants[color1][size]['img']} alt={`img-${index}`} />
