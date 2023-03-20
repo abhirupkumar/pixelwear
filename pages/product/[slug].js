@@ -12,6 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import PicModal from '../../components/PicModal';
 import { CircularProgress } from '@mui/material';
+import ReactImageZoom from 'react-image-zoom';
 
 const Post = ({ product, variants, error }) => {
   const dispatch = useDispatch();
@@ -103,6 +104,8 @@ const Post = ({ product, variants, error }) => {
     router.push('/404')
   }
 
+  let props = { width: 375, height: 540, img: image, zoomStyle: 'z-index:100' };
+
   return (
     <section className="text-gray-600 body-font overflow-hidden">
       <ToastContainer
@@ -123,22 +126,23 @@ const Post = ({ product, variants, error }) => {
       </Head>
       <div className="container px-5 mx-auto mt-4">
         <div className="mx-auto flex flex-wrap">
-          <div className='lg:w-1/2 mx-auto items-center justify-center'>
-            <div className='flex flex-row'>
-              {imgarr?.length > 1 && <div className="w-[15%] mx-auto flex flex-col">
+          <div className='lg:w-[50%] mx-auto items-center justify-center'>
+            <div className='flex lg:flex-row flex-col-reverse'>
+              {imgarr?.length > 1 && <div className="lg:w-[15%] mx-auto flex lg:flex-col flex-row overflow-auto">
                 {imgarr?.map((item, index) => (
-                  <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`md:w-16 w-8 md:h-24 h-14 rounded-sm m-2 object-cover cursor-pointer`} src={item} loading="lazy" />
+                  <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`w-16 h-24 rounded-sm m-2 object-cover cursor-pointer`} src={item} loading="lazy" />
                 ))}
               </div>}
-              <div className='md:block hidden w-[85%] mx-auto'>
-                <PicModal img={image} />
+              <div className='md:block hidden mx-auto'>
+                {image && <ReactImageZoom {...props} />}
+                {/* <PicModal img={image} /> */}
               </div>
-              <div className='md:hidden flex w-[85%] mx-auto justify-center items-center'>
+              <div className='md:hidden flex mx-auto justify-center items-center'>
                 <img alt="product-image" src={image} loading="lazy" className='max-h-[450px]' />
               </div>
             </div>
           </div>
-          <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+          <div className="lg:w-[50%] w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
             <h1 className="text-gray-900 lg:text-3xl text-2xl title-font font-medium mb-1">{product.title} - ({product.size}/{product.color})</h1>
             <div className="flex mb-4">
               {/* <span className="flex items-center">

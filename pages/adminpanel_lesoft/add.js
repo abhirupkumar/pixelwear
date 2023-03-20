@@ -338,21 +338,27 @@ const Add = () => {
                                     </TextField>
                                 })}
 
-                                <div className="flex space-x-6 items-center">
-                                    <TextField onChange={onChange} value={form.img ? form.img : ""} name="img" label="Main Image Link" variant="outlined" className="flex-1" />
-                                    {form.img && form.img != "" && <img src={form.img} alt={`product-main-image`} className="w-14" loading="lazy" />}
+                                <div>
+                                    <div className="flex space-x-6 items-center">
+                                        <TextField onChange={onChange} value={form.img ? form.img : ""} name="img" label="Main Image Link" variant="outlined" className="flex-1" />
+                                        {form.img && form.img != "" && <img src={form.img} alt={`product-main-image`} className="w-14" loading="lazy" />}
+                                    </div>
+                                    <p className="text-sm text-gray-500">Try to give (2400 x 3600) px image for better zoom</p>
                                 </div>
 
-                                <div className="flex space-x-4">
-                                    <TextField
-                                        label="Optional Images Link"
-                                        value={newLink}
-                                        onChange={(e) => setNewLink(e.target.value)}
-                                        className="flex-1 pr-4"
-                                    />
-                                    <Button variant="contained" color="primary" sx={{ height: '50px' }} onClick={handleAddLink}>
-                                        Add Link
-                                    </Button>
+                                <div>
+                                    <div className="flex space-x-4">
+                                        <TextField
+                                            label="Optional Images Link"
+                                            value={newLink}
+                                            onChange={(e) => setNewLink(e.target.value)}
+                                            className="flex-1 pr-4"
+                                        />
+                                        <Button variant="contained" color="primary" sx={{ height: '50px' }} onClick={handleAddLink}>
+                                            Add Link
+                                        </Button>
+                                    </div>
+                                    <p className="text-sm text-gray-500">Try to give all (2400 x 3600) px images for better zoom</p>
                                 </div>
                                 {imageLinks.length !== 0 && <Typography variant="subtitle1">Entered Image Links:</Typography>}
                                 <div className="flex space-x-4">
