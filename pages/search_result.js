@@ -147,13 +147,10 @@ const SearchResult = ({ products, filter, colorfilter, page, totalPages }) => {
                     <div className="flex flex-wrap justify-center items-center">
                         {Object.keys(products)?.length === 0 && <p className="mt-10">Sorry, Search not found!</p>}
                         {Object.keys(products)?.map((item) => {
-                            return <div key={products[item]._id} className="lg:w-[310px] w-[39%] cursor-pointer m-4 overlfow-x-hiden">
+                            return <div key={products[item]._id} className="md:w-[310px] w-[39%] cursor-pointer m-4 overlfow-x-hiden">
                                 <Link href={`/product/${products[item].slug}`}>
-                                    <div className="flex justify-center md:h-[480px] h-[216px] overflow-hidden transition duration-500 ease-in-out absolute opacity-100 hover:opacity-0 object-contain">
-                                        <img alt="ecommerce" className="m-auto md:m-0 lg:max-w-[310px]" src={products[item].img} loading="lazy" />
-                                    </div>
-                                    <div className="flex justify-center md:h-[480px] h-[216px] overflow-hidden transition duration-500 ease-in-out opacity-100 hover:opacity-100 object-contain">
-                                        <img alt="ecommerce" className="m-auto md:m-0 lg:max-w-[310px]" src={products[item].imgarr[0]} loading="lazy" />
+                                    <div className="flex justify-center md:h-[480px] h-[216px] overflow-hidden">
+                                        <img alt="ecommerce" className="m-auto md:m-0 object-contain" src={products[item].img} loading="lazy" />
                                     </div>
                                     <div className="text-center md:text-left flex flex-col lg:h-[195px] h-[162px] justify-around">
                                         <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{products[item].category.toUpperCase()}</h3>

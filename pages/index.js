@@ -79,37 +79,37 @@ const Home = ({ videos, images, products }) => {
             <div className="flex flex-col">
               <div className="flex flex-wrap -mx-4 md:-mb-10 md:-mt-4 -mt-8">
                 <div className="p-2 lg:w-1/3 md:w-1/2 mb-0 md:mb-6">
-                  <div className="rounded-xs mt-6 lg:h-[30rem] h-[20rem] overflow-hidden">
+                  <div className="rounded-xs mt-6 lg:h-[30rem] h-[20rem] max-w-[40rem] overflow-hidden">
                     <img alt="content" className="object-fill object-center h-full w-full" src="https://dummyimage.com/1203x503" />
                   </div>
                   <h2 className="text-xl font-medium title-font text-gray-900 mt-5">Sarees</h2>
                 </div>
                 <div className="p-2 lg:w-1/3 md:w-1/2 mb-0 md:mb-6">
-                  <div className="rounded-xs mt-6 lg:h-[30rem] h-[20rem] overflow-hidden">
+                  <div className="rounded-xs mt-6 lg:h-[30rem] h-[20rem] max-w-[40rem]  overflow-hidden">
                     <img alt="content" className="object-fill object-center h-full w-full" src="https://dummyimage.com/1204x504" />
                   </div>
                   <h2 className="text-xl font-medium title-font text-gray-900 mt-5">Bottoms</h2>
                 </div>
                 <div className="p-2 lg:w-1/3 md:w-1/2 mb-0 md:mb-6">
-                  <div className="rounded-xs mt-6 lg:h-[30rem] h-[20rem] overflow-hidden">
+                  <div className="rounded-xs mt-6 lg:h-[30rem] h-[20rem] max-w-[40rem]  overflow-hidden">
                     <img alt="content" className="object-fill object-center h-full w-full" src="https://dummyimage.com/1205x505" />
                   </div>
                   <h2 className="text-xl font-medium title-font text-gray-900 mt-5">Tops</h2>
                 </div>
                 <div className="p-2 lg:w-1/3 md:w-1/2 mb-0 md:mb-6">
-                  <div className="rounded-xs mt-6 lg:h-[30rem] h-[20rem] overflow-hidden">
+                  <div className="rounded-xs mt-6 lg:h-[30rem] h-[20rem] max-w-[40rem]  overflow-hidden">
                     <img alt="content" className="object-fill object-center h-full w-full" src="https://dummyimage.com/1205x505" />
                   </div>
                   <h2 className="text-xl font-medium title-font text-gray-900 mt-5">Inner Wear</h2>
                 </div>
                 <div className="p-2 lg:w-1/3 md:w-1/2 mb-0 md:mb-6">
-                  <div className="rounded-xs mt-6 lg:h-[30rem] h-[20rem] overflow-hidden">
+                  <div className="rounded-xs mt-6 lg:h-[30rem] h-[20rem] max-w-[40rem]  overflow-hidden">
                     <img alt="content" className="object-fill object-center h-full w-full" src="https://dummyimage.com/1205x505" />
                   </div>
                   <h2 className="text-xl font-medium title-font text-gray-900 mt-5">Kids</h2>
                 </div>
                 <div className="p-2 lg:w-1/3 md:w-1/2 mb-0 md:mb-6">
-                  <div className="rounded-xs mt-6 lg:h-[30rem] h-[20rem] overflow-hidden">
+                  <div className="rounded-xs mt-6 lg:h-[30rem] h-[20rem] max-w-[40rem]  overflow-hidden">
                     <img alt="content" className="object-fill object-center h-full w-full" src="https://dummyimage.com/1205x505" />
                   </div>
                   <h2 className="text-xl font-medium title-font text-gray-900 mt-5">Lounge Wear</h2>
@@ -137,17 +137,14 @@ const Home = ({ videos, images, products }) => {
                   renderPrevButton={renderPrevButton}
                   renderNextButton={renderNextButton}>
                   {Object.keys(products).reverse().map((item) => {
-                    return <div key={products[item]._id} className="lg:w-[310px] lg:h-auto h-[] cursor-pointer m-4">
+                    return <div key={products[item]._id} className="md:w-[310px] lg:h-auto h-[] cursor-pointer m-4">
                       <Link href={`/product/${products[item].slug}`}>
-                        <div className="flex justify-center md:h-[480px] h-[216px] overflow-hidden transition duration-500 ease-in-out absolute opacity-100 hover:opacity-0 object-contain">
-                          <img alt="ecommerce" className="m-auto md:m-0 lg:max-w-[310px]" src={products[item].img} loading="lazy" />
-                        </div>
-                        <div className="flex justify-center md:h-[480px] h-[216px] overflow-hidden transition duration-500 ease-in-out opacity-100 hover:opacity-100 object-contain">
-                          <img alt="ecommerce" className="m-auto md:m-0 lg:max-w-[310px]" src={products[item].imgarr[0]} loading="lazy" />
+                        <div className="flex justify-center md:h-[470px] h-[216px] relative overflow-hidden">
+                          <img alt="ecommerce" className="m-auto md:m-0 object-contain block" src={products[item].img} loading="lazy" />
                         </div>
                         <div className="text-center md:text-left flex flex-col lg:h-[195px] h-[162px] justify-around">
-                          <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{products[item].category.toUpperCase()}</h3>
-                          <h2 className="text-gray-900 text-left title-font lg:text-lg sm:text-sm text-xs font-medium">{products[item].title}</h2>
+                          <h3 className="text-gray-500 mx-auto text-xs tracking-widest title-font mb-1">{products[item].category.toUpperCase()}</h3>
+                          <h2 className="text-gray-900 mx-auto text-left title-font lg:text-lg sm:text-sm text-xs font-medium">{products[item].title}</h2>
                           <p className="mt-1 text-left">₹{products[item].price}</p>
                           <div className="mt-1 flex items-start">
                             {products[item].size.slice(0, 3).map((size, index) => {
