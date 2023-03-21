@@ -56,7 +56,7 @@ const Home = ({ videos, images, products }) => {
   };
 
   return (
-    <div className=''>
+    <div className='max-w-[2500px] mx-auto'>
       <Head>
         <title>Le-Soft - Women's Leading Fashion Brand</title>
         <meta name="description" content="Quality of classes at prices of masses." />
@@ -76,7 +76,7 @@ const Home = ({ videos, images, products }) => {
 
           <div className="flex flex-wrap w-full mb-20 flex-col items-center text-center">
             <h1 className="sm:text-3xl text-2xl mb-4 font-medium title-font text-gray-900">Categories</h1>
-            <div className="flex flex-col">
+            <div className="flex flex-col max-w-[2000px]">
               <div className="flex flex-wrap -mx-4 md:-mb-10 md:-mt-4 -mt-8">
                 <div className="p-2 lg:w-1/3 md:w-1/2 mb-0 md:mb-6">
                   <div className="rounded-xs mt-6 lg:h-[30rem] h-[20rem] max-w-[40rem] overflow-hidden">
@@ -119,7 +119,7 @@ const Home = ({ videos, images, products }) => {
           </div>
           {Object.keys(products).length !== 0 && <div className="flex flex-wrap w-full mb-20 flex-col items-center text-center">
             <h1 className="sm:text-3xl text-2xl mb-4 font-medium title-font text-gray-900">New Arrival</h1>
-            <div className="w-full mx-auto">
+            <div className="w-full mx-auto max-w-[2080px] items-center">
               <div className="flex flex-wrap justify-center">
                 <AliceCarousel
                   responsive={responsive}
@@ -137,10 +137,10 @@ const Home = ({ videos, images, products }) => {
                   renderPrevButton={renderPrevButton}
                   renderNextButton={renderNextButton}>
                   {Object.keys(products).reverse().map((item) => {
-                    return <div key={products[item]._id} className="md:w-[310px] lg:h-auto h-[] cursor-pointer m-4">
+                    return <div key={products[item]._id} className="lg:w-[310px] md:w[250px] lg:h-auto cursor-pointer m-4">
                       <Link href={`/product/${products[item].slug}`}>
-                        <div className="flex justify-center md:h-[470px] h-[216px] relative overflow-hidden">
-                          <img alt="ecommerce" className="m-auto md:m-0 object-contain block" src={products[item].img} loading="lazy" />
+                        <div className="flex justify-center lg:h-[470px] md:h-[400px] h-[216px] relative overflow-hidden">
+                          <img alt="ecommerce" className="m-auto md:m-0 lg:h-[470px] md:h-[400px] h-[216px] object-contain block" src={products[item].img} loading="lazy" />
                         </div>
                         <div className="text-center md:text-left flex flex-col lg:h-[195px] h-[162px] justify-around">
                           <h3 className="text-gray-500 mx-auto text-xs tracking-widest title-font mb-1">{products[item].category.toUpperCase()}</h3>
