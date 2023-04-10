@@ -197,6 +197,7 @@ const Add = () => {
             size: size,
             color: form.color,
             fabric: form.fabric,
+            mrp: form.mrp,
             price: form.price,
             availableQty: form.qty,
         }]
@@ -463,37 +464,19 @@ const Add = () => {
                                     </RadioGroup>
                                 </FormControl>
 
-                                <div className='flex space-x-6'>
-                                    {/* <Autocomplete
-                                        options={Object.keys(wordToHex)}
-                                        noOptionsText='No Option Found'
-                                        loadingText='Loading...'
-                                        renderInput={(params) => (
-                                            <TextField {...params} label="Choose a color" variant="outlined" name={"color"} />
-                                        )}
-                                        isOptionEqualToValue={(option, newValue) => {
-                                            return option.id === newValue.id;
-                                        }}
-                                        onChange={handleColorChange}
-                                        onInputChange={(e, v) => {
-                                            setColor(v)
-                                        }}
-                                        renderOption={(props, option) => {
-                                            return <li key={option} {...props} style={{ display: 'flex', alignItems: 'center' }}>
-                                                <div style={{ backgroundColor: wordToHex[option], width: 20, height: 20, marginRight: 10 }} />
-                                                {option}
-                                            </li>
-                                        }}
-                                        style={{
-                                            flex: 1,
-                                            marginTop: 0,
-                                        }}
-                                        ref={ref}
-                                    /> */}
+                                <div className='flex space-x-3'>
                                     <TextField onChange={onChange} value={form.color ? form.color : ""} name="color" label="Color" variant="outlined" />
                                     <TextField onChange={onChange} value={form.qty ? form.qty : ""} name="qty" label="Quantity" variant="outlined" />
 
                                     <TextField onChange={onChange} value={form.fabric ? form.fabric : ""} name="fabric" label="Fabric" variant="outlined" />
+
+                                    <TextField onChange={onChange}
+                                        id="mrp"
+                                        name="mrp"
+                                        label="MRP"
+                                        value={form.mrp ? form.mrp : ""}
+                                        variant="outlined"
+                                    />
 
                                     <TextField onChange={onChange}
                                         id="price"

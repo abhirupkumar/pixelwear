@@ -95,6 +95,7 @@ const productcatelogue = [
 ];
 
 const Update = ({ product }) => {
+    const [mrp, setMrp] = useState()
     const [price, setPrice] = useState()
     const [size, setSize] = useState('')
     const [title, setTitle] = useState('')
@@ -150,6 +151,8 @@ const Update = ({ product }) => {
         setSize(product.size)
         setColor(product.color)
         setFabric(product.fabric)
+        if (product.mrp)
+            setMrp(product.mrp)
         setPrice(product.price)
         setQty(product.availableQty)
         setDesc(product.desc)
@@ -186,6 +189,9 @@ const Update = ({ product }) => {
         if (e.target.name == 'fabric') {
             setFabric(e.target.value)
         }
+        if (e.target.name == 'mrp') {
+            setMrp(e.target.value)
+        }
         if (e.target.name == 'price') {
             setPrice(e.target.value)
         }
@@ -211,6 +217,7 @@ const Update = ({ product }) => {
             size: size,
             color: color,
             fabric: fabric,
+            mrp: mrp,
             price: price,
             availableQty: qty
         }]
@@ -469,38 +476,19 @@ const Update = ({ product }) => {
                                     </RadioGroup>
                                 </FormControl>
 
-                                <div className='flex space-x-6 my-[1rem]'>
-                                    {/* <Autocomplete
-                                        options={Object.keys(wordToHex)}
-                                        noOptionsText='No Option Found'
-                                        value={color}
-                                        loadingText='Loading...'
-                                        renderInput={(params) => (
-                                            <TextField {...params} label="Choose a color" variant="outlined" name={"color"} />
-                                        )}
-                                        isOptionEqualToValue={(option, newValue) => {
-                                            return option.id === newValue.id;
-                                        }}
-                                        onChange={handleColorChange}
-                                        onInputChange={(e, v) => {
-                                            setColor(v)
-                                        }}
-                                        renderOption={(props, option) => {
-                                            return <li key={option} {...props} style={{ display: 'flex', alignItems: 'center' }}>
-                                                <div style={{ backgroundColor: wordToHex[option], width: 20, height: 20, marginRight: 10 }} />
-                                                {option}
-                                            </li>
-                                        }}
-                                        style={{
-                                            flex: 1,
-                                            marginTop: 0,
-                                        }}
-                                        ref={ref}
-                                    /> */}
+                                <div className='flex space-x-3 my-[1rem]'>
                                     <TextField onChange={handleOtherChange} value={color} name="color" label="Color" variant="outlined" />
                                     <TextField onChange={handleOtherChange} value={qty} name="qty" label="Quantity" variant="outlined" />
 
                                     <TextField onChange={handleOtherChange} value={fabric} name="fabric" label="Fabric" variant="outlined" />
+
+                                    <TextField onChange={handleOtherChange}
+                                        id="mrp"
+                                        name="mrp"
+                                        label="MRP"
+                                        value={mrp}
+                                        variant="outlined"
+                                    />
 
                                     <TextField onChange={handleOtherChange}
                                         id="price"

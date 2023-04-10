@@ -231,14 +231,18 @@ const Post = ({ product, variants, error }) => {
               <p className="font-medium w-2">{qty}</p>
               <AddIcon className="rounded-sm cursor-pointer bg-[#8000ff] text-white" onClick={() => { return qty !== product.availableQty && setQty(qty + 1) }} />
             </div>}
-            <div className="flex">
+            <div className="flex space-x-4">
+              {!!product.mrp && product.availableQty > 0 && <span className="title-font font-medium text-2xl text-gray-400 line-through">₹{product.mrp}</span>}
               {product.availableQty > 0 && <span className="title-font font-medium text-2xl text-gray-900">₹{product.price}</span>}
+              {product.availableQty > 0 && !!product.mrp && <span className="title-font font-medium text-2xl text-red-600">{((product.mrp - product.price) / product.mrp * 100).toFixed(1)}% off</span>}
               {product.availableQty <= 0 && <span className="title-font font-medium text-2xl text-red-600">Out Of Stock!</span>}
+            </div>
+            <div className="flex my-4 items-start">
               <button disabled={product.availableQty <= 0} onClick={() => {
                 dispatch(clearCart())
                 dispatch(addToCart({ slug, qty: qty, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img }))
                 router.push('/checkout')
-              }} className="flex ml-4 text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Buy Now</button>
+              }} className="flex text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Buy Now</button>
               <button disabled={product.availableQty <= 0} onClick={() => dispatch(addToCart({ slug, qty: qty, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img }))} className="flex ml-4 text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Add To Cart</button>
             </div>
             <div className="pin my-6 flex space-x-2 text-sm items-center flex-wrap">

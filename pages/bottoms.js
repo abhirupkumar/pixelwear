@@ -184,6 +184,11 @@ const Bottoms = ({ products, filter, colorfilter, page, totalPages }) => {
                     <div className="flex flex-wrap justify-center items-center">
                         {Object.keys(products)?.length === 0 && <p className="mt-10">Sorry all the {value} are currently out of stock. New stock comming soon. Stay Tuned!</p>}
                         {Object.keys(products)?.map((item) => {
+                            let discount = 0
+                            if (!!products[item].mrp) {
+                                discount = (products[item].mrp - products[item].price) / products[item].mrp * 100
+                                discount = discount.toFixed(1)
+                            }
                             return <div key={products[item]._id} className="md:w-[310px] w-[39%] cursor-pointer m-4 overlfow-x-hiden">
                                 <Link href={`/product/${products[item].slug}`}>
                                     <div className="flex justify-center md:h-[470px] h-[216px] relative overflow-hidden">
@@ -192,12 +197,16 @@ const Bottoms = ({ products, filter, colorfilter, page, totalPages }) => {
                                     <div className="text-center md:text-left flex flex-col lg:h-[195px] h-[162px] justify-around">
                                         <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{products[item].category.toUpperCase()}</h3>
                                         <h2 className="text-gray-900 text-left title-font lg:text-lg sm:text-sm text-xs font-medium">{products[item].title}</h2>
-                                        <p className="mt-1 text-left">₹{products[item].price}</p>
+                                        <div className="flex space-x-2 items-center">
+                                            {!!products[item].mrp && <p className="mt-1 text-left text-gray-400 line-through">₹{products[item].mrp}</p>}
+                                            <p className="mt-1 text-left text-black font-semibold">₹{products[item].price}</p>
+                                            {!!products[item].mrp && discount > 0 && <p className="mt-1 text-left font-semibold text-red-600 text-xs">({discount}% off)</p>}
+                                        </div>
                                         <div className="mt-1 flex items-start">
                                             {products[item].size.slice(0, 3).map((size, index) => {
-                                                return <span key={index} className='border border-gray-500 px-1 mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>{size}</span>
+                                                return <span key={index} className='border border-gray-500 px-1 mx-1  md:text-md sm:text-sm text-xs'>{size}</span>
                                             })}
-                                            {products[item].size.length > 3 && <span className='border border-gray-500 lg:px-1 px-[0.10rem] mx-1 lg:text-lg ms:text-md sm:text-sm text-xs'>+{products[item].size.length - 3} more</span>}
+                                            {products[item].size.length > 3 && <span className='border border-gray-500 lg:px-1 px-[0.10rem] mx-1 md:text-md sm:text-sm text-xs'>+{products[item].size.length - 3} more</span>}
                                         </div>
                                     </div>
                                 </Link>

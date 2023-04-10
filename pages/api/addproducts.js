@@ -17,6 +17,7 @@ const handler = async (req, res) => {
                     size: req.body[i].size,
                     color: req.body[i].color,
                     fabric: req.body[i].fabric,
+                    mrp: req.body[i].mrp,
                     price: req.body[i].price,
                     availableQty: req.body[i].availableQty,
                 })

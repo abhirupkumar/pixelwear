@@ -12,6 +12,7 @@ const ProductSchema = new mongoose.Schema({
   size: { type: String, required: true },
   color: { type: String, required: true },
   fabric: { type: String },
+  mrp: { type: Number, required: true },
   price: { type: Number, required: true },
   availableQty: { type: Number, required: true }
 }, { timestamps: true });
