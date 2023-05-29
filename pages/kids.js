@@ -177,7 +177,7 @@ const Kids = ({ products, filter, colorfilter, page, totalPages }) => {
                             return <div key={products[item]._id} className="md:w-[310px] w-[39%] cursor-pointer m-4 overlfow-x-hiden">
                                 <Link href={`/product/${products[item].slug}`}>
                                     <div className="flex justify-center md:h-[470px] h-[216px] relative overflow-hidden">
-                                        <img alt="ecommerce" className="m-auto md:m-0 object-cover block" src={products[item].img} loading="lazy" />
+                                        <img alt="ecommerce" className="m-auto md:m-0 block" src={products[item].img} loading="lazy" />
                                     </div>
                                     <div className="text-center md:text-left flex flex-col lg:h-[195px] h-[162px] justify-around">
                                         <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{products[item].category.toUpperCase()}</h3>
