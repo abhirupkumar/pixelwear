@@ -156,7 +156,7 @@ const Sarees = ({ products, filter, colorfilter, page, totalPages }) => {
                             return <div key={products[item]._id} className="md:w-[310px] w-[39%] cursor-pointer m-4 overlfow-x-hiden">
                                 <Link href={`/product/${products[item].slug}`}>
                                     <div className="flex justify-center md:h-[480px] h-[216px] overflow-hidden">
-                                        <img alt="ecommerce" className="m-auto md:m-0 object-contain" src={products[item].img} loading="lazy" />
+                                        <img alt="ecommerce" className="m-auto md:m-0 object-cover" src={products[item].img} loading="lazy" />
                                     </div>
                                     <div className="text-center md:text-left flex flex-col lg:h-[195px] h-[162px] justify-around">
                                         <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{products[item].category.toUpperCase()}</h3>
