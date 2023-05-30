@@ -142,24 +142,24 @@ const Home = ({ videos, images, products }) => {
                       discount = (products[item].mrp - products[item].price) / products[item].mrp * 100
                       discount = discount.toFixed(1)
                     }
-                    return <div key={products[item]._id} className="lg:w-[310px] md:w[250px] lg:h-auto cursor-pointer m-4">
+                    return <div key={products[item]._id} className="lg:w-[310px] md:w[250px] prod-shadow lg:h-auto cursor-pointer m-2">
                       <Link href={`/product/${products[item].slug}`}>
                         <div className="flex justify-center lg:h-[470px] md:h-[400px] h-[216px] relative overflow-hidden">
-                          <img alt="ecommerce" className="m-auto md:m-0 lg:h-[470px] md:h-[400px] h-[216px] block" src={products[item].img} loading="lazy" />
+                          <img alt="ecommerce" className="m-auto md:m-0 prodimg-border lg:h-[470px] md:h-[400px] h-[216px] block" src={products[item].img} loading="lazy" />
                         </div>
-                        <div className="text-center md:text-left flex flex-col lg:h-[195px] h-[162px] justify-around">
-                          <h3 className="text-gray-500 mx-auto text-xs tracking-widest title-font mb-1">{products[item].category.toUpperCase()}</h3>
-                          <h2 className="text-gray-900 mx-auto text-left title-font lg:text-lg sm:text-sm text-xs font-medium">{products[item].title}</h2>
+                        <div className="text-center mx-[10px] md:text-justify flex flex-col lg:h-[195px] h-[162px] justify-evenly">
+                          <h3 className="text-gray-500 mx-auto text-xs tracking-widest title-font">{products[item].category.toUpperCase()}</h3>
+                          <h2 className="text-gray-900 mx-auto text-left title-font lg:text-lg text-xs font-medium">{products[item].title}</h2>
                           <div className="flex space-x-2">
-                            {!!products[item].mrp && <p className="mt-1 text-left text-gray-400 line-through">₹{products[item].mrp}</p>}
-                            <p className="mt-1 text-left text-black font-semibold">₹{products[item].price}</p>
-                            {!!products[item].mrp && discount > 0 && <p className="mt-1 text-left font-semibold text-red-600">{discount}% off</p>}
+                            {!!products[item].mrp && <p className="mt-1 text-left text-gray-400 line-through md:text-base text-xs">₹{products[item].mrp}</p>}
+                            <p className="mt-1 text-left text-black font-semibold md:text-base text-xs">₹{products[item].price}</p>
+                            {!!products[item].mrp && discount > 0 && <p className="mt-1 text-left font-semibold text-red-600 md:text-base text-xs">{discount}% off</p>}
                           </div>
                           <div className="mt-1 flex items-start">
-                            {products[item].size.slice(0, 3).map((size, index) => {
+                            {products[item].size.slice(0, 2).map((size, index) => {
                               return <span key={index} className='border border-gray-500 px-1 mx-1  md:text-md sm:text-sm text-xs'>{size}</span>
                             })}
-                            {products[item].size.length > 3 && <span className='border border-gray-500 lg:px-1 px-[0.10rem] mx-1 md:text-md sm:text-sm text-xs'>+{products[item].size.length - 3} more</span>}
+                            {products[item].size.length > 2 && <span className='border border-gray-500 lg:px-1 px-[0.10rem] mx-1 md:text-md sm:text-sm text-xs'>+{products[item].size.length - 3} more</span>}
                           </div>
                         </div>
                       </Link>
