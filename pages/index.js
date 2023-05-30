@@ -159,7 +159,7 @@ const Home = ({ videos, images, products }) => {
                             {products[item].size.slice(0, 2).map((size, index) => {
                               return <span key={index} className='border border-gray-500 px-1 mx-1  md:text-md sm:text-sm text-xs'>{size}</span>
                             })}
-                            {products[item].size.length > 2 && <span className='border border-gray-500 lg:px-1 px-[0.10rem] mx-1 md:text-md sm:text-sm text-xs'>+{products[item].size.length - 3} more</span>}
+                            {products[item].size.length > 2 && <span className='border border-gray-500 lg:px-1 px-[0.10rem] mx-1 md:text-md sm:text-sm text-xs'>+{products[item].size.length - 2} more</span>}
                           </div>
                         </div>
                       </Link>
