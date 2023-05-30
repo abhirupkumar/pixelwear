@@ -128,14 +128,13 @@ const Post = ({ product, variants, error }) => {
         <div className="mx-auto flex flex-wrap">
           <div className='lg:w-[50%] mx-auto items-center justify-center'>
             <div className='flex lg:flex-row flex-col-reverse'>
-              {imgarr?.length > 1 && <div className="lg:w-[15%] mx-auto flex lg:flex-col flex-row overflow-auto">
+              {imgarr?.length > 1 && <div className="lg:w-[15%] mx-auto items-center flex lg:flex-col flex-row overflow-auto">
                 {imgarr?.map((item, index) => (
-                  <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`w-16 h-24 rounded-sm m-2 object-cover cursor-pointer`} src={item} loading="lazy" />
+                  <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`w-16 h-24 prod-sideimg rounded-sm m-2 object-cover cursor-pointer`} src={item} loading="lazy" />
                 ))}
               </div>}
-              <div className='md:block hidden mx-auto'>
+              <div className='md:block hidden mx-auto prod-slugimg'>
                 {image && <ReactImageZoom {...props} />}
-                {/* <PicModal img={image} /> */}
               </div>
               <div className='md:hidden flex mx-auto justify-center items-center'>
                 <img alt="product-image" src={image} loading="lazy" className='max-h-[450px]' />
