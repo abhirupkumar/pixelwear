@@ -130,7 +130,7 @@ const Post = ({ product, variants, error }) => {
             <div className='flex lg:flex-row flex-col-reverse'>
               {imgarr?.length > 1 && <div className="lg:w-[15%] mx-auto items-center flex lg:flex-col flex-row overflow-auto">
                 {imgarr?.map((item, index) => (
-                  <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`w-16 h-24 prod-sideimg rounded-sm m-2 object-cover cursor-pointer`} src={item} loading="lazy" />
+                  item && <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`w-16 h-24 prod-sideimg rounded-sm m-2 object-cover cursor-pointer`} src={item} />
                 ))}
               </div>}
               <div className='md:block hidden mx-auto prod-slugimg'>

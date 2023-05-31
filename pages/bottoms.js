@@ -192,7 +192,7 @@ const Bottoms = ({ products, filter, colorfilter, page, totalPages }) => {
                             return <div key={products[item]._id} className="lg:w-[310px] w-[39%] prod-shadow lg:h-auto cursor-pointer m-4">
                                 <Link href={`/product/${products[item].slug}`}>
                                     <div className="flex justify-center lg:h-[470px] md:h-[400px] h-[216px] relative overflow-hidden">
-                                        <img alt="ecommerce" className="m-auto md:m-0 prodimg-border lg:h-[470px] md:h-[400px] h-[216px] block" src={products[item].img} loading="lazy" />
+                                        <img alt="ecommerce" className="m-auto md:m-0 prodimg-border lg:h-[470px] md:h-[400px] h-[216px] block" src={products[item]?.img} />
                                     </div>
                                     <div className="text-center mx-[10px] md:text-justify flex flex-col lg:h-[195px] h-[162px] justify-evenly">
                                         <h3 className="text-gray-500 mx-auto text-xs tracking-widest title-font">{products[item].category.toUpperCase()}</h3>
