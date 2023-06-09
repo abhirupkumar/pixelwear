@@ -203,7 +203,7 @@ const Add = () => {
         }]
 
         setLoading(true);
-        let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/addproducts`, {
+        let a = await fetch(`/api/addproducts`, {
             method: 'POST', // or 'PUT'
             headers: {
                 'Content-Type': 'application/json',

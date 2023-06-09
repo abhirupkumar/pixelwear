@@ -5,12 +5,14 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow, FormControlLabel, FormControl, FormLabel, RadioGroup, Radio, Button, MenuItem, TextField, Pagination, Box
+  TableRow, FormControlLabel, FormControl, FormLabel, RadioGroup, Radio, Button, MenuItem, TextField, Pagination, Box, Checkbox, CircularProgress, Modal
 } from "@mui/material";
 import BaseCard from "../baseCard/BaseCard";
 import { useState } from 'react';
 import Link from 'next/link'
 import { useRouter } from "next/router";
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const AllProducts = ({ products, page, totalPages }) => {
 
@@ -129,8 +131,109 @@ const AllProducts = ({ products, page, totalPages }) => {
     }
   }
 
+  const [prod, setProd] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const handleDeleteChange = (e) => {
+    if (prod.includes(e.target.value)) {
+      setProd(prod.filter((item) => item !== e.target.value))
+    }
+    else {
+      setProd([...prod, e.target.value])
+    }
+  };
+
+  const submitDeletion = async (e) => {
+    handleClose();
+    setLoading(true);
+    let a = await fetch(`/api/deleteproducts`, {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(prod),
+    })
+    let res = await a.json()
+    setLoading(false);
+    if (res.success) {
+      toast.success("Items Deleted Sucessfully!", {
+        position: "top-left",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setProd([]);
+      router.push(router.asPath)
+    }
+    else {
+      toast.error(res.error, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  }
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setLoading(false);
+    setLoading(true);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <BaseCard title="All Products">
+      <ToastContainer
+        position="top-left"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <Modal open={open} onClose={handleClose}>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'white',
+          boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
+          padding: "20px",
+          outline: 'none',
+          maxWidth: '800px',
+          maxHeight: '98%',
+          overflow: 'auto',
+          borderRadius: '10px'
+        }}>
+          <div>
+            Are you sure you want to delete these items? Selected: {prod.length}
+          </div>
+          <div>
+            <button onClick={submitDeletion} className="bg-red-500 hover:bg-red-700 text-black font-bold py-2 px-4 rounded">Yes</button>
+            <button onClick={handleClose} className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded">No</button>
+          </div>
+        </div>
+      </Modal>
       <FormControl>
         <FormLabel id="demo-radio-buttons-group-label">Category</FormLabel>
         <RadioGroup
@@ -201,6 +304,16 @@ const AllProducts = ({ products, page, totalPages }) => {
         variant="outlined" color="primary"
       />}
 
+      {prod.length > 0 && <div className="flex flex-1 justify-end">
+        <div>
+          <p><b>Selected:</b> {prod.length}</p>
+        </div>
+        {loading ? <CircularProgress color="primary" />
+          :
+          <Button variant="contained" color="primary" sx={{ height: '30px', marginLeft: '20px' }} onClick={handleOpen}>Delete</Button>
+        }
+      </div>}
+
       <Table
         aria-label="simple table"
         sx={{
@@ -210,6 +323,11 @@ const AllProducts = ({ products, page, totalPages }) => {
       >
         <TableHead>
           <TableRow>
+            <TableCell align="center">
+              <Typography color="textSecondary" variant="h6">
+                #
+              </Typography>
+            </TableCell>
             <TableCell align="center">
               <Typography color="textSecondary" variant="h6">
                 Title
@@ -240,6 +358,15 @@ const AllProducts = ({ products, page, totalPages }) => {
         <TableBody>
           {Object.keys(products)?.map((product) => {
             return <TableRow key={products[product]?._id}>
+              {<TableCell align="center" sx={{
+                alignItems: "center",
+                justifyContent: "center",
+              }}>
+                <FormControlLabel
+                  control={<Checkbox name="" value={products[product]._id} checked={!!prod.includes(products[product]._id)} onChange={handleDeleteChange} />}
+                  label={""}
+                />
+              </TableCell>}
               {<TableCell sx={{
                 paddingRight: '4px',
                 maxWidth: '20rem',
@@ -286,7 +413,7 @@ const AllProducts = ({ products, page, totalPages }) => {
                 display: "flex",
                 justifyContent: "center",
               }}>
-                <img style={{ height: '100px' }} src={products[product]?.img} alt='1' loading="lazy" />
+                <img style={{ height: '100px' }} src={products[product]?.img} alt='1' />
               </TableCell>}
               {<TableCell align="center">
                 <Typography variant="h6">{products[product]?.skuId}</Typography>
@@ -307,6 +434,7 @@ const AllProducts = ({ products, page, totalPages }) => {
                 </Typography>
               </TableCell>}
             </TableRow>
+
           })}
         </TableBody>
       </Table>
