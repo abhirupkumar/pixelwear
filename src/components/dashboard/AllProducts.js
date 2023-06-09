@@ -143,8 +143,21 @@ const AllProducts = ({ products, page, totalPages }) => {
     }
   };
 
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setLoading(false);
+    setLoading(true);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setLoading(false);
+    setOpen(false);
+  };
+
   const submitDeletion = async (e) => {
-    handleClose();
+    setOpen(false);
     setLoading(true);
     let a = await fetch(`/api/deleteproducts`, {
       method: 'POST', // or 'PUT'
@@ -180,19 +193,6 @@ const AllProducts = ({ products, page, totalPages }) => {
       });
     }
   }
-
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => {
-    setLoading(false);
-    setLoading(true);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setLoading(false);
-    setOpen(false);
-  };
 
   return (
     <BaseCard title="All Products">
