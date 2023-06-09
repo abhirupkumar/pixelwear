@@ -190,6 +190,7 @@ const AllProducts = ({ products, page, totalPages }) => {
   };
 
   const handleClose = () => {
+    setLoading(false);
     setOpen(false);
   };
 
