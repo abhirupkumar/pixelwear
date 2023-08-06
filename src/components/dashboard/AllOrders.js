@@ -131,7 +131,7 @@ const AllOrders = ({ orders }) => {
                       color: "blue",
                     }}
                   >
-                    <Link href={'/adminpanel_lesoft/orderstatus?id=' + order._id}>{order.orderId}</Link>
+                    <Link href={'/admin/orderstatus?id=' + order._id}>{order.orderId}</Link>
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
