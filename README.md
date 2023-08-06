@@ -1,4 +1,13 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Pixelwear
+
+This is a modern Ecommerce site built using Nextjs.
+https://pixelwear.vercel.app
+
+## Tech Stack
+
+**Client** : Nextjs, React, React Redux, Tailwind Css, Material UI
+
+**Database** : MongoDB
 
 ## Getting Started
 
