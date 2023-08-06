@@ -90,7 +90,7 @@ const Orderstatus = ({ order, orders }) => {
                 progress: undefined,
             });
             setTimeout(() => {
-                router.push(`/adminpanel_lesoft/orderstatus?id=${order._id}`)
+                router.push(`/admin/orderstatus?id=${order._id}`)
             }, 2000);
         }
         else {
@@ -107,7 +107,7 @@ const Orderstatus = ({ order, orders }) => {
     }
 
     const handleOrderChange = () => {
-        router.push(`/adminpanel_lesoft/orderstatus?id=${orders[0]._id}`)
+        router.push(`/admin/orderstatus?id=${orders[0]._id}`)
     }
 
     return (

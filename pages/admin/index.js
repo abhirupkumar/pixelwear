@@ -127,7 +127,7 @@ const Index = ({ images, videos }) => {
                 progress: undefined,
             });
             setTimeout(() => {
-                router.push(`/adminpanel_lesoft`)
+                router.push(`/admin`)
             }, 2000);
         }
         else {
