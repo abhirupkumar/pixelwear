@@ -1,101 +1,73 @@
 export const menuItems = [
     {
-        title: "Bottoms",
-        link: "/bottoms",
+        title: "Tshirts",
+        link: "/tshirts",
         submenu: [{
-            title: "Ankle Leggings",
-            link: "/bottoms?categories=ankleleggings",
+            title: "Polo Tshirts",
+            link: "/tshirts?categories=polo",
         },
         {
-            title: "Capri Leggings",
-            link: "/bottoms?categories=caprileggings",
+            title: "Half Sleeves Tshirts",
+            link: "/tshirts?categories=half-sleeves",
         },
         {
-            title: "Churidar Leggings",
-            link: "/bottoms?categories=churidarleggings",
+            title: "V-Neck T-Shirts",
+            link: "/tshirts?categories=v-neck",
         },
         {
-            title: "Palazzo",
-            link: "/bottoms?categories=palazzo",
+            title: "Striped T-Shirts",
+            link: "/tshirts?categories=stripped",
         },
         {
-            title: "Patiala",
-            link: "/bottoms?categories=patiala",
-        },
-        {
-            title: "Straight Pant",
-            link: "/bottoms?categories=straightpant",
+            title: "Colorful Tie-Dye T-Shirts",
+            link: "/tshirts?categories=colorful-tie-dye",
         },
         ],
     },
     {
-        title: "Tops",
-        link: "/tops",
+        title: "Hoodies",
+        link: "/hoodies",
         submenu: [{
-            title: "T-shirts",
-            link: "/tops?categories=tshirts",
+            title: "Zip-Up Hoodies",
+            link: "/hoodies?categories=zip-up",
         },
         {
-            title: "Hoodies",
-            link: "/tops?categories=hoodies",
+            title: "Polyester Hoodies",
+            link: "/hoodies?categories=polyster",
+        },
+        {
+            title: "Pullover Hoodies",
+            link: "/hoodies?categories=pullover",
         },
         ],
     },
     {
-        title: "Inner Wear",
-        link: "/innerwear",
+        title: "Jeans",
+        link: "/jeans",
         submenu: [{
-            title: "Shorts",
-            link: "/innerwear?categories=shorts",
+            title: "Slim Fit Jeans",
+            link: "/jeans?categories=slim-fit",
+        },
+        {
+            title: "Regular Fit Jeans",
+            link: "/jeans?categories=regular-fit",
+        },
+        {
+            title: "Tapered Fit Jeans",
+            link: "/jeans?categories=tapered-fit",
         },
         ],
     },
     {
-        title: "Kids",
-        link: "/kids",
-        submenu: [{
-            title: "Bottoms",
-            link: "/kids?categories=bottom/ankleleggings",
-            submenu: [
-                {
-                    title: "Ankle Leggings",
-                    link: "/kids?categories=bottom/ankleleggings",
-                },
-                {
-                    title: "Capri",
-                    link: "/kids?categories=bottom/capri",
-                },
-            ],
-        },
-        {
-            title: "Shorts",
-            link: "/kids?categories=shorts",
-        },
-        ],
+        title: "Trousers",
+        link: "/trousers",
     },
     {
-        title: "Lounge Wear",
-        link: "/loungewear",
-        submenu: [{
-            title: "Pyjama Set",
-            link: "/loungewear?categories=pyjama",
-        },
-        {
-            title: "Capri Set",
-            link: "/loungewear?categories=capri",
-        },
-        {
-            title: "Shorty Set",
-            link: "/loungewear?categories=shorty",
-        },
-        {
-            title: "Long Tee",
-            link: "/loungewear?categories=longtee",
-        },
-        ],
+        title: "Caps",
+        link: "/caps",
     },
     {
-        title: "Sarees",
-        link: "/sarees?categories=sarees",
+        title: "Mouse Pads",
+        link: "/mouse-pads",
     },
 ];

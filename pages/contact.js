@@ -5,7 +5,7 @@ const Contact = () => {
   return (
     <div>
       <Head>
-        <title>Contact Us - Le-Soft</title>
+        <title>Contact Us - Pizelwear</title>
         <meta name="description" content="Quality of classes at proces of masses." />
         <link rel="icon" href="/icon.png" />
       </Head>
@@ -21,17 +21,17 @@ const Contact = () => {
                 <div className="text-center px-5 md:px-0 md:text-left py-10">
                   <span className="font-bold">Registered Office</span>
                   <br />
-                  Kabir Textile & Apparelss<br />
-                  Ramnagar-1, Milanbagan School Road,<br />
-                  (Opp. NH34), Ranaghat, Nadia,<br />
-                  Pin Code: 741201, West Bengal, India<br />
+                  Pixelwear<br />
+                  Ganganagar, Madhyamgram,<br />
+                  Old Jessore Road, North 24 Parganas,<br />
+                  Pin Code: 700132, West Bengal, India<br />
                 </div>
                 <div className="text-center px-5 md:px-0 md:text-left py-10">
                   <span className="font-bold">Customer Support</span>
                   <br />
-                  Phone Number: <p className="inline-flex text-blue-600 font-semibold">+91-9093945082 / +91-8981950638</p>
+                  Phone Number: <p className="inline-flex text-blue-600 font-semibold">+91-700xxxxxx</p>
                   <br />
-                  Email: <p className="inline-flex text-slate-600 font-semibold">kabirlesoft@gmail.com</p>
+                  Email: <p className="inline-flex text-slate-600 font-semibold">xxxxxxxxxxxxx@gmail.com</p>
                   <br />
                 </div>
               </div>

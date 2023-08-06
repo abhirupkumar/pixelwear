@@ -8,6 +8,9 @@ import { wordToHex } from '../colorhex'
 import Head from 'next/head'
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
+import { checkWishlist } from '../features/cartSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { AiOutlineHeart, AiTwotoneHeart } from 'react-icons/ai'
 
 const SearchResult = ({ products, filter, colorfilter, page, totalPages }) => {
 
@@ -19,6 +22,9 @@ const SearchResult = ({ products, filter, colorfilter, page, totalPages }) => {
         fabrics: [],
         sizes: [],
     });
+
+    const dispatch = useDispatch();
+    const wishlist = useSelector((state) => state.cartItems.wishlist)
 
     useEffect(() => {
         const { colors = [], categories = [], fabrics = [], sizes = [] } = router.query;
@@ -94,16 +100,15 @@ const SearchResult = ({ products, filter, colorfilter, page, totalPages }) => {
                 <link rel="icon" href="/icon.png" />
             </Head>
             <div className="text-gray-600 body-font min-h-screen flex lg:flex-row flex-col">
-                {colorfilter && colorfilter.length > 0 && <div className={`lg:mx-2 lg:my-12 lg:w-[300px] border border-gray-400 w-full rounded-md h-full lg:relative sticky top-0 bg-white z-20 ${showFilter ? '' : 'lg:border-gray-400 border-gray-300'}`}>
+                {colorfilter && colorfilter.length > 0 && Object.keys(products)?.length > 0 && <div className={`lg:mx-2 lg:my-12 lg:w-[300px] border border-gray-400 w-full rounded-md h-full lg:relative sticky top-0 bg-white z-20 ${showFilter ? '' : 'lg:border-gray-400 border-gray-300'}`}>
                     <p className='lg:flex lg:flex-row hidden justify-center px-1 my-2 mx-10 text-xl'>Filter</p>
                     <button className='flex lg:hidden justify-center px-1 my-2 mx-auto text-xl' onClick={changeFilter}>Filter {showFilter ? <FilterListIcon /> : <FilterListOffIcon />}</button>
                     <div className={`${showFilter ? 'lg:block transition-all overflow-y-scroll' : 'lg:block hidden'}`}>
                         <hr className='lg:mt-2 mt-1 mb-2' />
                         <div className="flex items-center justify-center">
-                            <button onClick={applyFilters} className="flex mr-2 text-white bg-[#9933ff] border-0 py-2 px-3 focus:outline-none hover:bg-[#8000ff] rounded text-sm">Apply Filter</button>
-                            <button onClick={clearFilters} className="flex mr-2 text-white bg-[#9933ff] border-0 py-2 px-3 focus:outline-none hover:bg-[#8000ff] rounded text-sm">Clear Filter</button>
+                            <button onClick={applyFilters} className="flex mr-2 text-white bg-[#1a4ffd] hover:bg-[#1440d3] border-0 py-2 px-3 focus:outline-none rounded text-sm">Apply Filter</button>
+                            <button onClick={clearFilters} className="flex mr-2 text-white bg-[#1a4ffd] hover:bg-[#1440d3] border-0 py-2 px-3 focus:outline-none  rounded text-sm">Clear Filter</button>
                         </div>
-                        <hr className='lg:mt-2 mt-1' />
                         {Object.keys(filter).length != 0 && <><hr className='mt-2' />
                             <p className='flex flex-row justify-center px-1 my-2 mx-10 text-lg text-semibold'>Fabric</p>
                             <div className='flex flex-col px-20 mx-auto text-base'>
@@ -152,24 +157,30 @@ const SearchResult = ({ products, filter, colorfilter, page, totalPages }) => {
                                 discount = (products[item].mrp - products[item].price) / products[item].mrp * 100
                                 discount = discount.toFixed(1)
                             }
-                            return <div key={products[item]._id} className="lg:w-[310px] w-[39%] prod-shadow lg:h-auto cursor-pointer m-4">
-                                <Link href={`/product/${products[item].slug}`}>
-                                    <div className="flex justify-center lg:h-[470px] md:h-[400px] h-[216px] relative overflow-hidden">
-                                        <img alt="ecommerce" className="m-auto md:m-0 prodimg-border lg:h-[470px] md:h-[400px] h-[216px] block" src={products[item]?.img} />
+                            return <div key={products[item]._id} className="flex mx-auto mb-10 flex-col lg:w-[310px] w-[40vw] cursor-pointer items-center">
+                                <div>
+                                    <div className='m-auto md:m-0 flex lg:h-[470px] md:h-[400px] w-full sm-1:h-[40vh] sm-2:h-[30vh] h-[22vh]'>
+                                        {!!products[item].mrp && discount > 0 && <div className='absolute z-20 m-2 bg-[#f3f3f3] px-2 py-1 items-center rounded-full md:block hidden'>
+                                            <p className="text-left font-semibold text-green-600 text-xs">{discount}% off</p>
+                                        </div>}
+                                        <Link href={`/product/${products[item].slug}`}><img alt="ecommerce" className="h-full  block" src={products[item]?.img} /></Link>
                                     </div>
-                                    <div className="text-center mx-[10px] md:text-justify flex flex-col lg:h-[195px] h-[162px] justify-evenly">
-                                        <h3 className="text-gray-500 mx-auto text-xs tracking-widest title-font">{products[item].category.toUpperCase()}</h3>
-                                        <h2 className="text-gray-900 mx-auto text-left title-font lg:text-lg text-xs font-medium">{products[item].title}</h2>
-                                        <div className="flex space-x-2">
-                                            {!!products[item].mrp && <p className="mt-1 text-left text-gray-400 line-through md:text-base text-xs">₹{products[item].mrp}</p>}
-                                            <p className="mt-1 text-left text-black font-semibold md:text-base text-xs">₹{products[item].price}</p>
-                                            {!!products[item].mrp && discount > 0 && <p className="mt-1 text-left font-semibold text-red-600 md:text-base text-xs">{discount}% off</p>}
+                                </div>
+                                <Link href={`/product/${products[item].slug}`}>
+                                    <div className="text-center mx-[2px] my-1 space-y-2 md:text-justify flex flex-col">
+                                        <h3 className="text-gray-500 mx-auto text-xs tracking-widest capitalize">{products[item].category.toUpperCase()}</h3>
+                                        <h2 className="text-gray-900 mx-auto lg:text-left title-font lg:text-lg md:text-md sm:text-sm text-xs font-medium">{products[item].title}</h2>
+                                        <div className="flex space-x-2 lg:justify-start items-center justify-center">
+                                            <p className="text-left text-black font-semibold md:text-lg text-sm">₹{products[item].price}</p>
+                                            {!!products[item].mrp && <p className="text-left text-gray-400 line-through md:text-base text-xs">₹{products[item].mrp}</p>}
+                                            {!!products[item].mrp && discount > 0 && <p className="text-left font-semibold text-green-600 text-xs md:hidden block">{discount}% off</p>}
                                         </div>
-                                        <div className="mt-1 flex items-start">
+                                        <div className="lg:justify-start justify-center flex">
                                             {products[item].size.slice(0, 2).map((size, index) => {
                                                 return <span key={index} className='border border-gray-500 px-1 mx-1  md:text-md sm:text-sm text-xs'>{size}</span>
                                             })}
-                                            {products[item].size.length > 2 && <span className='border border-gray-500 lg:px-1 px-[0.10rem] mx-1 md:text-md sm:text-sm text-xs'>+{products[item].size.length - 2} more</span>}
+                                            {products[item].size.length > 2 && <span className='border border-gray-500 lg:px-1 px-[0.10rem] mx-1 md:text-md sm:text-sm text-xs sm:block hidden'>+{products[item].size.length - 2} more</span>}
+                                            {products[item].size.length > 2 && <span className='border border-gray-500 lg:px-1 px-[0.10rem] mx-1 md:text-md sm:text-sm text-xs sm:hidden block'>+{products[item].size.length - 2}</span>}
                                         </div>
                                     </div>
                                 </Link>
@@ -181,7 +192,7 @@ const SearchResult = ({ products, filter, colorfilter, page, totalPages }) => {
                         page={page}
                         onChange={handlePageChange}
                         style={{ marginTop: '3rem', marginBottom: '3rem' }}
-                        variant="outlined" color="secondary"
+                        variant="outlined" color="primary"
                     />}
                 </div>
             </div>

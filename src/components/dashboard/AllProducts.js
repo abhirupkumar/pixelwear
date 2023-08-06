@@ -13,85 +13,9 @@ import Link from 'next/link'
 import { useRouter } from "next/router";
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { productcatelogue } from "../../../productcatalogue";
 
 const AllProducts = ({ products, page, totalPages }) => {
-
-  const productcatelogue = [
-    {
-      title: "sarees",
-      submenu: [{
-        title: "sarees",
-      }]
-    },
-    {
-      title: "bottoms",
-      submenu: [{
-        title: "ankleleggings",
-      },
-      {
-        title: "caprileggings",
-      },
-      {
-        title: "churidarleggings",
-      },
-      {
-        title: "palazzo",
-      },
-      {
-        title: "patiala",
-      },
-      {
-        title: "straightpant",
-      },
-      ],
-    },
-    {
-      title: "tops",
-      submenu: [{
-        title: "tshirts",
-      },
-      {
-        title: "hoodies",
-      },
-      ],
-    },
-    {
-      title: "innerwear",
-      submenu: [{
-        title: "shorts",
-      },
-      ],
-    },
-    {
-      title: "kids",
-      submenu: [{
-        title: "bottoms/ankleleggings",
-      },
-      {
-        title: "bottoms/capri",
-      },
-      {
-        title: "shorts",
-      },
-      ],
-    },
-    {
-      title: "loungewear",
-      submenu: [{
-        title: "pyjama",
-      },
-      {
-        title: "capri",
-      },
-      {
-        title: "shorty",
-      },
-      {
-        title: "longtee",
-      },
-      ],
-    },
-  ];
 
   const [type, setType] = useState('')
 
@@ -110,12 +34,17 @@ const AllProducts = ({ products, page, totalPages }) => {
       const value = e.target.value
       setSubcategory(value)
     });
-    router.push(`/adminpanel_lesoft/allproducts?category=${type}&theme=${e.target.value}`)
+    router.push(`/admin/allproducts?category=${type}&theme=${e.target.value}`)
   }
 
   useEffect(() => {
     setCount(products.length)
   }, [router])
+
+  useEffect(() => {
+    if (router.query.category) setType(router.query.category);
+    if (router.query.theme) setSubcategory(router.query.theme);
+  }, [router.query])
 
   const handlePageChange = (event, value) => {
     if (router.query.page) {
@@ -241,57 +170,24 @@ const AllProducts = ({ products, page, totalPages }) => {
           aria-labelledby="demo-radio-buttons-group-label"
           name="radio-buttons-group">
           <div className='flex flex-col lg:flex-row'>
-            <FormControlLabel
-              value='sarees'
+            {productcatelogue.map((item, index) => <FormControlLabel
+              key={index}
+              value={item.value}
               control={<Radio />}
-              label="Sarees"
-              name="sarees"
+              label={item.title}
+              name={item.value}
               onChange={handleRadioChange}
-            />
-            <FormControlLabel
-              value='bottoms'
-              control={<Radio />}
-              label="Bottoms"
-              name="bottoms"
-              onChange={handleRadioChange}
-            />
-            <FormControlLabel
-              value="tops"
-              control={<Radio />}
-              label="Tops"
-              name="tops"
-              onChange={handleRadioChange}
-            />
-            <FormControlLabel
-              value="innerwear"
-              control={<Radio />}
-              label="Inner Wear"
-              name="innerwear"
-              onChange={handleRadioChange}
-            />
-            <FormControlLabel
-              value="kids"
-              control={<Radio />}
-              label="Kids"
-              name="kids"
-              onChange={handleRadioChange}
-            />
-            <FormControlLabel
-              value="loungewear"
-              control={<Radio />}
-              label="Lounge Wear"
-              name="loungewear"
-              onChange={handleRadioChange}
-            />
+              checked={type == item.value}
+            />)}
           </div>
         </RadioGroup>
       </FormControl>
 
       <div className="my-3">
         {productcatelogue.map((item) => {
-          return type == item.title && <TextField key={item.title} label='Subcategory' name='subcategory' select value={subcategory} onChange={handleChange} fullWidth>
+          return type == item.value && <TextField key={item.title} label='Subcategory' name='subcategory' select value={subcategory} onChange={handleChange} fullWidth>
             {item.submenu && item.submenu.map((subitems, index) => {
-              return (<MenuItem key={index} value={subitems.title}>{subitems.title}</MenuItem>);
+              return (<MenuItem key={index} value={subitems.value}>{subitems.title}</MenuItem>);
             })}
           </TextField>
         })}
@@ -420,7 +316,7 @@ const AllProducts = ({ products, page, totalPages }) => {
                 <Typography variant="h6">{products[product]?.skuId}</Typography>
               </TableCell>}
               {<TableCell align="center">
-                <div className="text-blue-700"><Link href={'/adminpanel_lesoft/update?slug=' + products[product]?.slug}>
+                <div className="text-blue-700"><Link href={'/admin/update?slug=' + products[product]?.slug}>
                   Edit</Link></div>
               </TableCell>}
               {<TableCell align="center">

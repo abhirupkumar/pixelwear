@@ -29,7 +29,7 @@ const handler = async (req, res) => {
         }
         else {
             let emailMessage = `
-                <div>We have sent you this email in response to your request to send the otp on Le-Soft website.
+                <div>We have sent you this email in response to your request to send the otp on Pixelwear's website.
 
         <br/> Otp for signup --> <a>${req.body.otp}</a>
 
@@ -47,7 +47,7 @@ const handler = async (req, res) => {
                             {
                                 From: {
                                     Email: "abhirupkumar2003@gmail.com",
-                                    Name: "Le-Soft Team • noreply@lesoft.in",
+                                    Name: "Pixelwear Team • noreply@pixelwear",
                                 },
                                 To: [
                                     {
@@ -55,13 +55,13 @@ const handler = async (req, res) => {
                                     },
                                 ],
                                 Subject: "OTP For Verfication",
-                                TextPart: "Le-Soft",
+                                TextPart: "Pixelwear",
                                 HTMLPart: emailMessage,
                             },
                         ],
                     })
-                   return response;
-           }
+                return response;
+            }
 
             const mail = await sendEmail(req.body.email);
             if (mail.body.Messages[0].Status != "success") {

@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { AiFillCloseCircle, AiOutlineSearch, AiOutlineShoppingCart } from 'react-icons/ai';
+import { AiFillCloseCircle, AiOutlineHeart, AiOutlineSearch, AiOutlineShoppingCart } from 'react-icons/ai';
 import { BsFillBagCheckFill } from 'react-icons/bs';
 import { MdAccountCircle } from 'react-icons/md';
 import { menuItems } from '../menuItems';
@@ -33,6 +33,7 @@ const Navbar = () => {
   const [menu, setMenu] = useState(false)
   const [searchbar, setSearchbar] = useState(false)
   const router = useRouter()
+  const wishlist = useSelector((state) => state.cartItems.wishlist)
 
   const animation = ["fadeIn", "fadeOut"];
   let email = ''
@@ -115,7 +116,7 @@ const Navbar = () => {
   return (
     <>
       <Head>
-        <title>Le-Soft - Women's Leading Fashion Brand</title>
+        <title>Pixelwear - Men's Fashion Brand</title>
         <meta name="description" content="Quality of classes at prices of masses." />
         <link rel="icon" href="/icon.png" />
       </Head>
@@ -134,8 +135,8 @@ const Navbar = () => {
         </div>
 
       </span>}
-      <div className='md:hidden block fixed left-8 top-0 z-[27]'>
-        <IconButton size='large' edge='start' color='inherit' aria-label='logo' sx={{ top: '8px' }} onClick={() => setIsDrawerOpen(true)}>
+      <div className='md:hidden flex fixed left-8 top-0 z-[27] items-center'>
+        <IconButton size='large' edge='start' color='inherit' aria-label='logo' onClick={() => setIsDrawerOpen(true)}>
           <MenuIcon />
         </IconButton>
       </div>
@@ -213,9 +214,9 @@ const Navbar = () => {
             })}
           </ul>
         </div>
-        <div className='md:flex md:flex-1 justify-end'>
+        <div className='md:flex md:flex-1 justify-center'>
           <div className="md:flex flex-1 top-3 justify-end items-center lg:mx-10 mx-2 hidden">
-            <input onKeyDown={handleSearch} onChange={handleChange} value={search} className='border-2 border-gray-300 bg-white h-10 px-5 pr-16 w-[80%] lg:flex hidden rounded-lg text-sm focus:outline-none' type="search" name="search" placeholder="Search" />
+            <input onKeyDown={handleSearch} onChange={handleChange} value={search} className='border-2 border-gray-300 bg-white h-10 px-5 pr-16 w-[85%] lg:flex hidden rounded-lg text-sm focus:outline-none' type="search" name="search" placeholder="Search" />
             <button type="submit" onClick={handleSearch} className="absolute mx-2 text-xl text-gray-400 lg:flex md:hidden sm:flex">
               <AiOutlineSearch />
             </button>
@@ -226,28 +227,30 @@ const Navbar = () => {
           <span className="md:block hidden cursor-pointer" onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>
             {token && <MdAccountCircle className="text-2xl mt-2" />}
           </span>
-          <div className="cart md:flex hidden top-4 mx-6 cursor-pointer">
+          <div className="cart md:flex hidden top-4 mx-6 justify-evenly cursor-pointer">
             {token == null && <Link href={'/login'}>
-              <button className='md:flex hidden mr-2 text-white bg-[#9933ff] border-0 py-2 px-3 focus:outline-none hover:bg-[#8000ff] rounded text-sm' >Login</button>
+              <button className='md:flex hidden mr-2 text-white border-0 py-2 px-3 focus:outline-none bg-[#1a4ffd] hover:bg-[#1440d3] rounded text-sm' >Login</button>
             </Link>}
-            <AiOutlineShoppingCart onClick={toggleCart} className="text-2xl mt-2" />
-            {Object.keys(cart).length > 0 && <span className='absolute right-4 px-1 text-xs border border-indigo-500 bg-[#9933ff] text-white rounded-full'> {cart?.length} </span>}
+            <AiOutlineHeart onClick={() => router.push('/wishlist')} className="text-2xl mt-2 mx-2" />
+            {Object.keys(wishlist).length > 0 && <span className='absolute right-16 px-1 text-xs border border-[#1a4ffd] bg-[#1a4ffd] text-white rounded-full'> {wishlist?.length} </span>}
+            <AiOutlineShoppingCart onClick={toggleCart} className="text-2xl mt-2 mx-2" />
+            {Object.keys(cart).length > 0 && <span className='absolute right-6 px-1 text-xs border border-[#1a4ffd] bg-[#1a4ffd] text-white rounded-full'> {cart?.length} </span>}
           </div>
         </div>
         <Drawer anchor='right' open={sidebar} onClose={() => setSidebar(false)} className="z-[45]">
-          <div className={`h-[100vh] md:w-[40rem] top-0 bg-[#f2e5ff] px-8 py-10 transition-all overflow-y-scroll`}>
+          <div className={`h-[100vh] md:w-[40rem] top-0 bg-[#eaf1fd] px-8 py-10 transition-all overflow-y-scroll`}>
             <h2 className='font-bold text-xl text-center'>Shopping Cart</h2>
-            <span onClick={toggleCart} className='absolute top-5 right-3 text-3xl cursor-pointer text-[#8000ff]'><AiFillCloseCircle /></span>
+            <span onClick={toggleCart} className='absolute top-5 right-3 text-3xl cursor-pointer text-[#0026ff]'><AiFillCloseCircle /></span>
             <ol className='list-decimal font-semibold'>
               {cart?.length == 0 && <div className='my-4 font-semibold'>Your cart is Empty!</div>}
               {cart?.map((item, index) => {
                 return <li key={index}>
-                  <div className="flex my-5 space-x-2 flex-row-reverse">
-                    <img style={{ height: '110px' }} src={item.img} alt={index} />
+                  <div className="flex my-5 space-x-2 justify-end flex-row-reverse">
+                    <img className="h-[140px] mx-4" src={item.img} alt={index} />
                     <div className='flex flex-col'>
-                      <div className='max-w-[30rem] font-semibold flex flex-row'>{item.name} ({item.size}/{item.variant})</div>
+                      <div className='max-w-[30rem] font-semibold flex flex-row'>{item.name} ({item.size}/{item.color})</div>
                       <div className='flex space-x-6'>
-                        <div className='flex items-center justify-start mt-2 font-semibold text-lg'><RemoveIcon onClick={() => { dispatch(removeFromCart({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#8000ff] text-[#f2e5ff] rounded-sm' /><span className='mx-2 text-sm' > {item.qty} </span><AddIcon onClick={() => { dispatch(increment({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#8000ff] text-[#f2e5ff] rounded-sm' /></div>
+                        <div className='flex items-center justify-start mt-2 font-semibold text-lg'><RemoveIcon onClick={() => { dispatch(removeFromCart({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.color, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#1a4ffd]  text-[#f2e5ff] rounded-sm' /><span className='mx-2 text-sm' > {item.qty} </span><AddIcon onClick={() => { dispatch(increment({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.color, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#1a4ffd] text-[#f2e5ff] rounded-sm' /></div>
                         <div className='flex mt-3 justify-start space-x-1'>
                           <p>Price: </p>
                           <p>₹{item.price * item.qty}</p>
@@ -260,8 +263,8 @@ const Navbar = () => {
               <div className="font-bold my-2">Subtotal: ₹{subTotal}</div>
             </ol>
             <div className="flex">
-              <Link href={'/checkout'} ><button disabled={cart.length === 0} className="disabled:bg-[#cc99ff] flex mr-2 text-white bg-[#9933ff] border-0 py-2 px-2 focus:outline-none hover:bg-[#8000ff] rounded text-sm"><BsFillBagCheckFill className='m-1' />Checkout</button></Link>
-              <button disabled={cart.length === 0} onClick={() => dispatch(clearCart())} className="disabled:bg-[#cc99ff] flex mr-2 text-white bg-[#9933ff] border-0 py-2 px-2 focus:outline-none hover:bg-[#8000ff] rounded text-sm">Clear Cart</button>
+              <Link href={'/checkout'} ><button disabled={cart.length === 0} className="disabled:bg-[#b6c9fd] flex mr-2 text-white border-0 py-2 px-2 focus:outline-none bg-[#1a4ffd] hover:bg-[#1440d3] rounded text-sm"><BsFillBagCheckFill className='m-1' />Checkout</button></Link>
+              <button disabled={cart.length === 0} onClick={() => dispatch(clearCart())} className="disabled:bg-[#b6c9fd] flex mr-2 text-white bg-[#1a4ffd] hover:bg-[#1440d3] border-0 py-2 px-2 focus:outline-none rounded text-sm">Clear Cart</button>
             </div>
           </div>
         </Drawer>

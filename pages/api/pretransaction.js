@@ -61,7 +61,7 @@ const handler = async (req, res) => {
             res.status(200).json({ success: false, "error": "Please enter your 6 digit pincode", cartClear: false })
             return
         }
-        const rdata = { price: req.body.subTotal, oid: req.body.oid };
+        const rdata = { price: req.body.amount, oid: req.body.oid };
         const data = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/razorpay`, { method: "POST", body: JSON.stringify(rdata), }).then((t) =>
             t.json()
         );

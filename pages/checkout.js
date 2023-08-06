@@ -19,6 +19,7 @@ const Checkout = () => {
   const router = useRouter()
   const cart = useSelector((state) => state.cartItems.cart);
   const subTotal = useSelector((state) => state.cartItems.subTotal);
+  const [loadRazorpay, setLoadRazorpay] = useState();
   const dispatch = useDispatch();
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -33,7 +34,11 @@ const Checkout = () => {
   const [paid, setPaid] = useState(false)
   let CGST_tax = parseFloat(subTotal * 5.5 / 100);
   let SGST_tax = parseFloat(subTotal * 5.5 / 100);
-  let amount = parseFloat(subTotal + CGST_tax + SGST_tax).toFixed(2);
+  const [amount, setAmount] = useState(parseFloat(subTotal + CGST_tax + SGST_tax).toFixed(2));
+
+  useEffect(() => {
+    setAmount(parseFloat(subTotal + CGST_tax + SGST_tax).toFixed(2))
+  }, [subTotal])
 
   const token = useSelector((state) => state.cartItems.token)
 
@@ -43,6 +48,7 @@ const Checkout = () => {
       setEmail(jwt.decode(token).email)
       fetchData(token)
     }
+    loadPaymentChannel();
   }, [])
 
   useEffect(() => {
@@ -69,6 +75,16 @@ const Checkout = () => {
     setPincode(res.pincode)
     setPhone(res.phone)
     getPinCode(res.pincode)
+  }
+
+  const loadPaymentChannel = async () => {
+    const res = await initializeRazorpay();
+    if (!res) {
+      setLoadRazorpay(false);
+    }
+    else {
+      setLoadRazorpay(true);
+    }
   }
 
   const getPinCode = async (pincode) => {
@@ -156,9 +172,8 @@ const Checkout = () => {
   const makePayment = async (e) => {
     e.preventDefault()
     setLoading(true)
-    const res = await initializeRazorpay();
     let oid = Math.floor(Math.random() * Date.now());
-    if (!res) {
+    if (!loadRazorpay) {
       alert("Your are offline.... Razorpay SDK Failed to load");
       return;
     }
@@ -190,11 +205,11 @@ const Checkout = () => {
     else {
       var options = {
         key: process.env.RAZORPAY_KEY,
-        name: "Le-Soft",
+        name: "Pixelwear",
         currency: "INR",
         amount: data.amount,
         order_id: data.id,
-        description: "Thank You for purchasing from Le-Soft India.",
+        description: "Thank You for purchasing from Pixelwear.",
         image: "/logo.png",
         handler: function (response) {
           let res = {
@@ -296,24 +311,24 @@ const Checkout = () => {
               </div>
               <div className='lg:w-[50%] w-[100%] flex flex-col justify-start'>
                 <h2 className='font-semibold text-xl'>2. Review Cart Items & Pay</h2>
-                <div className="cartItems bg-[#f2e5ff] py-6 px-10">
+                <div className="cartItems bg-[#e5edff] py-6 md:px-10 px-4">
 
                   <ol className='list-decimal font-semibold '>
                     {cart?.length == 0 && <div className='my-4 font-semibold'>Your cart is Empty!</div>}
                     {cart?.map((item, index) => {
                       return <li key={index}>
-                        <div className="flex my-5 space-x-2 flex-row-reverse">
-                          <img style={{ height: '110px', maxWidth: "98px" }} src={item.img} alt={index} />
+                        <div className="flex my-5 space-x-2 justify-start flex-row">
                           <div className='flex flex-col'>
                             <div className='max-w-[30rem] font-semibold flex flex-row'>{item.name} ({item.size}/{item.variant})</div>
                             <div className='flex space-x-6'>
-                              <div className='flex items-center justify-start mt-2 font-semibold text-lg'><RemoveIcon onClick={() => { dispatch(removeFromCart({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#8000ff] text-[#f2e5ff] rounded-sm' /><span className='mx-2 text-sm' > {item.qty} </span><AddIcon onClick={() => { dispatch(increment({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#8000ff] text-[#f2e5ff] rounded-sm' /></div>
+                              <div className='flex items-center justify-start mt-2 font-semibold text-lg'><RemoveIcon onClick={() => { dispatch(removeFromCart({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#1a4ffd] text-[#f2e5ff] rounded-sm' /><span className='mx-2 text-sm' > {item.qty} </span><AddIcon onClick={() => { dispatch(increment({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#1a4ffd] text-[#f2e5ff] rounded-sm' /></div>
                               <div className='flex mt-3 justify-start space-x-1'>
                                 <p>Price: </p>
                                 <p>₹{item.price * item.qty}</p>
                               </div>
                             </div>
                           </div>
+                          <img className="mx-2 sm:h-[140px] h-[110px] max-w-[98px]" src={item.img} alt={index} />
                         </div>
                       </li>
                     })}
@@ -323,7 +338,7 @@ const Checkout = () => {
                     <div className="font-bold my-2">Amount Payable: ₹{amount}</div>
                   </ol>
                   <div className="mx-4">
-                    {loading ? <CircularProgress color="secondary" /> : <Link href={'/checkout'} ><button disabled={disabled} onClick={makePayment} className="disabled:bg-[#c993ff] flex mx-auto mt-8 w-[15rem] text-white bg-[#9933ff] border-0 py-2 px-2 focus:outline-none hover:bg-[#a044fc] rounded-sm text-sm justify-center"><BsFillBagCheckFill className='m-1' />Complete Payment</button></Link>}
+                    {loading ? <CircularProgress color="primary" /> : <Link href={'/checkout'} ><button disabled={disabled} onClick={makePayment} className="disabled:bg-[#c993ff] flex mx-auto mt-8 w-[15rem] text-white bg-[#1a4ffd] hover:bg-[#1440d3] border-0 py-2 px-2 focus:outline-none rounded-sm text-sm justify-center"><BsFillBagCheckFill className='m-1' />Complete Payment</button></Link>}
                   </div>
                 </div>
               </div>
@@ -333,7 +348,7 @@ const Checkout = () => {
             <div className="flex flex-col justify-center items-center">
               <h1 className="text-2xl font-semibold">Login to Checkout</h1>
               <div className="flex flex-col justify-center items-center">
-                <Link href='/login'><button className="flex mx-auto mt-8 w-[15rem] text-white bg-[#9933ff] border-0 py-2 px-2 focus:outline-none hover:bg-[#a044fc] rounded-sm text-sm justify-center"><BsFillBagCheckFill className='m-1' />Login</button></Link>
+                <Link href='/login'><button className="flex mx-auto mt-8 w-[15rem] text-white bg-[#1a4ffd] hover:bg-[#1440d3] border-0 py-2 px-2 focus:outline-none rounded-sm text-sm justify-center"><BsFillBagCheckFill className='m-1' />Login</button></Link>
               </div>
             </div>}
         </>

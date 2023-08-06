@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     cart: [],
+    wishlist: [],
     subTotal: 0,
     token: null,
 }
@@ -56,11 +57,20 @@ export const cartSlice = createSlice({
         },
         removeToken: (state, action) => {
             state.token = null;
-        }
+        },
+        checkWishlist: (state, action) => {
+            const itemInList = state.wishlist.find((item) => item === action.payload);
+            if (!itemInList)
+                state.wishlist.push(action.payload);
+            else {
+                let newList = state.wishlist.filter((item) => item !== action.payload);
+                state.wishlist = newList;
+            }
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { addToCart, increment, removeFromCart, clearCart, setToken, removeToken } = cartSlice.actions
+export const { addToCart, increment, removeFromCart, clearCart, setToken, removeToken, checkWishlist } = cartSlice.actions
 
 export default cartSlice.reducer

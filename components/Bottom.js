@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import React, { useRef } from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { AiFillCloseCircle, AiFillHome, AiOutlineSearch, AiOutlineShoppingCart } from 'react-icons/ai';
+import { AiFillCloseCircle, AiFillHome, AiOutlineHeart, AiOutlineSearch, AiOutlineShoppingCart } from 'react-icons/ai';
 import { BsFillBagCheckFill } from 'react-icons/bs';
 import { MdAccountCircle } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,6 +32,7 @@ const Bottom = () => {
     const dispatch = useDispatch();
     const cart = useSelector((state) => state.cartItems.cart)
     const token = useSelector((state) => state.cartItems.token)
+    const wishlist = useSelector((state) => state.cartItems.wishlist)
     const subTotal = useSelector((state) => state.cartItems.subTotal)
     const [dropdown, setDropdown] = useState(null)
     const [sidebar, setSidebar] = useState(false)
@@ -133,9 +134,9 @@ const Bottom = () => {
                 </MenuList>
             </Menu>
             <Drawer anchor='right' open={sidebar} onClose={() => setSidebar(false)} className="z-[45]">
-                <div className={`h-[100vh] md:w-[40rem] top-0 bg-[#f2e5ff] px-8 py-10 transition-all overflow-y-scroll`}>
+                <div className={`h-[100vh] md:w-[40rem] top-0 bg-[#eaf1fd] px-8 py-10 transition-all overflow-y-scroll`}>
                     <h2 className='font-bold text-xl text-center'>Shopping Cart</h2>
-                    <span onClick={toggleCart} className='absolute top-5 right-3 text-3xl cursor-pointer text-[#8000ff]'><AiFillCloseCircle /></span>
+                    <span onClick={toggleCart} className='absolute top-5 right-3 text-3xl cursor-pointer text-[#0026ff]'><AiFillCloseCircle /></span>
                     <ol className='list-decimal font-semibold'>
                         {cart?.length == 0 && <div className='my-4 font-semibold'>Your cart is Empty!</div>}
                         {cart?.map((item, index) => {
@@ -143,9 +144,9 @@ const Bottom = () => {
                                 <div className="flex my-5 space-x-2 flex-row-reverse">
                                     <img style={{ height: '110px', maxWidth: "98px" }} src={item.img} alt={index} />
                                     <div className='flex flex-col'>
-                                        <div className='max-w-[30rem] font-semibold flex flex-row'>{item.name} ({item.size}/{item.variant})</div>
+                                        <div className='max-w-[30rem] font-semibold flex flex-row'>{item.name} ({item.size}/{item.color})</div>
                                         <div className='flex space-x-6'>
-                                            <div className='flex items-center justify-start mt-2 font-semibold text-lg'><RemoveIcon onClick={() => { item.qty <= item.availableQty && dispatch(removeFromCart({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#8000ff] text-[#f2e5ff] rounded-sm' /><span className='mx-2 text-sm' > {item.qty} </span><AddIcon onClick={() => { item.qty <= item.availableQty && dispatch(increment({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.variant, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#8000ff] text-[#f2e5ff] rounded-sm' /></div>
+                                            <div className='flex items-center justify-start mt-2 font-semibold text-lg'><RemoveIcon onClick={() => { item.qty <= item.availableQty && dispatch(removeFromCart({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.color, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#1a4ffd] text-[#f2e5ff] rounded-sm' /><span className='mx-2 text-sm' > {item.qty} </span><AddIcon onClick={() => { item.qty <= item.availableQty && dispatch(increment({ slug: item.slug, qty: 1, price: item.price, name: item.name, size: item.size, color: item.color, category: item.category, img: item.img, fabric: item.fabric })) }} className='cursor-pointer bg-[#1a4ffd] text-[#f2e5ff] rounded-sm' /></div>
                                             <div className='flex mt-3 justify-start space-x-1'>
                                                 <p>Price: </p>
                                                 <p>₹{item.price * item.qty}</p>
@@ -158,8 +159,8 @@ const Bottom = () => {
                         <div className="font-bold my-2">Subtotal: ₹{subTotal}</div>
                     </ol>
                     <div className="flex">
-                        <Link href={'/checkout'} ><button onClick={() => setSidebar(false)} disabled={cart.length === 0} className="disabled:bg-[#cc99ff] flex mr-2 text-white bg-[#9933ff] border-0 py-2 px-2 focus:outline-none hover:bg-[#8000ff] rounded text-sm"><BsFillBagCheckFill className='m-1' />Checkout</button></Link>
-                        <button disabled={cart.length === 0} onClick={() => dispatch(clearCart())} className="disabled:bg-[#cc99ff] flex mr-2 text-white bg-[#9933ff] border-0 py-2 px-2 focus:outline-none hover:bg-[#8000ff] rounded text-sm">Clear Cart</button>
+                        <Link href={'/checkout'} ><button onClick={() => setSidebar(false)} disabled={cart.length === 0} className="disabled:bg-[#b6c9fd] flex mr-2 text-white bg-[#1a4ffd] hover:bg-[#1440d3] border-0 py-2 px-2 focus:outline-none rounded text-sm"><BsFillBagCheckFill className='m-1' />Checkout</button></Link>
+                        <button disabled={cart.length === 0} onClick={() => dispatch(clearCart())} className="disabled:bg-[#b6c9fd] flex mr-2 text-white bg-[#1a4ffd] hover:bg-[#1440d3] border-0 py-2 px-2 focus:outline-none rounded text-sm">Clear Cart</button>
                     </div>
                 </div>
             </Drawer>
@@ -190,6 +191,10 @@ const Bottom = () => {
 
                 <BottomNavigationAction value="Search" icon={<span onClick={() => setSearchbar(true)}><AiOutlineSearch className="text-3xl" /></span>} />
 
+                <BottomNavigationAction value="Sidebar" icon={<span onClick={() => router.push('/wishlist')}>
+                    <AiOutlineHeart className="text-3xl" />
+                    {Object.keys(wishlist).length > 0 && <span className='absolute top-3 ml-1 px-1 text-xs border border-[#1a4ffd] bg-[#1a4ffd] text-white rounded-full'> {wishlist?.length} </span>}
+                </span>} />
                 <BottomNavigationAction value="Sidebar" icon={<span onClick={() => {
                     setSidebar(true)
                 }}>
@@ -205,7 +210,7 @@ const Bottom = () => {
 
 const Carticon = (cartlen) => {
     return <div>
-        {cartlen.cartlen > 0 && <span className='absolute mt-[-4px] px-1 border border-[#9933ff] bg-[#9933ff] text-white text-xs rounded-full'> {cartlen.cartlen} </span>}
+        {cartlen.cartlen > 0 && <span className='absolute mt-[-4px] px-1 border border-[#1a4ffd] bg-[#1a4ffd] text-white text-xs rounded-full'> {cartlen.cartlen} </span>}
         <AiOutlineShoppingCart className="text-3xl" />
     </div>
 }

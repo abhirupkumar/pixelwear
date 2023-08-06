@@ -5,7 +5,7 @@ const Privacy = () => {
   return (
     <div>
       <Head>
-        <title> Privacy Policy - Le-Soft</title>
+        <title> Privacy Policy - Pixelwear</title>
         <meta name="description" content="Quality of classes at proces of masses." />
         <link rel="icon" href="/icon.png" />
       </Head>
@@ -67,7 +67,7 @@ const Privacy = () => {
                 <li>
 
                   <p> <strong> Website</strong>  refers to Le-Soft, accessible from
-                    <a href="https://www.lesoft.in" rel="external nofollow noopener noreferrer" target="_blank"> https://www.lesoft.in</a>
+                    <a href="https://www.pixelwear.vercel.app" rel="external nofollow noopener noreferrer" target="_blank"> https://www.pixelwear.vercel.app</a>
                   </p>
                 </li>
 

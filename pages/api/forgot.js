@@ -28,7 +28,7 @@ export default async function handler(req, res) {
                 let token = jwt.sign({ email: req.body.email, name: result }, process.env.JWT_SECRET, { expiresIn: "700s" })
 
                 let emailMessage = `
-                <div>We have sent you this email in response to your request to reset your password on lesoft.in
+                <div>We have sent you this email in response to your request to reset your password on Pixelwear's website.
 
         <br/>To reset your password, please follow the link below:
 
@@ -48,7 +48,7 @@ export default async function handler(req, res) {
                                 {
                                     From: {
                                         Email: "abhirupkumar2003@gmail.com",
-                                        Name: "Le-Soft Team • noreply@lesoft.in",
+                                        Name: "Pixelwear Team • noreply@pixelwear",
                                     },
                                     To: [
                                         {
@@ -56,12 +56,12 @@ export default async function handler(req, res) {
                                         },
                                     ],
                                     Subject: "Forgot Password",
-                                    TextPart: "Le-Soft",
+                                    TextPart: "Pixelwear",
                                     HTMLPart: emailMessage,
                                 },
                             ],
                         })
-                      return response;
+                    return response;
                 }
 
                 const mail = await sendEmail(req.body.email);

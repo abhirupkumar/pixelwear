@@ -6,16 +6,18 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Error from 'next/error'
 import Head from 'next/head';
-import { useDispatch } from 'react-redux';
-import { addToCart, clearCart, removeFromCart } from '../../features/cartSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart, checkWishlist, clearCart, removeFromCart } from '../../features/cartSlice';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import PicModal from '../../components/PicModal';
 import { CircularProgress } from '@mui/material';
 import ReactImageZoom from 'react-image-zoom';
+import { AiOutlineHeart, AiTwotoneHeart } from 'react-icons/ai';
 
 const Post = ({ product, variants, error }) => {
   const dispatch = useDispatch();
+  const wishlist = useSelector((state) => state.cartItems.wishlist)
   const router = useRouter()
   const { slug } = router.query
   const [pin, setpin] = useState()
@@ -43,12 +45,6 @@ const Post = ({ product, variants, error }) => {
 
   const handleImage = (e) => {
     setImage(e.target.id)
-  }
-
-  const buyNow = (slug, qty, price, name, size, variant, theme, category, img, img2, img3, img4, fabric) => {
-    dispatch(clearCart());
-    dispatch(addToCart({ slug, qty, price, name, size, variant, theme, category, img, img2, img3, img4, fabric }));
-    router.push('/checkout');
   }
 
 
@@ -120,7 +116,7 @@ const Post = ({ product, variants, error }) => {
         pauseOnHover
       />
       <Head>
-        <title>Le-Soft - {product.title}</title>
+        <title>Pixelwear - {product.title}</title>
         <meta name="description" content="Quality of classes at proces of masses." />
         <link rel="icon" href="/icon.png" />
       </Head>
@@ -130,7 +126,7 @@ const Post = ({ product, variants, error }) => {
             <div className='flex lg:flex-row flex-col-reverse'>
               {imgarr?.length > 1 && <div className="lg:w-[15%] mx-auto items-center flex lg:flex-col flex-row overflow-auto">
                 {imgarr?.map((item, index) => (
-                  item && <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`w-16 h-24 prod-sideimg rounded-sm m-2 object-cover cursor-pointer`} src={item} />
+                  item && <img key={index} onMouseOver={handleImage} id={item} alt="ecommerce" className={`w-[4.5rem] h-[6.5rem] prod-sideimg m-2 object-cover cursor-pointer`} src={item} />
                 ))}
               </div>}
               <div className='md:block hidden mx-auto prod-slugimg'>
@@ -143,8 +139,8 @@ const Post = ({ product, variants, error }) => {
           </div>
           <div className="lg:w-[50%] w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
             <h1 className="text-gray-900 lg:text-3xl text-2xl title-font font-medium mb-1">{product.title} - ({product.size}/{product.color})</h1>
-            <div className="flex mb-4">
-              {/* <span className="flex items-center">
+            <div className="flex mb-4 items-center">
+              <span className="flex items-center">
                 <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-indigo-500" viewBox="0 0 24 24">
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                 </svg>
@@ -157,10 +153,10 @@ const Post = ({ product, variants, error }) => {
                 <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-indigo-500" viewBox="0 0 24 24">
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                 </svg>
-                <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-indigo-500" viewBox="0 0 24 24">
+                <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-indigo-500" viewBox="0 0 24 24">
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                 </svg>
-                <span className="text-gray-600 ml-3">4 Reviews</span>
+                <span className="text-gray-600 ml-3">295 reviews</span>
               </span>
               <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2s">
                 <a className="text-gray-500">
@@ -178,7 +174,10 @@ const Post = ({ product, variants, error }) => {
                     <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
                   </svg>
                 </a>
-              </span> */}
+              </span>
+              <button onClick={() => dispatch(checkWishlist(product._id))} className='lg:w-12 lg:h-12 h-8 w-8 rounded-full m-2 p-2 bg-slate-200'>
+                {!(wishlist.includes(product._id)) ? <AiOutlineHeart className='h-full w-full  text-gray-600' /> : <AiTwotoneHeart className='h-full w-full text-[#ff2c2c]' />}
+              </button>
             </div>
             <ul className="flex flex-col justify-start flex-wrap list-disc pl-10 lg:text-base md:text-sm text-xs">
               {product?.desc && product?.desc.map((desc, index) => <li key={index} className="leading-relaxed text-md">{desc}</li>)}
@@ -226,14 +225,14 @@ const Post = ({ product, variants, error }) => {
             </div>
             {product.availableQty > 0 && <div className=" flex my-8 space-x-4">
               <p className="font-medium">Quantity: </p>
-              <RemoveIcon className="rounded-sm cursor-pointer bg-[#8000ff] text-white" onClick={() => { return qty !== 1 && setQty(qty - 1) }} />
+              <RemoveIcon className="rounded-sm cursor-pointer bg-[#1a4ffd] text-white" onClick={() => { return qty !== 1 && setQty(qty - 1) }} />
               <p className="font-medium w-2">{qty}</p>
-              <AddIcon className="rounded-sm cursor-pointer bg-[#8000ff] text-white" onClick={() => { return qty !== product.availableQty && setQty(qty + 1) }} />
+              <AddIcon className="rounded-sm cursor-pointer bg-[#1a4ffd] text-white" onClick={() => { return qty !== product.availableQty && setQty(qty + 1) }} />
             </div>}
             <div className="flex space-x-4">
-              {!!product.mrp && product.availableQty > 0 && <span className="title-font font-medium text-2xl text-gray-400 line-through">₹{product.mrp}</span>}
               {product.availableQty > 0 && <span className="title-font font-medium text-2xl text-gray-900">₹{product.price}</span>}
-              {product.availableQty > 0 && !!product.mrp && <span className="title-font font-medium text-2xl text-red-600">{((product.mrp - product.price) / product.mrp * 100).toFixed(1)}% off</span>}
+              {!!product.mrp && product.availableQty > 0 && <span className="title-font font-medium text-2xl text-gray-400 line-through">₹{product.mrp}</span>}
+              {product.availableQty > 0 && !!product.mrp && <span className="title-font font-medium text-2xl text-green-600">{((product.mrp - product.price) / product.mrp * 100).toFixed(1)}% Off</span>}
               {product.availableQty <= 0 && <span className="title-font font-medium text-2xl text-red-600">Out Of Stock!</span>}
             </div>
             <div className="flex my-4 items-start">
@@ -241,13 +240,13 @@ const Post = ({ product, variants, error }) => {
                 dispatch(clearCart())
                 dispatch(addToCart({ slug, qty: qty, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img }))
                 router.push('/checkout')
-              }} className="flex text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Buy Now</button>
-              <button disabled={product.availableQty <= 0} onClick={() => dispatch(addToCart({ slug, qty: qty, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img }))} className="flex ml-4 text-white bg-[#9933ff] disabled:bg-[#cc99ff] border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-[#8000ff] rounded">Add To Cart</button>
+              }} className="flex text-white bg-[#1a4ffd] hover:bg-[#1440d3] disabled:bg-[#b6c9fd]  border-0 py-2 px-2 md:px-6 focus:outline-none  rounded">Buy Now</button>
+              <button disabled={product.availableQty <= 0} onClick={() => dispatch(addToCart({ slug, qty: qty, price: product.price, name: product.title, size, color, category: product.category, theme: product.theme, img: product.img }))} className="flex ml-4 text-white bg-[#1a4ffd] hover:bg-[#1440d3] disabled:bg-[#b6c9fd]  border-0 py-2 px-2 md:px-6 focus:outline-none rounded">Add To Cart</button>
             </div>
             <div className="pin my-6 flex space-x-2 text-sm items-center flex-wrap">
               <p className='md:mr-4 mr-1 font-medium lg:text-lg text-base'>Availability:</p>
               <input onChange={onChangePin} className="px-2 py-1 border-2 border-gray-400 rounded-md" type="text" placeholder='Enter your pincode' />
-              {loading ? <CircularProgress color="secondary" /> : <button onClick={checkServiceability} className="flex ml-14 text-white bg-[#9933ff] border-0 py-2 px-6 focus:outline-none hover:bg-[#8000ff] rounded">Check</button>}
+              {loading ? <CircularProgress color="primary" /> : <button onClick={checkServiceability} className="flex ml-14 text-white bg-[#1a4ffd] hover:bg-[#1440d3] border-0 py-2 px-6 focus:outline-none rounded">Check</button>}
             </div>
             {(!service && service != null) && <div className="text-red-700 text-sm mt-3">
               Sorry! We do not deliver to this pincode yet

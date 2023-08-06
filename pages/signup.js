@@ -155,7 +155,7 @@ const Signup = () => {
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign up for an account</h2>
             <div className="mt-2 text-center text-sm text-gray-600">
               Or
-              <Link href={'/login'}><div href="#" className="font-medium text-[#8000ff] hover:text-[#9933ff]"> Login </div></Link>
+              <Link href={'/login'}><div href="#" className="font-medium text-[#5377ec] hover:text-[#1a4ffd]"> Login </div></Link>
             </div>
           </div>
           <form onSubmit={handleSubmit} className="mt-8 space-y-6" method="POST">
@@ -175,10 +175,10 @@ const Signup = () => {
               </div>
             </div>
             {pinLoading ? <CircularProgress color="secondary" /> : <div>
-              <button type="button" onClick={OtpSend} className="my-6 group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#8000ff] hover:bg-[#8f1eff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              <button type="button" onClick={OtpSend} className="my-6 group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#1a4ffd] hover:bg-[#1440d3] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
 
-                  <svg className="h-5 w-5 text-[#ddc1f8] group-hover:text-[#c796f8]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <svg className="h-5 w-5 text-[#ecf3f8] group-hover:text-[#abc6ff]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                   </svg>
                 </span>
@@ -190,10 +190,10 @@ const Signup = () => {
               <input value={otp} onChange={handleChange} id="otp" name="otp" type="text" autoComplete="otp" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="OTP" />
             </div>}
             <div>
-              {loading ? <CircularProgress color="secondary" /> : sendOtp && <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#8000ff] hover:bg-[#8f1eff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              {loading ? <CircularProgress color="secondary" /> : sendOtp && <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#1a4ffd] hover:bg-[#1440d3] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
 
-                  <svg className="h-5 w-5 text-[#ddc1f8] group-hover:text-[#c796f8]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <svg className="h-5 w-5 text-[#ecf3f8] group-hover:text-[#abc6ff]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                   </svg>
                 </span>

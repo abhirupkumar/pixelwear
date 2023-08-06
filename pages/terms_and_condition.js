@@ -5,7 +5,7 @@ const Terms_And_Condition = () => {
   return (
     <div>
       <Head>
-        <title>Terms And Condition - Le-Soft</title>
+        <title>Terms And Condition - Pixelwear</title>
         <meta name="description" content="Quality of classes at proces of masses." />
         <link rel="icon" href="/icon.png" />
       </Head>
@@ -15,31 +15,31 @@ const Terms_And_Condition = () => {
             <h2 className="px-10 py-2 text-gray-900 font-bold title-font tracking-wider text-4xl text-center mb-4">
               Terms &amp; Conditions</h2>
             <p className="px-10 py-2">
-              These terms and conditions outline the rules and regulations for the use of Le-Soft's Website, located at www.lesoft.in. By accessing this website we assume you accept these terms and conditions. Do not continue to use lesoft.in if you do not agree to take all of the terms and conditions stated on this page. The following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice and all Agreements: "Client", "You" and "Your" refers to you, the person log on this website and compliant to the Company's terms and conditions. "The Company", "Ourselves", "We", "Our" and "Us", refers to our Company. "Party", "Parties", or "Us", refers to both the Client and ourselves. All terms refer to the offer, acceptance and consideration of payment necessary to undertake the process of our assistance to the Client in the most appropriate manner for the express purpose of meeting the Client's needs in respect of provision of the Company's stated services, in accordance with and subject to, prevailing law of India. Any use of the above terminology or other words in the singular, plural, capitalization and/or he/she or they, are taken as interchangeable and therefore as referring to same.</p>
+              These terms and conditions outline the rules and regulations for the use of Pixelwear's Website, located at www.pixelwear.vercel.app. By accessing this website we assume you accept these terms and conditions. Do not continue to use pixelwear.vercel.app if you do not agree to take all of the terms and conditions stated on this page. The following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice and all Agreements: "Client", "You" and "Your" refers to you, the person log on this website and compliant to the Company's terms and conditions. "The Company", "Ourselves", "We", "Our" and "Us", refers to our Company. "Party", "Parties", or "Us", refers to both the Client and ourselves. All terms refer to the offer, acceptance and consideration of payment necessary to undertake the process of our assistance to the Client in the most appropriate manner for the express purpose of meeting the Client's needs in respect of provision of the Company's stated services, in accordance with and subject to, prevailing law of India. Any use of the above terminology or other words in the singular, plural, capitalization and/or he/she or they, are taken as interchangeable and therefore as referring to same.</p>
             <h1 className="mx-10 font-semibold text-2xl">
               Cookies</h1>
             <p className="px-10 py-2">
-              We employ the use of cookies. By accessing lesoft.in, you agreed to use cookies in agreement with the Le-Soft's Privacy Policy. Most interactive websites use cookies to let us retrieve the user's details for each visit. Cookies are used by our website to enable the functionality of certain areas to make it easier for people visiting our website. Some of our affiliate/advertising partners may also use cookies.</p>
+              We employ the use of cookies. By accessing pixelwear.vercel.app, you agreed to use cookies in agreement with the Pixelwear's Privacy Policy. Most interactive websites use cookies to let us retrieve the user's details for each visit. Cookies are used by our website to enable the functionality of certain areas to make it easier for people visiting our website. Some of our affiliate/advertising partners may also use cookies.</p>
             <h1 className="mx-10 font-semibold text-2xl">
               License</h1>
             <p className="px-10 py-2">
-              Unless otherwise stated, Le-Soft and/or its licensors own the intellectual property rights for all material on lesoft.in. All intellectual property rights are reserved. You may access this from lesoft.in for your own personal use subjected to restrictions set in these terms and conditions.</p>
+              Unless otherwise stated, Pixelwear and/or its licensors own the intellectual property rights for all material on pixelwear.vercel.app. All intellectual property rights are reserved. You may access this from pixelwear.vercel.app for your own personal use subjected to restrictions set in these terms and conditions.</p>
             <div>
               <p className="mb-4 mx-10 font-semibold">
                 You must not:</p>
               <li className="ml-10">
-                Republish material from lesoft.in</li>
+                Republish material from pixelwear.vercel.app</li>
               <li className="ml-10">
-                Sell, rent or sub-license material from lesoft.in</li>
+                Sell, rent or sub-license material from pixelwear.vercel.app</li>
               <li className="ml-10">
-                Reproduce, duplicate or copy material from lesoft.in</li>
+                Reproduce, duplicate or copy material from pixelwear.vercel.app</li>
               <li className="ml-10">
-                Redistribute content from lesoft.in</li>
+                Redistribute content from pixelwear.vercel.app</li>
             </div>
             <h1 className="mx-10 my-2">
               This Agreement shall begin on the date hereof.</h1>
             <p className="mx-10 my-2 ">
-              Parts of this website offer an opportunity for users to post and exchange opinions and information in certain areas of the website. Le-Soft does not filter, edit, publish or review Comments prior to their presence on the website. Comments do not reflect the views and opinions of Le-Soft,its agents and/or affiliates. Comments reflect the views and opinions of the person who post their views and opinions. To the extent permitted by applicable laws, Le-Soft shall not be liable for the Comments or for any liability, damages or expenses caused and/or suffered as a result of any use of and/or posting of and/or appearance of the Comments on this website. Le-Soft reserves the right to monitor all Comments and to remove any Comments which can be considered inappropriate, offensive or causes breach of these Terms and Conditions.</p>
+              Parts of this website offer an opportunity for users to post and exchange opinions and information in certain areas of the website. Pixelwear does not filter, edit, publish or review Comments prior to their presence on the website. Comments do not reflect the views and opinions of Pixelwear,its agents and/or affiliates. Comments reflect the views and opinions of the person who post their views and opinions. To the extent permitted by applicable laws, Pixelwear shall not be liable for the Comments or for any liability, damages or expenses caused and/or suffered as a result of any use of and/or posting of and/or appearance of the Comments on this website. Pixelwear reserves the right to monitor all Comments and to remove any Comments which can be considered inappropriate, offensive or causes breach of these Terms and Conditions.</p>
             <div>
               <p className="mx-10 my-2 font-semibold">
                 You warrant and represent that:</p>
@@ -52,7 +52,7 @@ const Terms_And_Condition = () => {
               <li className="ml-10">
                 The Comments will not be used to solicit or promote business or custom or present commercial activities or unlawful activity.</li>
               <p className="mx-10 my-2">
-                You hereby grant Le-Soft a non-exclusive license to use, reproduce, edit and authorize others to use, reproduce and edit any of your Comments in any and all forms, formats or media.</p>
+                You hereby grant Pixelwear a non-exclusive license to use, reproduce, edit and authorize others to use, reproduce and edit any of your Comments in any and all forms, formats or media.</p>
             </div>
             <h1 className="mx-10 font-semibold text-2xl">
               Hyperlinking to our Content</h1>
@@ -91,7 +91,7 @@ const Terms_And_Condition = () => {
                 educational institutions and trade associations.</li>
             </div>
             <p className="px-10 py-2">
-              We will approve link requests from these organizations if we decide that: (a) the link would not make us look unfavorably to ourselves or to our accredited businesses; (b) the organization does not have any negative records with us; (c) the benefit to us from the visibility of the hyperlink compensates the absence of Le-Soft; and (d) the link is in the context of general resource information. These organizations may link to our home page so long as the link: (a) is not in any way deceptive; (b) does not falsely imply sponsorship, endorsement or approval of the linking party and its products or services; and (c) fits within the context of the linking party's site. If you are one of the organizations listed in paragraph 2 above and are interested in linking to our website, you must inform us by sending an e-mail to Le-Soft. Please include your name, your organization name, contact information as well as the URL of your site, a list of any URLs from which you intend to link to our Website, and a list of the URLs on our site to which you would like to link. Wait 2-3 weeks for a response.</p>
+              We will approve link requests from these organizations if we decide that: (a) the link would not make us look unfavorably to ourselves or to our accredited businesses; (b) the organization does not have any negative records with us; (c) the benefit to us from the visibility of the hyperlink compensates the absence of Pixelwear; and (d) the link is in the context of general resource information. These organizations may link to our home page so long as the link: (a) is not in any way deceptive; (b) does not falsely imply sponsorship, endorsement or approval of the linking party and its products or services; and (c) fits within the context of the linking party's site. If you are one of the organizations listed in paragraph 2 above and are interested in linking to our website, you must inform us by sending an e-mail to Pixelwear. Please include your name, your organization name, contact information as well as the URL of your site, a list of any URLs from which you intend to link to our Website, and a list of the URLs on our site to which you would like to link. Wait 2-3 weeks for a response.</p>
             <h1 className="ml-10 mb-1">
               Approved organizations may hyperlink to our Website as follows:</h1>
             <div>
@@ -102,7 +102,7 @@ const Terms_And_Condition = () => {
               <li className="ml-10">
                 By use of any other description of our Website being linked to that makes sense within the context and format of content on the linking party's site.</li>
               <p className="ml-10 mt-4">
-                No use of Le-Soft's logo or other artwork will be allowed for linking absent a trademark license agreement.</p>
+                No use of Pixelwear's logo or other artwork will be allowed for linking absent a trademark license agreement.</p>
             </div>
             <h1 className="mt-4 mx-10 text-xl font-semibold">
               iFrames</h1>
