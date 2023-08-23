@@ -5,9 +5,9 @@ https://pixelwear.vercel.app
 
 ## Tech Stack
 
-**Client** : Nextjs, React, React Redux, Tailwind Css, Material UI
+**Client** : Nextjs, React, React Redux, Tailwind Css, Material UI, Mongoose.
 
-**Database** : MongoDB
+**Database** : MongoDB.
 
 ## Getting Started
 
